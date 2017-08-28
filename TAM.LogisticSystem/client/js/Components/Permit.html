@@ -1,0 +1,341 @@
+﻿<div class="container">
+    <div class="container">
+        <div class="form-group">
+
+            <h2>
+                Permit/ TPT Import
+                <span class="pull-right">
+                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate" ng-click="me.checkInput()" ng-if="me.editBtn==false">Simpan</button>
+                    <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit" ng-click="me.checkUpdate()" ng-if="me.editBtn==true">Update</button>
+                    <button type="reset" class="buttonSubmit btn btn-default" ng-click="me.name=null">Batal</button>
+                </span>
+            </h2>
+
+            <hr style="border-top-color: #999999;" />
+        </div>
+    </div>
+
+    <fieldset>
+        <div class="container">
+			<p class="text-primary">Defect list </p>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <!--<th class="text-primary"><a href="" ng-click="ord='data.itemName'">Inspection Part Name</a></th>-->
+                        <th class="text-primary">Katashiki</th>
+                        <th class="text-primary">Suffix</th>
+                        <th class="text-primary">Model Name</th>
+                        <th class="text-primary">Quota</th>
+                        <th class="text-primary">Effective From</th>
+                        <th class="text-primary">Effective Until</th>
+                        <th class="text-primary">TPT No</th>
+
+                        <th class="text-primary">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.katashiki" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.suffix" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.name" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.quota" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.effectiveFrom" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.effectiveUntil" /></th>
+
+
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="data in (result = (me.Data | filter:me.Search)) | orderBy:'+name' track by data.name">
+                        <td ng-bind="data.katashiki"></td>
+                        <td ng-bind="data.suffix"></td>
+                        <td ng-bind="data.name"></td>
+                        <td ng-bind="data.quota"></td>
+                        <td ng-bind="data.effectiveFrom"></td>
+                        <td ng-bind="data.effectiveUntil"></td>
+                        <td ng-bind="data.permitId"></td>
+
+                        <td>
+                            <button (click)="clicked()" type="button" class="btn btn-info" ng-click="me.selectData(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalDelete" ng-click="me.selectData(data)"><i class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="4" class="text-warning">Data Not Found!!!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+
+    <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+
+    <fieldset>
+        <div class="container">
+            <div class="form-horizontal">
+
+                <form name="frmdata">
+                    <div class="form-group">
+                        <label class="col-sm-2">No.TPT</label>
+                        <div class="col-sm-3" ng-if="me.editBtn==true">
+                            <input type="text" class="form-control" ng-model="me.permitId" ng-minlength="0" ng-maxlength="30" name="txtName" disabled/>
+
+                            <i>
+                                <p class="error" ng-show="frmData.txtName.$error.minlength">
+                                    Data yang dimasukan terlalu pendek!
+                                </p>
+                                <p class="error" ng-show="frmData.txtName.$error.maxlength">
+                                    Data yang dimasukan terlalu panjang!
+                                </p>
+                            </i>
+                        </div>
+                        <div class="col-sm-3" ng-if="me.editBtn==false">
+                            <input type="text" class="form-control" ng-model="me.permitId" ng-minlength="0" ng-maxlength="30" name="txtName" />
+
+                            <i>
+                                <p class="error" ng-show="frmData.txtName.$error.minlength">
+                                    Data yang dimasukan terlalu pendek!
+                                </p>
+                                <p class="error" ng-show="frmData.txtName.$error.maxlength">
+                                    Data yang dimasukan terlalu panjang!
+                                </p>
+                            </i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Katashiki</label>
+                        <div class="col-sm-3" ng-if="me.editBtn==true">
+                            <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.katashiki" readonly/>
+                        </div>
+                        <div class="col-sm-3" ng-if="me.editBtn==false">
+                            <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.katashiki" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">Suffix</label>
+                        <div class="col-sm-3" ng-if="me.editBtn==true">
+                            <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.suffix" readonly/>
+                        </div>
+                        <div class="col-sm-3" ng-if="me.editBtn==false">
+                            <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.suffix" ng-keyup="me.cascadeForModel(me.katashiki,me.suffix)" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">Car Model</label>
+                        <div class="col-sm-3">
+                            <input type="hidden" asp-for="CarModelCode" class="form-control" ng-model="me.CarModelCode" />
+                            <input class="form-control" type="text" ng-model="me.modelName" disabled />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Quota</label>
+                        <div class="col-sm-3">
+                            <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.quota" />
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">Tanggal Effective</label>
+                        <div class="col-sm-3">
+                            <input type="date" class="form-control" ng-model="me.effectiveFrom" />
+                        </div>
+                        <label class="col-sm-4">Sampai</label>
+                        <div class="col-sm-3">
+                            <input type="date" class="form-control" ng-model="me.effectiveUntil" />
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </fieldset>
+
+    <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+
+    <div class="container">
+
+        <div class="form-group">
+            <div class="pull-right">
+                <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate" ng-click="me.checkInput()" ng-if="me.editBtn==false">Simpan</button>
+                <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit" ng-click="me.checkUpdate()" ng-if="me.editBtn==true">Update</button>
+                <button type="reset" class="buttonSubmit btn btn-default" ng-click="me.name=null">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalShowCreate" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure want to save this name ?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">No TPT</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.permitId"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Katashiki</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.katashiki"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Suffix</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.suffix" ></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Model</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.CarModelCode"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2">Quota</label>
+                            <div class="col-sm-3">
+                                <label typeof="" class="control-label" ng-bind="me.quota"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2">Tanggal Effective</label>
+                            <div class="col-sm-3">
+                                <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.effectiveFrom" />
+                            </div>
+                            <label class="col-sm-4">Sampai</label>
+                            <div class="col-sm-3">
+                                <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.effectiveUntil" />
+                            </div>
+                        </div>
+                        </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.createData()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalDelete" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure  ?</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="hidden" ng-bind="me.defectId" />
+                        <strong style="color:red;">
+                            You are Going to delete {{me.name}}. All information...
+                        </strong>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.deleteData()" data-dismiss="modal">Yes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalShowEdit" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure want to edit this Name ?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">No TPT</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.permitId"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Katashiki</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.katashiki"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Suffix</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.suffix"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Model</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.modelName"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2">Quota</label>
+                            <div class="col-sm-3">
+                                <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.quota" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2">Tanggal Effective</label>
+                            <div class="col-sm-3">
+                                <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.effectiveFrom" />
+                            </div>
+                            <label class="col-sm-4">Sampai</label>
+                            <div class="col-sm-3">
+                                <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.effectiveFrom" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.updateData()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+<!--<p>
+    <button type="button" class="btn btn-primary" ng-click="me.Increment()">Click me</button>
+</p>
+<p>
+    <span ng-bind="me.Count"></span>
+    <span ng-if="me.Count % 2 === 0">Even</span>
+    <span ng-if="me.Count % 2 !== 0">Odd</span>
+</p>-->
+<!--<p ng-bind="me.Value"></p>-->
+
+<!--<p ng-bind="me.Data"></p>
+<p ng-bind="me.DataSide"></p>
+<p ng-bind="me.DataById"></p>-->
+
+<!--<p ng-bind="me.Create"></p>-->

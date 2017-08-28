@@ -1,0 +1,183 @@
+﻿
+<div class="col-md-12 page" ng-if="me.pageState==true">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                Master Lokasi
+            </h1>
+        </div>
+        <div class="col-md-6 text-right">
+            <h1>
+                <button class="btn btn-primary" ng-click="me.Download(result)">
+                    Download
+                </button>
+                <button class="btn btn-default" ng-click="me.Upload()">
+                    Upload
+                </button>
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('locationCode')">Kode Lokasi</th>
+                            <th ng-click="me.order('locationName')">Lokasi</th>
+                            <th ng-click="me.order('alamat')">Alamat</th>
+                            <th ng-click="me.order('locationTypeView')">Kode Tipe Lokasi</th>
+                            <th ng-click="me.order('cityForShipmentView')">Kode City</th>
+                            <th ng-click="me.order('cityForLegView')">Kode City Location</th>
+                            <th ng-click="me.order('cetakSJKB')">Cetak SJKB</th>
+                            <th class="action"></th>
+                        </tr>
+                        <tr>
+                            <th><input class="form-control" ng-model="me.searchFilter.locationCode" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control" ng-model="me.searchFilter.locationName" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control" ng-model="me.searchFilter.alamat" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control" ng-model="me.searchFilter.locationTypeView" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control" ng-model="me.searchFilter.cityForShipmentView" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control" ng-model="me.searchFilter.cityForLegView" ng-keyup="me.search(this)" /></th>
+                            <th><input type="checkbox" class="checkbox checkbox-inline" ng-model="me.searchFilter.cetakSJKB" ng-keyup="me.search(this)" /></th>
+                            <th class="action"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in (result = (me.data | filter: me.searchFilter | orderBy: me.orderString : me.orderState)) track by $index"
+                            ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.locationCode"></td>
+                            <td ng-bind="data.locationName"></td>
+                            <td ng-bind="data.alamat"></td>
+                            <td ng-bind="data.locationTypeView"></td>
+                            <td ng-bind="data.cityForShipmentView"></td>
+                            <td ng-bind="data.cityForLegView"></td>
+                            <td class="text-center"><input type="checkbox" class="checkbox checkbox-inline" disabled ng-checked="data.cetakSJKB"/></td>
+                            <td class="action">
+                                <button type="button" class="btn btn-info" ng-click="me.selectEdit(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                                <button type="button" class="btn btn-danger" ng-click="me.selectDelete(data,MyForm)"><i class="glyphicon glyphicon-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length < 1">
+                            <td colspan="8" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="result.length == undefined">
+                            <td colspan="8" class="text-center"><i>Loading...</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="MyForm" ng-submit="me.checkForm(MyForm.value)" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Lokasi<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" id="KodeLokasi" name="KodeLokasi" class="form-control" ng-disabled="me.isUpdate" ng-model="me.locationCode" required="required" ng-pattern="/^[A-Za-z0-9]+$/" ng-maxlength="16" ng-change="me.validationKodeLokasi()" ng-model-options="{debounce: 500}" />
+                        <validation-message title="Kode Lokasi" input="MyForm.KodeLokasi"></validation-message>
+                        <span class="field-validation-error" ng-show="me.validationFlag === false">Kode Lokasi sudah terdaftar</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Lokasi<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" id="Lokasi" name="Lokasi" class="form-control" ng-model="me.locationName" required="required" ng-pattern="/^[A-Za-z0-9\s&.\/,\'-]+$/" ng-maxlength="255" />
+                        <validation-message title="Lokasi" input="MyForm.Lokasi"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Alamat<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" id="Alamat" name="Alamat" class="form-control" ng-model="me.alamat" required="required" ng-pattern="/^[A-Za-z0-9\s&.\/,\'-]+$/" ng-maxlength="255" />
+                        <validation-message title="Alamat" input="MyForm.Alamat"></validation-message>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Tipe Lokasi<span class="mandatory"> *</span></label>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <ui-select name="KodeTipeLokasi" ng-model="me.locationType" theme="bootstrap" required="required">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationTypeCode}} - {{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="option in me.locTypeData | filter: $select.search">
+                                <span ng-bind-html="option.locationTypeCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="option.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <!--<span class="field-validation-error" ng-show="me.locationType.locationTypeCode === undefined && MyForm.KodeTipeLokasi.$touched">Kode Tipe Lokasi harus dipilih</span>-->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode City<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <ui-select name="KodeKotaShipment" ng-model="me.cityForShipment" theme="bootstrap" required="required">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.cityForShipmentCode}} - {{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="option in me.cityForShipmentData | filter: $select.search">
+                                <span ng-bind-html="option.cityForShipmentCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="option.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <!--<span class="field-validation-error" ng-show="me.cityForShipment.cityForShipmentCode === undefined && MyForm.KodeKotaShipment.$touched">Kode City harus dipilih</span>-->
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode City Location<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <ui-select name="KodeKotaLeg" ng-model="me.cityForLeg" theme="bootstrap" required="required">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.cityForLegCode}} - {{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="option in me.cityForLegData | filter: $select.search">
+                                <span ng-bind-html="option.cityForLegCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="option.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <!--<span class="field-validation-error" ng-show="me.cityForLeg.cityForLegCode === undefined && MyForm.KodeKotaLeg.$touched">Kode City Location harus dipilih</span>-->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Cetak SJKB</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="checkbox" class="checkbox checkbox-inline" ng-model="me.cetakSJKB"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="text-right">
+        <button type="button" class="btn btn-primary" ng-if="me.isUpdate == 0" ng-click="me.confirmation('insert',MyForm)" ng-disabled="!MyForm.$valid || me.validationFlag === false || me.cityForLeg.cityForLegCode === undefined || me.cityForShipment.cityForShipmentCode === undefined || me.locationType.locationTypeCode === undefined">Simpan</button>
+        <button type="button" class="btn btn-primary" ng-if="me.isUpdate != 0" ng-click="me.confirmation('update',MyForm)" ng-disabled="!MyForm.$valid || me.cityForLeg.cityForLegCode === undefined || me.cityForShipment.cityForShipmentCode === undefined || me.locationType.locationTypeCode === undefined">Update</button>
+        <button type="reset" class="btn btn-danger" ng-click="me.refreshData(MyForm)">Batal</button>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "PDCConfig";
+    ViewBag.BreadCrumb = new List<string> {
+        "PDC Config"
+    };
+}
+
+<div ng-app="aspnet" class="row">
+    <pdc-Config greet="@Url.Content("~/")"><div class="loading"></div></pdc-Config>
+    <upload-download></upload-download>
+</div>

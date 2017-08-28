@@ -1,0 +1,283 @@
+﻿$blue: #6acccb;
+$light-blue: #edf3f9;
+
+html, body {
+    padding: 0px;
+    margin: 0px;
+    background-color: $light-blue;
+}
+
+/* Override default style */
+/*-----------------------------------------------------------------------------------------*/
+.btn-danger {
+    background-color: #D71921;
+
+    &:hover {
+        background-color: #840007;
+        color: #ffffff;
+    }
+}
+
+h1, h2, h3, h4, h5 {
+    font-weight: bolder;
+}
+/*-----------------------------------------------------------------------------------------*/
+
+
+/* Custom style */
+/*-----------------------------------------------------------------------------------------*/
+
+//aqua sub title
+.h4-aqua {
+    color: #33cccc;
+}
+
+//padding untuk di dalam fieldset
+.panel-inside-padding {
+    padding-right: 1em;
+    padding-left: 1em;
+}
+
+/*Fixed style*/
+// Sebelumnya untuk semua element fieldset
+.menu-panel {
+    padding: 1em;
+    color: grey;
+    background: white;
+    box-shadow: 0px 0px 2px #999999;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.scrollable-panel {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+// Garis di bawah tulisan header
+.header-line {
+    width: 100%;
+    color: black;
+    height: 1px;
+    background-color: black;
+    margin: 5px 0;
+    opacity: .2;
+}
+
+.panel-right-form {
+    border-left: 1px solid #bbb;
+}
+
+.row-striped > .form-group:nth-child(odd) {
+    background-color: $light-blue;
+}
+
+.table {
+    > thead > tr {
+        > th {
+            color: $blue;
+            text-align: center;
+            vertical-align: top;
+
+            &:not(.action):hover {
+                color: darken($blue, 20%);
+                cursor: pointer;
+                text-decoration: underline;
+            }
+        }
+
+        &:last-child > th:hover {
+            text-decoration: none;
+        }
+    }
+
+    .td-min-width {
+        min-width: 100px;
+    }
+
+    .action-1 {
+        text-align: center;
+        width: 52px;
+    }
+
+    .action,
+    .action-3 {
+        min-width: 156px;
+        text-align: center;
+    }
+
+    .btn {
+        margin-bottom: 0;
+        min-width: initial;
+    }
+}
+
+.btn {
+    margin-bottom: 10px;
+    min-width: 125px;
+
+    + .btn {
+        margin-left: 5px;
+    }
+}
+
+.form-horizontal {
+    .form-group {
+        margin-bottom: 0;
+        padding: 3px 0;
+    }
+
+    .control-label {
+        text-align: left;
+    }
+
+    .radio-inline {
+        padding-bottom: 7px;
+    }
+}
+
+.form-group {
+    .mandatory {
+        color: red;
+    }
+
+    .form-note {
+        color: red;
+        font-size: 12px;
+        font-style: italic;
+        margin-bottom: 0;
+    }
+
+    &.form-datepicker {
+        .control-label,
+        .input-group,
+        .form-control {
+            margin-top: 37px;
+        }
+
+        .uib-timepicker .form-control,
+        .input-group .form-control {
+            margin-top: 0;
+        }
+
+        .uib-timepicker a.btn {
+            background-color: transparent;
+            color: #337ab7;
+
+            &:focus,
+            &:hover {
+                color: #23527c;
+            }
+        }
+
+        .ui-select-bootstrap {
+            margin-top: 37px;
+
+            .form-control {
+                margin-top: 0;
+            }
+        }
+    }
+}
+
+.form-control,
+.ui-select-bootstrap {
+    text-transform: uppercase;
+}
+
+.input-datepicker[readonly] {
+    background-color: white;
+}
+
+.input-group .btn,
+.ui-select-bootstrap > .ui-select-match > .btn,
+.ui-select-bootstrap .ui-select-toggle > a.btn,
+.uib-timepicker .btn {
+    margin-bottom: 0;
+    min-width: initial;
+}
+
+.ui-select-bootstrap .ui-select-toggle {
+    padding-right: 45px;
+
+    > a.btn {
+        margin-top: 0;
+    }
+}
+
+.uib-monthpicker .btn,
+.uib-datepicker .btn {
+    margin-bottom: 0;
+    min-width: 100%;
+}
+
+.ui-select-match-text {
+    overflow: hidden;
+}
+
+.breadcrumb {
+    background-color: transparent;
+    margin-bottom: 0;
+    margin-top: 20px;
+    padding: 0;
+
+    > li + li:before {
+        content: "> ";
+    }
+}
+
+div[ng-app="aspnet"] {
+    height: 100vh;
+    position: relative;
+}
+
+.loading {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.loading:after {
+    animation: rotateRight 1s linear infinite;
+    content: "\e031";
+    font-family: 'Glyphicons Halflings';
+    font-size: 48px;
+    margin-left: -24px;
+    margin-top: -34px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+}
+
+@keyframes rotateRight {
+    from {
+        transform: rotateZ(0);
+    }
+
+    to {
+        transform: rotateZ(360deg);
+    }
+}
+
+.alertify {
+    .table {
+        border-top: 1px solid #ddd;
+
+        > tbody > tr > td {
+            border-top: none;
+
+            &:first-child {
+                min-width: 125px;
+            }
+
+            &:last-child {
+                text-transform: uppercase;
+            }
+        }
+    }
+}
+
+.katsu-row {
+    display: inline-block;
+}

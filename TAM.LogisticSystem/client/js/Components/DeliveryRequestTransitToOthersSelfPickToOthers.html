@@ -1,0 +1,47 @@
+﻿<h4 class="form-group h4-aqua">Driver Information</h4>
+<div class="form-group"><hr class="header-line" /></div>
+<div class="row-striped">
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Identitas Driver<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-3">
+            <ui-select ng-model="me.deliveryRequestSelfPickToOthers.driverType" theme="bootstrap" ng-change="me.validationIdentitasDriver();me.broadcast()">
+                <ui-select-match placeholder="Pilih salah satu">{{$select.selected}}</ui-select-match>
+                <ui-select-choices repeat="driverType in me.driverType| filter: $select.search">
+                    <div ng-bind-html="driverType | highlight: $select.search"></div>
+                </ui-select-choices>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" ng-model="me.deliveryRequestSelfPickToOthers.driverId" ng-change="me.validationIdentitasDriver();me.broadcast()" ng-model-options="{debounce: 500}" />
+        </div>
+        <div class="col-md-offset-3 col-md-9">
+            <span class="field-validation-error" ng-bind="me.errorMsgIdentitasDriver" ng-hide="me.validateIdentitasDriver === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Nama Driver<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-7">
+            <input type="text" class="form-control" ng-model="me.deliveryRequestSelfPickToOthers.driverName" ng-change="me.validationDriverName();me.broadcast()" ng-model-options="{debounce: 500}" />
+            <span class="field-validation-error" ng-bind="me.errorMsgDriverName" ng-hide="me.validateDriverName === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Kode Konfirmasi</label>
+        </div>
+        <div class="col-md-7">
+            <input type="text" class="form-control" disabled ng-model="me.deliveryRequestSelfPickToOthers.confirmationCode" ng-change="me.broadcast()" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-5">
+            <label class="control-label">Unit ini harus dikembalikan ke PDC pada tanggal</label>
+        </div>
+        <div class="col-md-5">
+            <input type="text" class="form-control" disabled value="{{me.deliveryRequestSelfPickToOthers.returnPdcDate | date: 'dd-MMM-yyyy HH:mm'}}" />
+        </div>
+    </div>
+</div>

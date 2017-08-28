@@ -1,0 +1,164 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>
+                    PDC Config
+                </h2>
+            </div>
+            <div class="col-md-6 text-right">
+                <h1>
+                    <button ng-click="me.download(result)" class="btn btn-primary">
+                        Download
+                    </button>
+                    <button ng-click="me.upload()" class="btn btn-default">
+                        Upload
+                    </button>
+                </h1>
+            </div>
+        </div>
+        <hr class="header-line" />
+        <div class="menu-panel">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table-bordered table table-striped">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('name')" class="text-center">PDC</th>
+                            <th ng-click="me.order('maintenanceDayResult')" class="text-center">Durasi Maintenance</th>
+                            <th ng-click="me.order('carCarrierQuotaPerDayResult')" class="text-center">Unit Kapasitas Pengiriman (Unit Car Carrier)</th>
+                            <th ng-click="me.order('nonCarCarrierQuotaPerDayResult')" class="text-center">Unit Kapasitas Bukan Pengiriman (Unit Non Car Carrier)</th>
+                            <th ng-click="me.order('leadTimePreDelivery')" class="text-center">Lead Time Persiapan Pengiriman</th>
+                            <th class="action"></th>
+                        </tr>
+                        <tr>
+                            <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="Search.name" /></th>
+                            <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="Search.maintenanceDayResult" /></th>
+                            <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="Search.carCarrierQuotaPerDayResult" /></th>
+                            <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="Search.nonCarCarrierQuotaPerDayResult" /></th>
+                            <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="Search.leadTimePreDelivery" /></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="result.length == 0">
+                            <td colspan="10" class="text-warning">Data Tidak Ditemukan</td>
+                        </tr>
+
+                        <tr ng-repeat="data in (result = (me.data | filter: Search | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.name"></td>
+                            <td ng-bind="data.maintenanceDayResult"></td>
+                            <td ng-bind="data.carCarrierQuotaPerDayResult"></td>
+                            <td ng-bind="data.nonCarCarrierQuotaPerDayResult"></td>
+                            <td ng-bind="data.leadTimePreDelivery"></td>
+                            <td class="text-nowrap text-center">
+                                <button id="btnEdit" type="button" class="btn btn-info" ng-click="me.selectEdit(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                                <button type="button" class="btn btn-danger" ng-click="me.deleteData(data)"><i class="glyphicon glyphicon-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" ng-change="me.pageChanged()" max-size="me.maxSize" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <form id="MyForm" name="MyForm" class="form-horizontal row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">PDC<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <select ng-if="me.disablePDC==true" class="form-control" ng-model="me.locationCodes" ng-options="option.name for option in me.dataPDC track by option.locationCode" disabled></select>
+                            <ui-select ng-if="me.disablePDC==false" ng-model="me.locationCodes" theme="bootstrap" ng-change="me.checkLocationCode()">
+                                <ui-select-match placeholder="(Pilih Salah Satu)">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="dataPDC in me.dataPDC | filter: $select.search">
+                                    <span ng-bind-html="dataPDC.locationCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="dataPDC .name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group"> 
+                        <div class="col-sm-3">
+                            <label class="control-label" for="">Durasi Maintenance<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input min="0" max="99" id="DurasiMaintenance" name="DurasiMaintenance" class="form-control" ng-model="me.maintenanceDay" type="number" required />
+                            <validation-message input="MyForm.DurasiMaintenance"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <label class="control-label" for="">Unit Kapasitas Pengiriman Per Hari</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label" for="">-Unit Car Carrier<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input min="0" id="UnitCarCarrier" name="UnitCarCarrier" class="form-control" ng-model="me.carCarrierQuotaPerDay" type="number" required />
+                            <validation-message input="MyForm.UnitCarCarrier"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label" for="">-Unit Non Car Carrier<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input min="0" id="UnitNonCarCarrier" name="UnitNonCarCarrier" class="form-control" ng-model="me.nonCarCarrierQuotaPerDay" type="number" required />
+                            <validation-message input="MyForm.UnitNonCarCarrier"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label" for="">Lead Time Persiapan Pengiriman<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input min="0" max="99" id="HariLeadTimePersiapan" name="HariLeadTimePersiapan" class="form-control" ng-model="me.dayPreDelivery" type="number" required />
+                            <validation-message input="MyForm.HariLeadTimePersiapan"></validation-message>
+                        </div>
+                        <div class="col-sm-1">
+                            <label class="control-label" for="">Hari</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input min="0" max="99" id="JamLeadTimePersiapan" name="JamLeadTimePersiapan" class="form-control" ng-model="me.hoursPreDelivery" type="number" required />
+                            <validation-message input="MyForm.JamLeadTimePersiapan"></validation-message>
+                        </div>
+                        <div class="col-sm-1">
+                            <label min="0" class="control-label" for="">Jam</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input min="0" max="99" id="MinutePreDelivery" name="MinutePreDelivery" class="form-control" ng-model="me.minutePreDelivery" type="number" required />
+                            <validation-message input="MyForm.MinutePreDelivery"></validation-message>
+                        </div>
+                        <div class="col-sm-1">
+                            <label class="control-label" for="">Menit</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="text-right">
+            <button type="submit" ng-click="me.addData(MyForm)" ng-if="me.created==true" ng-disabled="MyForm.$invalid" class="btn btn-primary"> Simpan</button>
+            <button type="submit" class="btn btn-info" ng-click="me.updateData(MyForm)" ng-if="me.edited==true" ng-disabled="MyForm.$invalid">Update</button>
+            <button type="reset" ng-click="me.clearForm(MyForm)" class="btn btn-danger"> Batal</button>
+        </div>
+    </div>
+</div>

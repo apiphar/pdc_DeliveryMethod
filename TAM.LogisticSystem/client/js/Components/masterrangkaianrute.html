@@ -1,0 +1,635 @@
+﻿<!--<style>
+    body {
+        background-color: #edf3f9;
+    }
+
+    fieldset {
+        padding: 1em;
+        border: 1px solid rgba(0, 0, 0, .5);
+        color: grey;
+        border-radius: 10px;
+        background: white;
+    }
+</style>-->
+
+
+<!--Masih menggunakan modal-->
+<div>
+
+    <div>
+        <div class="form-group">
+
+            <h2>
+                Master Rangkaian Rute
+                <span class="pull-right">
+                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate" ng-click="me.checkInputHeader()" ng-show="me.ShowEdit">Simpan</button>
+                    <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit" ng-click="me.checkUpdateHeader()" ng-hide="me.ShowEdit">Update</button>
+                    <button type="reset" class="btn btn-default" ng-click="me.refreshData()">Batal</button>
+                </span>
+            </h2>
+
+            <hr class="header-line" />
+        </div>
+    </div>
+
+    <fieldset>
+        <div class="fieldset-padding">
+            <label class="text-primary">Master Rangkaian Rute</label>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-primary">No. RR</th>
+                        <th class="text-primary">Kd. Dealer</th>
+                        <th class="text-primary">Dealer</th>
+                        <th class="text-primary">Kd. Branch</th>
+                        <th class="text-primary">Branch</th>
+                        <th class="text-primary">Katashiki</th>
+                        <th class="text-primary">Suffix</th>
+                        <th class="text-primary col-sm-2">Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><input class="form-control" ng-model="me.Search.routingDictionaryId" /></th>
+                        <th><input class="form-control" ng-model="me.Search.dealerCode" /></th>
+                        <th><input class="form-control" ng-model="me.Search.dealerName" /></th>
+                        <th><input class="form-control" ng-model="me.Search.branchCode" /></th>
+                        <th><input class="form-control" ng-model="me.Search.branchName" /></th>
+                        <th><input class="form-control" ng-model="me.Search.katashiki" /></th>
+                        <th><input class="form-control" ng-model="me.Search.suffix" /></th>
+                        <th></th>
+                    </tr>
+                    <!--<tr ng-repeat="data in (result = (me.Data | filter:me.Search)) | orderBy:'+partName' track by data.partName">-->
+                    <tr ng-repeat="data in (resultHeader = (me.DataHeader | filter:me.Search)) | orderBy:'+partName' | limitTo: me.pageSizeHeader : (me.currentPageHeader-1) * me.pageSizeHeader">
+
+                        <td ng-bind="data.routingDictionaryId"></td>
+                        <td ng-bind="data.dealerCode"></td>
+                        <td ng-bind="data.dealerName"></td>
+                        <td ng-bind="data.branchCode"></td>
+                        <td ng-bind="data.branchName"></td>
+                        <td ng-bind="data.katashiki"></td>
+                        <td ng-bind="data.suffix"></td>
+                        <td>
+                            <button type="button" class="btn btn-info" ng-click="me.selectDataHeader(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalDeleteHeader" ng-click="me.selectDataHeader(data)"><i class="glyphicon glyphicon-trash"></i></button>
+                            <button type="button" class="btn btn-link" ng-click="me.refreshDataDetail(data.routingDictionaryId)">Detail</button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="4" class="text-warning">Data Not Found!!!</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <ul uib-pagination total-items="resultHeader.length" ng-model="me.currentPageHeader" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSizeHeader" num-pages="me.pageNumberHeader" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<br />
+
+<div>
+    <fieldset>
+        <div class="fieldset-padding">
+            <div class="form-horizontal">
+                <form id="frmData" name="frmData">
+                    <div class="form-group">
+                        <label class="col-sm-2">Kode Rangkaian Rute (#RR)</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.RoutingDictionaryId1" ng-minlength="0" id="RoutingDictionary" name="RoutingDictionary" required readonly/>
+                            <validation-message input="frmData.RoutingDictionary"></validation-message>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Kode Dealer</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="me.Dealer" ng-change="me.SelectItemOnChangeDealer()" ng-options="option.dealerCode for option in me.DataDealer track by option.dealerCode" id="dealerCode" name="dealerCode">
+                                <option>Please select</option>
+                            </select>
+                            <validation-message input="frmData.dealerCode"></validation-message>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2">Nama Dealer</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" ng-model="me.DealerName" ng-minlength="0" id="DealerName" name="DealerName" required readonly />
+                                <validation-message input="frmData.DealerName"></validation-message>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Kode Branch</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="me.Branch" ng-change="me.SelectItemOnChangeBranch()" ng-options="option.branchCode for option in me.DataBranch track by option.branchCode" id="Katashiki" name="Katashiki">
+                                <option>Please select</option>
+                            </select>
+                            <validation-message input="frmData.Katashiki"></validation-message>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2">Nama Branch</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" ng-model="me.BranchName" ng-minlength="0" id="BranchName" name="BranchName" required readonly />
+                                <validation-message input="frmData.BranchName"></validation-message>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Katashiki</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="me.Vehicle" ng-change="me.SelectItemOnChangeVehicle()" ng-options="option.katashiki for option in me.DataVehicle track by option.katashiki" id="Katashiki" name="Katashiki">
+                                <option>Please select</option>
+                            </select>
+                            <validation-message input="frmData.Katashiki"></validation-message>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-1">Suffix</label>
+                            <div class="col-sm-2">
+                                <select class="form-control" ng-model="me.Vehicle" ng-change="me.SelectItemOnChangeVehicle()" ng-options="option.suffix for option in me.DataVehicle track by option.katashiki" id="Suffix" name="Suffix">
+                                    <option>Please select</option>
+                                </select>
+                                <validation-message input="frmData.Suffix"></validation-message>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-1">Mobilnya</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" ng-model="me.CarModelName" ng-minlength="0" id="CarModel" name="CarModelName" required readonly />
+                                    <validation-message input="frmData.CarModelName"></validation-message>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<div class="fieldset-padding">
+
+    <div class="form-group">
+        <div class="pull-right">
+            <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowCreateHeader" ng-click="me.checkInputHeader()" ng-show="me.ShowEdit">Simpan</button>
+            <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEditHeader" ng-click="me.checkUpdateHeader()" ng-hide="me.ShowEdit">Update</button>
+            <button type="submit" class="buttonSubmit btn btn-default" ng-click="me.refreshDataHeader()">Batal</button>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+
+
+<div class="">
+    <fieldset>
+        <div class="fieldset-padding">
+            <label class="text-primary">Detail Rangkaian Rute no. </label>
+            <label typeof="" class="control-label" ng-bind="me.RoutingDictionaryId" hidden="hidden">Detail Rangkaian Rute no. </label>
+
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-primary">Lokasi</th>
+                        <th class="text-primary">No. Urut</th>
+                        <th class="text-primary">Kd Rute</th>
+                        <th class="text-primary">Rute</th>
+                        <th class="text-primary">Moda</th>
+                        <th class="text-primary col-sm-2">Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><input class="form-control" ng-model="me.Search.locationName" /></th>
+                        <th><input class="form-control" ng-model="me.Search.ordering" /></th>
+                        <th><input class="form-control" ng-model="me.Search.routingMasterCode" /></th>
+                        <th><input class="form-control" ng-model="me.Search.routingMasterName" /></th>
+                        <th><input class="form-control" ng-model="me.Search.deliveryMethodName" /></th>
+                        <th></th>
+                    </tr>
+                    <!--<tr ng-repeat="data in (result = (me.Data | filter:me.Search)) | orderBy:'+partName' track by data.partName">-->
+                    <tr ng-repeat="data in (resultDetail = (me.DataDetail | filter:me.Search))  | limitTo: me.pageSizeDetail : (me.currentPageDetail-1) * me.pageSizeDetail">
+
+                        <td ng-bind="data.locationName"></td>
+                        <td ng-bind="data.ordering"></td>
+                        <td ng-bind="data.routingMasterCode"></td>
+                        <td ng-bind="data.routingMasterName"></td>
+                        <td ng-bind="data.deliveryMethodName"></td>
+                        <td>
+                            <button type="button" class="btn btn-info" ng-click="me.selectDataDetail(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalDeleteDetail" ng-click="me.selectDataDetail(data)"><i class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="4" class="text-warning">Data Not Found!!!</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <ul uib-pagination total-items="resultDetail.length" ng-model="me.currentPageDetail" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSizeDetail" num-pages="me.pageNumberDetail" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<br />
+
+<div>
+    <fieldset>
+        <div class="">
+            <div class="form-horizontal">
+                <form id="frmData" name="frmData">
+                    <div class="form-group">
+                        <label class="col-sm-2">Kode Rangkaian Rute (#RR)</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.RoutingDictionaryId" ng-minlength="0" id="RoutingDictionaryId" name="RoutingDictionaryId" required readonly />
+                            <validation-message input="frmData.RoutingDictionaryId"></validation-message>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Dealer</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.DealerName" ng-minlength="0" id="Dealer" name="Dealer" required readonly />
+                            <validation-message input="frmData.Dealer"></validation-message>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-1">Branch</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control" ng-model="me.BranchName" ng-minlength="0" id="Branch" name="Branch" required readonly />
+                                <validation-message input="frmData.Branch"></validation-message>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Lokasi</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="me.Location" ng-change="me.SelectItemOnChangeLocation()" ng-options="option.name for option in me.DataLocation track by option.locationCode" id="Location" name="Location">
+                                <option>Please select</option>
+                            </select>
+                            <validation-message input="frmData.Location"></validation-message>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-1">No. Urut</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control" ng-model="me.Ordering" ng-minlength="0" id="Ordering" name="Ordering" required />
+                                <validation-message input="frmData.Ordering"></validation-message>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-1">Moda</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" ng-model="me.DeliveryMethod" ng-change="me.SelectItemOnChangeDeliveryMethod()" ng-options="option.name for option in me.DataDeliveryMethod track by option.deliveryMethodCode" id="DeliveryMethod" name="DeliveryMethod">
+                                        <option>Please select</option>
+                                    </select>
+                                    <validation-message input="frmData.DeliveryMethod"></validation-message>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Kode Rute</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="me.RoutingMaster" ng-change="me.SelectItemOnChangeRoutingMaster()" ng-options="option.routingMasterCode for option in me.DataRoutingMaster track by option.routingMasterCode" id="RoutingMaster" name="RoutingMaster">
+                                <option>Please select</option>
+                            </select>
+                            <validation-message input="frmData.RoutingMaster"></validation-message>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-1">Descripsi Rute</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" ng-model="me.RoutingMasterName" ng-minlength="0" id="RoutingMasterName" name="RoutingMasterName" required readonly />
+                                <validation-message input="frmData.RoutingMasterName"></validation-message>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<div class="">
+
+    <div class="form-group">
+        <div class="pull-right">
+            <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowCreateDetail" ng-click="me.checkInputDetail()" ng-show="me.ShowEdit">Simpan</button>
+            <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEditDetail" ng-click="me.checkUpdateDetail()" ng-hide="me.ShowEdit">Update</button>
+            <button type="submit" class="buttonSubmit btn btn-default" ng-click="me.refreshDataDetail()">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="ModalShowCreateHeader" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure want to save this details ?</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Dealer</label>
+                        <div class="col-sm-4">
+                            <label typeof="" class="control-label" ng-bind="me.DealerCode" hidden="hidden"></label>
+                            <label typeof="" class="control-label" ng-bind="me.DealerName"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Dealer</label>
+                        <div class="col-sm-4">
+                            <label typeof="" class="control-label" ng-bind="me.BranchCode" hidden="hidden"></label>
+                            <label typeof="" class="control-label" ng-bind="me.BranchName"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Katashiki</label>
+                        <div class="col-sm-4">
+                            <!--<input type="hidden" ng-bind="me.LocationTo" />-->
+                            <label typeof="" class="control-label" ng-bind="me.Katashiki"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Suffix</label>
+                        <div class="col-sm-4">
+                            <!--<input type="hidden" ng-bind="me.LocationTo" />-->
+                            <label typeof="" class="control-label" ng-bind="me.Suffix"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default" ng-click="me.createDataHeader()" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalShowEditHeader" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure want to edit this details ?</h4>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Dealer</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.DealerCode" hidden="hidden"></label>
+                                <label typeof="" class="control-label" ng-bind="me.DealerName"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Dealer</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.BranchCode" hidden="hidden"></label>
+                                <label typeof="" class="control-label" ng-bind="me.BranchName"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Katashiki</label>
+                            <div class="col-sm-4">
+                                <!--<input type="hidden" ng-bind="me.LocationTo" />-->
+                                <label typeof="" class="control-label" ng-bind="me.Katashiki"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Suffix</label>
+                            <div class="col-sm-4">
+                                <!--<input type="hidden" ng-bind="me.LocationTo" />-->
+                                <label typeof="" class="control-label" ng-bind="me.Suffix"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.updateDataHeader()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="ModalDeleteHeader" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Are you sure ?</h4>
+            </div>
+            <div class="modal-body">
+
+                <input type="hidden" ng-bind="me.RoutingDictionaryId" />
+                <strong style="color: red;">
+                    You are going to delete {{me.RoutingDictionaryId}}. All information...
+                </strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="me.deleteDataHeader()">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalShowCreateDetail" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure want to save this details ?</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Kode Rangkairan Rute</label>
+                        <div class="col-sm-4">
+                            <label typeof="" class="control-label" ng-bind="me.RoutingDictionaryId" hidden="hidden"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Dealer</label>
+                        <div class="col-sm-4">
+                            <label typeof="" class="control-label" ng-bind="me.DealerCode" hidden="hidden"></label>
+                            <label typeof="" class="control-label" ng-bind="me.DealerName"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Branch</label>
+                        <div class="col-sm-4">
+                            <label typeof="" class="control-label" ng-bind="me.BranchCode" hidden="hidden"></label>
+                            <label typeof="" class="control-label" ng-bind="me.BranchName"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Location</label>
+                        <div class="col-sm-4">
+                            <label typeof="" class="control-label" ng-bind="me.LocationCode" hidden="hidden"></label>
+                            <label typeof="" class="control-label" ng-bind="me.LocationName"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">No. Urut</label>
+                        <div class="col-sm-4">
+                            <label typeof="" class="control-label" ng-bind="me.Ordering"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Moda</label>
+                        <div class="col-sm-4">
+                            <label typeof="" class="control-label" ng-bind="me.DeliveryMethodCode" hidden="hidden"></label>
+                            <label typeof="" class="control-label" ng-bind="me.DeliveryMethodName"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Kd Rute</label>
+                        <div class="col-sm-4">
+                            <label typeof="" class="control-label" ng-bind="me.RoutingMasterCode" hidden="hidden"></label>
+                            <label typeof="" class="control-label" ng-bind="me.RoutingMasterName"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default" ng-click="me.createDataDetail()" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalShowEditDetail" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure want to edit this details ?</h4>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Dealer</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.DealerCode" hidden="hidden"></label>
+                                <label typeof="" class="control-label" ng-bind="me.DealerName"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Branch</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.BranchCode" hidden="hidden"></label>
+                                <label typeof="" class="control-label" ng-bind="me.BranchName"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Location</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.LocationCode" hidden="hidden"></label>
+                                <label typeof="" class="control-label" ng-bind="me.LocationName"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">No. Urut</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.Ordering"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Moda</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.DeliveryMethodCode" hidden="hidden"></label>
+                                <label typeof="" class="control-label" ng-bind="me.DeliveryMethodName"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Kd Rute</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.RoutingMasterCode" hidden="hidden"></label>
+                                <label typeof="" class="control-label" ng-bind="me.RoutingMasterName"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.updateDataDetail()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="ModalDeleteDetail" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Are you sure ?</h4>
+            </div>
+            <div class="modal-body">
+
+                <input type="hidden" ng-bind="me.RoutingDictionaryDetailId" />
+                <strong style="color: red;">
+                    You are going to delete {{me.RoutingDictionaryDetailId}}. All information...
+                </strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="me.deleteDataDetail()">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--<p ng-bind="me.Data"></p>
+<p ng-bind="me.DataLine"></p>
+<p ng-bind="me.DataVehicle"></p>-->
+<!--<p ng-bind="me.DataDeliveryMethod"></p>-->

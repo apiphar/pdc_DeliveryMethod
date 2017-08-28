@@ -1,0 +1,644 @@
+<nav class="navbar navbar-inverse navbar-fixed-side">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">Toyota Logistic System</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <p class="navbar-text">
+                    Hello, @User.Identity.Name
+                </p>
+            }
+            <ul class="nav navbar-nav">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @if (User.IsInRole(RoleMenuEnum.MenuAdministrator))
+                    {
+                        <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAdministrator">
+                            <a href="@Url.Action("Index", "RoleMenu")">
+                                <span class="glyphicon glyphicon-link"></span>
+                                Role-Menu Mapping
+                            </a>
+                        </li>
+                    }
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Master
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterBranch">
+                                <a href="@Url.Action("Index", "Branch")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Branch
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuBrand">
+                                <a href="@Url.Action("Index", "Brand")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Brand
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterCity">
+                                <a href="@Url.Action("Index", "CityMaster")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    City
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterCityLeg">
+                                <a href="@Url.Action("Index", "CityLeg")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    City Leg
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterWarna">
+                                <a href="@Url.Action("Index", "Colour")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Warna
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterCompany">
+                                <a href="@Url.Action("Index", "MasterCompany")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Company
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterDealer">
+                                <a href="@Url.Action("Index", "DealerMaster")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Dealer
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuDefectMaintenance">
+                                <a href="@Url.Action("Index", "DefectMaintenance")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Defect Maintenance
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterDeliveryLeg">
+                                <a href="@Url.Action("Index", "DeliveryLeg")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Delivery Leg
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterManufacturing">
+                                <a href="@Url.Action("Index", "Manufacturing")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Manufacturing
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterModel">
+                                <a href="@Url.Action("Index", "MasterModel")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Model
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterModelSeries">
+                                <a href="@Url.Action("Index", "MasterModelSeries")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Model Series
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterWarnaVehicle">
+                                <a href="@Url.Action("Index", "MasterWarnaVehicle")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Warna Vehicle
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterPlafond">
+                                <a href="@Url.Action("Index", "MasterPlafond")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Plafond
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterLogisticVendor">
+                                <a href="@Url.Action("Index", "LogisticVendor")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Logistic Vendor
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuCluster">
+                                <a href="@Url.Action("Index", "Cluster")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Cluster
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuRegion">
+                                <a href="@Url.Action("Index", "Region")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Region
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuTariff">
+                                <a href="@Url.Action("Index", "Tariff")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Tariff
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuRitasePrice">
+                                <a href="@Url.Action("Index", "MasterRitasePrice")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Ritase Price
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuSalesArea">
+                                <a href="@Url.Action("Index", "SalesArea")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Sales Area
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuLocationType">
+                                <a href="@Url.Action("Index", "LocationType")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Tipe Lokasi
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuLogisticVehicle">
+                                <a href="@Url.Action("Index", "LogisticVehicle")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Logistic Vehicle
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterConfigurationPointPreBookVessel">
+                                <a href="@Url.Action("Index", "MasterConfigurationPointPreBookVessel")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Configuration Point Pre Book Vessel
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterLeadTimeLocation">
+                                <a href="@Url.Action("Index", "MasterLeadTimeLocation")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Lead Time Location
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterProses">
+                                <a href="@Url.Action("Index", "MasterProses")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Proses
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterRangkaianRute">
+                                <a href="@Url.Action("Index", "MasterRangkaianRute")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Rangkaian Rute
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterJenis">
+                                <a href="@Url.Action("Index", "MasterJenis")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Jenis
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterTipe">
+                                <a href="@Url.Action("Index", "CarType")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Tipe
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterGroupDealer">
+                                <a href="@Url.Action("Index", "MasterGroupDealer")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Group Dealer
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuPDCConfig">
+                                <a href="@Url.Action("Index", "PDCConfig")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    PDC Config
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterLegPrice">
+                                <a href="@Url.Action("Index", "LegPriceMaster")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Leg Price
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterLokasi">
+                                <a href="@Url.Action("Index", "Lokasi")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Lokasi
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterRegionAFI">
+                                <a href="@Url.Action("Index", "MasterRegionAFI")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Region AFI
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            AFI
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFIRequest">
+                                <a href="@Url.Action("Index", "AFIRequest")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    AFI Request
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFIRequestUpload">
+                                <a href="@Url.Action("Index", "AFIRequestUpload")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    AFI Request Upload
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFIRequestRevisi">
+                                <a href="@Url.Action("Index", "AFIRequestRevisi")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    AFI Request Revisi & Ex-Cancel
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFIReturnFromHO">
+                                <a href="@Url.Action("Index", "AFIReturnFromHO")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    AFI Return From HO
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFIHOApproval">
+                                <a href="@Url.Action("Index", "AFIHOApproval")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    HO Approval
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFIDownload">
+                                <a href="@Url.Action("Index", "AFIDownload")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    AFI Download
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFIReceiveDocument">
+                                <a href="@Url.Action("Index", "AFIReceiveDocument")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Receive Document
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFIKonfigurasiGesekan">
+                                <a href="@Url.Action("Index", "KonfigurasiGesekan")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Konfigurasi Gesekan
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFIGesekNomorAngka">
+                                <a href="@Url.Action("Index", "GesekNoRangka")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Gesek Nomor Rangka
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFISerahTerimaGesekan">
+                                <a href="@Url.Action("Index", "SerahTerimaGesekan")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Serah Terima Gesekan
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuAFIReportGesekan">
+                                <a href="@Url.Action("Index", "ReportGesekan")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Report Gesekan
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Planning
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuConfigurationPlanning">
+                                <a href="@Url.Action("Index", "ConfigurationPlanning")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Configuration Planning
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuDccpReadinessVolume">
+                                <a href="@Url.Action("Index", "DccpReadinessVolume")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    DCCP Readiness Volume
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuDownloadDccpReadinessVolume">
+                                <a href="@Url.Action("Index", "DownloadDccpReadinessVolume")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Download DCCP Readiness Volume
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuGeneratePolaRangkaianRute">
+                                <a href="@Url.Action("Index", "GeneratePolaRangkaianRute")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Generate Pola Rangkaian Rute
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuIdleDictionary">
+                                <a href="@Url.Action("Index", "IdleDictionary")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Kalender Kerja: Pola Break Dalam Seminggu
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuWorkingDictionary">
+                                <a href="@Url.Action("Index", "WorkingDictionary")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Kalender Kerja: Pola Kerja Seminggu
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuGenerateJamBreak">
+                                <a href="@Url.Action("Index", "GenerateJamBreak")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Generate Jam Break
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuGenerateShiftKerja">
+                                <a href="@Url.Action("Index", "GenerateShiftKerja")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Generate Shift Kerja
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuPolaRangkaianTahapAkhir">
+                                <a href="@Url.Action("Index", "PolaRangkaianTahapAkhir")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Pola Rangkaian Tahap Akhir
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuPolaRangkaianTahapAkhirPenerapan">
+                                <a href="@Url.Action("Index", "PolaRangkaianTahapAkhirPenerapan")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Pola Rangkaian Tahap Akhir Penerapan
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuPolaRangkaianTahapAwal">
+                                <a href="@Url.Action("Index", "PolaRangkaianTahapAwal")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Pola Rangkaian Tahap Awal
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuPolaRangkaianTahapAwalPenerapan">
+                                <a href="@Url.Action("Index", "PolaRangkaianTahapAwalPenerapan")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Pola Rangkaian Tahap Awal Penerapan
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuPenyesuaianTanggalProduksi">
+                                <a href="@Url.Action("Index", "PenyesuaianTanggalProduksi")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Penyesuaian Tanggal Produksi
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMaintenanceWaktuBreak">
+                                <a href="@Url.Action("Index", "MaintenanceWaktuBreak")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Maintenance Waktu Break
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMaintenanceKonfigurasiExportExcelFileDccp">
+                                <a href="@Url.Action("Index", "MaintenanceKonfigurasiExportFileDccp")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Maintenance Konfigurasi Export Excel File Dccp (Upload)
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuDwellingTime">
+                                <a href="@Url.Action("Index", "DwellingTime")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Dwelling Time
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMaintenanceShiftKerja">
+                                <a href="@Url.Action("Index", "MaintenanceShiftKerja")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Maintenance Shift Kerja
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuKodeShift">
+                                <a href="@Url.Action("Index", "KodeShift")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Kode Shift
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterLeadTimeLocation">
+                                <a href="@Url.Action("Index", "MasterLeadTimeLocation")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Lead Time Location
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMCCP">
+                                <a href="@Url.Action("Index", "MCCP")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    MCCP Config: Excel Summary
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMaintenanceRuteProduksiLeadTime">
+                                <a href="@Url.Action("Index", "RoutingProductionLeadTime")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Maintenance Rute Produksi & Lead Time
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuMasterKalenderLiburKerja">
+                                <a href="@Url.Action("Index", "Holiday")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Master Kalender Libur Kerja
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            CBU
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuCBUFormAInput">
+                                <a href="@Url.Action("Index", "FormA")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Form A Input
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuCBUFormARequest">
+                                <a href="@Url.Action("Index", "FormARequest")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Form A Request
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuCBUFinalizePIB">
+                                <a href="@Url.Action("Index", "CBUFinalizePIB")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Finalize PIB
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Delivery
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuVesselArrival">
+                                <a href="@Url.Action("Index", "VesselArrival")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Vessel Arrival
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuVesselDepart">
+                                <a href="@Url.Action("Index", "VesselDepart")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Vessel Depart
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuDeliveryRequest">
+                                <a href="@Url.Action("Index", "DeliveryRequest")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Delivery Request
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuBatalDeliveryRequest">
+                                <a href="@Url.Action("Index", "BatalDeliveryRequest")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Batal Delivery Request
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuDeliveryUnitAdvance">
+                                <a href="@Url.Action("Index", "DeliveryUnitAdvance")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Delivery Unit Advance
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuDeliveryUnitAssign">
+                                <a href="@Url.Action("Index", "UnitAssign")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Unit Assign
+                                </a>
+                            </li>
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuDeliveryUnitLoading">
+                                <a href="@Url.Action("Index", "DeliveryUnitLoading")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Unit Loading
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            PDI
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuPDILeadTimeConfiguration">
+                                <a href="@Url.Action("Index", "PDILeadTimeConfiguration")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Lead Time Configuration
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            PIO
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuPIOLineMaster">
+                                <a href="@Url.Action("Index", "PIOLineMaster")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Line Master
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="dropdown-menu">
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuPIODefaultLeadTimeConfiguration">
+                                <a href="@Url.Action("Index", "PIODefaultLeadTimeConfiguration")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Default Lead Time Configuration
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            SPU
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuSPULineMaster">
+                                <a href="@Url.Action("Index", "SPULineMaster")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Line Master
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="dropdown-menu">
+                            <li acl-active="ViewBag.Page == RoleMenuEnum.MenuSPUDefaultLeadTimeConfiguration">
+                                <a href="@Url.Action("Index", "SPUDefaultLeadTimeConfiguration")">
+                                    <span class="glyphicon glyphicon-link"></span>
+                                    Default Lead Time Configuration
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li acl-active="ViewBag.Page == RoleMenuEnum.MenuExchangeRate">
+                        <a href="@Url.Action("Index", "ExchangeRate")">
+                            <span class="glyphicon glyphicon-link"></span>
+                            Exchange Rate
+                        </a>
+                    </li>
+                    <li acl-active="ViewBag.Page == RoleMenuEnum.MenuInspectionItem">
+                        <a href="@Url.Action("Index", "InspectionItem")">
+                            <span class="glyphicon glyphicon-link"></span>
+                            Inspection Item
+                        </a>
+                    </li>
+                    <li acl-active="ViewBag.Page == RoleMenuEnum.MenuPDI">
+                        <a href="@Url.Action("Index", "PDI")">
+                            <span class="glyphicon glyphicon-link"></span>
+                            PDI
+                        </a>
+                    </li>
+                    
+                    
+                    <li acl-active="ViewBag.Page == RoleMenuEnum.MenuRoleMenu">
+                        <a href="@Url.Action("Index", "RoleMenu")">
+                            <span class="glyphicon glyphicon-link"></span>
+                            Role Menu
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Logout", "Auth")">
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Logout
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li acl-active="ViewBag.Page == RoleMenuEnum.Login">
+                        <a href="@Url.Action("Login", "Auth")">
+                            <span class="glyphicon glyphicon-log-in"></span>
+                            Login
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>

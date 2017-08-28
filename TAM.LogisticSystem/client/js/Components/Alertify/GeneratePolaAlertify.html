@@ -1,0 +1,41 @@
+﻿<label class="control-label">Apakah anda yakin data ingin di-generate?</label>
+
+<div class="table-responsive pre-scrollable">
+    <table class="table">
+        <tr>
+            <td>
+                <strong>Berlaku mulai</strong>
+            </td>
+            <td>
+                {{#validFrom}}
+                {{validFrom}}
+                {{/validFrom}}
+            </td>
+        </tr>
+    </table>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Kode Branch</th>
+                <th>Nama Branch</th>
+                <th>Katashiki</th>
+                <th>Suffix</th>
+                <th>Kode Tahap Awal</th>
+                <th>Kode Tahap Akhir</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#kodePola}}
+            <tr>
+                <td>{{branchCode}}</td>
+                <td>{{branchName}}</td>
+                <td>{{katashiki}}</td>
+                <td>{{suffix}}</td>
+                <td>{{kodeTahapAwal}}</td>
+                <td>{{kodeTahapAkhir}}</td>
+            </tr>
+            {{/kodePola}}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,21 @@
+﻿@inject WebEnvironmentService WebEnv
+
+@{ 
+    ViewBag.Title = "Login";
+    ViewBag.Page = RoleMenuEnum.Login;
+}
+
+<form method="post" id="Passport">
+    <div>
+        <tam-sso app="@WebEnv.TamPassportAppId" auto-submit="Passport" server="https://tam-passport.azurewebsites.net"></tam-sso>
+    </div>
+    <p>
+        @Html.ValidationMessage("token")
+    </p>
+    <p class="help-block">
+        Testing username: jono, password: HelloWorld
+    </p>
+    @Html.AntiForgeryToken()
+</form>
+
+<script src="https://tam-passport.azurewebsites.net/tam-sso.js"></script>

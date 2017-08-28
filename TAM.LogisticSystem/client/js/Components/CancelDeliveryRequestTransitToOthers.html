@@ -1,0 +1,67 @@
+﻿<h4 class="h4-aqua">Informasi Pengiriman</h4>
+<div class="row-striped">
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Tipe</label>
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.locationType" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Nama</label>
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.locationName" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Alamat</label>
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="form-control" ng-model="me.cancelDeliveryRequestViewModel.locationAddress" disabled />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Prakiraan Lead Time</label>
+        </div>
+        <div class="col-sm-1">
+            <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.leadTimeDay" ng-change="me.broadcast()" />
+        </div>
+        <div class="col-sm-1">
+            <label class="control-label">Hari</label>
+        </div>
+        <div class="col-sm-1">
+            <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.leadTimeHour" maxlength="23" ng-change="me.broadcast()" />
+        </div>
+        <div class="col-sm-1">
+            <label class="control-label">Jam</label>
+        </div>
+        <div class="col-sm-1">
+            <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.leadTimeMinute" maxlength="59" ng-change="me.broadcast()" />
+        </div>
+        <div class="col-sm-1">
+            <label class="control-label">Menit</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Tanggal Pengambilan</label>
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="form-control" disabled value="{{me.cancelDeliveryRequestViewModel.pickUpDate | date: 'dd-MMM-yyyy'}}" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-9">
+            <input type="radio" disabled ng-checked="me.deliveryTransitTypeId < 4" class="radio radio-inline" /> Normal
+            <input type="radio" disabled ng-checked="me.deliveryTransitTypeId == 4" ng-model="me.cancelDeliveryRequestViewModel.deliveryTransitTypeId" class="radio radio-inline"/> Self Pick To Others
+        </div>
+    </div>
+</div>
+<cancel-delivery-request-transit-to-others-normal ng-show="me.deliveryTransitTypeId !== 4"></cancel-delivery-request-transit-to-others-normal>
+<cancel-delivery-request-transit-to-others-self-pick-to-others ng-show="me.deliveryTransitTypeId === 4"></cancel-delivery-request-transit-to-others-self-pick-to-others>
+

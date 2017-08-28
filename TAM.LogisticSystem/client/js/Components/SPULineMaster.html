@@ -1,0 +1,157 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>
+                SPU Line Master
+            </h1>
+        </div>
+        <div class="col-sm-6 text-right">
+            <h1>
+                <button type="button" class="buttonSubmit btn btn-primary" ng-click="me.download(result)">Download</button>
+                <button type="button" class="buttonSubmit btn btn-default" ng-click="me.upload()">Upload</button>
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+
+    <div class="menu-panel">
+        <div>
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('locationString')">Location</th>
+                            <th ng-click="me.order('lineNumber')">Line</th>
+                            <th ng-click="me.order('taktSecondsString')">TAKT time</th>
+                            <th ng-click="me.order('post')">Jumlah Pos</th>
+                            <th width="120px"></th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="searchString.locationString" ng-keyup="me.search(this)" />
+                            </th>
+                            <th>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="searchString.lineNumber" ng-keyup="me.search(this)" />
+                            </th>
+                            <th>
+                            </th>
+                            <th>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="searchString.post" ng-keyup="me.search(this)" />
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="spu in (result =  (me.data | filter : searchString:me.allowNullValue | orderBy : me.orderString :me.orderState)) track by spu.spuLineId "
+                            ng-if="$index >= ((me.currentPage-1)*me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="spu.locationString"></td>
+                            <td ng-bind="spu.lineNumber"></td>
+                            <td ng-bind="spu.taktSecondsString"></td>
+                            <td ng-bind="spu.post"></td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-info" ng-click="me.selectUpdate(spu)"><i class="glyphicon glyphicon-edit"></i></button>
+                                <button type="button" class="btn btn-sm btn-danger" ng-click="me.deleteSPU(spu,spuForm)"><i class="glyphicon glyphicon-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length == 0">
+                            <td colspan="5" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="me.loader">
+                            <td colspan="5" class="text-center">Loading ...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize"
+                    class="pagination-sm" boundary-links="true" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="spuForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Lokasi<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-6">
+                        <ui-select ng-model="me.spuLineMaster.location" theme="bootstrap" required>
+                            <ui-select-match placeholder="Pilih salah satu" >{{$select.selected.locationCode}} - {{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="loc in me.location | filter: $select.search">
+                                <span ng-bind-html="loc.locationCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="loc.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <input type="hidden" ng-model="me.spuLineMaster.spuLineId"/>
+                        <label class="control-label">Line<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" name="Line" class="form-control text-uppercase" ng-model="me.spuLineMaster.lineNumber" required="required" ng-maxlength="8" ng-pattern="/^[a-zA-Z0-9\s\-.&,\'/]+$/" >  <!--/^[a-zA-Z0-9\s\-.&,\'/]+$/  /^[A-Za-z0-9 ]*$/-->
+                        <validation-message input="spuForm.Line" mismatch="harus Alpha Numeric" title="Line"></validation-message>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">TAKT time<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="number" name="Jam" class="form-control" ng-model="me.jam" min="0" max="23" required="required" ng-pattern="/^[0-9]*$/">
+                        <validation-message input="spuForm.Jam" mismatch="harus Numeric"></validation-message>
+                    </div>
+                    <div class="col-sm-1">
+                       <label class="control-label">Jam</label>
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="number" name="Menit" class="form-control" ng-model="me.menit" min="0" max="59" required="required" ng-pattern="/^[0-9]*$/">                       
+                        <validation-message input="spuForm.Menit" mismatch="harus Numeric"></validation-message>
+                    </div>
+                    <div class="col-sm-1">
+                        <label class="control-label">Menit</label>
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="number" name="Detik" class="form-control" ng-model="me.detik" min="0" max="59" required="required" ng-pattern="/^[0-9]*$/">
+                        <validation-message input="spuForm.Detik" mismatch="harus Numeric"></validation-message>
+                    </div>
+                    <div class="col-sm-1">
+                        <label class="control-label">Detik</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Jumlah Pos<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="number" name="JumlahPos" class="form-control" min="0" max="99" ng-model="me.spuLineMaster.post" ng-pattern="/^[0-9]*$/" required="required">
+                        <validation-message input="spuForm.JumlahPos" title="Jumlah Pos" mismatch="harus Numeric"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="pull-right">
+        <button type="submit" class="frmSubmit btn btn-primary" ng-click="me.postData(spuForm)" ng-if="me.buttonState!=1" ng-disabled="me.btnDisableCheck(spuForm)">Simpan</button>
+        <button type="submit" class="frmSubmit btn btn-primary" ng-if="me.buttonState==1" ng-click="me.updateSPULineMaster(spuForm)" ng-disabled="me.btnDisableCheck(spuForm)">Update</button>
+        <button type="reset" class="buttonSubmit btn btn-danger" ng-click="me.clear(spuForm)">Batal</button>
+    </div>
+
+    <br /><br />
+</div>

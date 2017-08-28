@@ -1,0 +1,142 @@
+﻿<div class="col-md-12 Page" ng-if="me.pageState==true">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                Master Warna
+            </h1>
+        </div>
+        <div class="col-md-6 text-right">
+            <h1>
+                <button class="btn btn-primary" ng-click="me.Download(result)">
+                    Download
+                </button>
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th ng-click="me.order('colorCode')">Kode Warna</th>
+                        <th ng-click="me.order('colorType')">Tipe Warna</th>
+                        <th ng-click="me.order('indonesianName')">Deskripsi Warna(Ind)</th>
+                        <th ng-click="me.order('englishName')">Deskripsi Warna(Eng)</th>
+                        <th class="action-1"></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input type="text" name="txtSearch" class="form-control" ng-model="me.searchString.colorCode" ng-keyup="me.search(this)" />
+                        </th>
+                        <th>
+                            <input type="text" name="txtSearch" class="form-control" ng-model="me.searchString.colorType" ng-keyup="me.search(this)" />
+                        </th>
+                        <th>
+                            <input type="text" name="txtSearch" class="form-control" ng-model="me.searchString.indonesianName" ng-keyup="me.search(this)" />
+                        </th>
+                        <th>
+                            <input type="text" name="txtSearch" class="form-control" ng-model="me.searchString.englishName" ng-keyup="me.search(this)" />
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="5" class="text-center">Data tidak ditemukan</td>
+                    </tr>
+                    <tr ng-if="me.isLoading ==true">
+                        <td colspan="5" class="text-center"><i>Loading...</i></td>
+                    </tr>                    
+                    <tr ng-repeat="data in (result = (me.dataTable | filter : me.searchString  | orderBy : me.orderString :me.orderState)) track by $index"
+                        ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="data.colorCode"></td>
+                        <td ng-bind="data.colorType.substring(0, 3).toUpperCase()"></td>
+                        <td ng-bind="data.indonesianName"></td>
+                        <td ng-bind="data.englishName"></td>
+                        <td class="action-1">
+                            <button type="button" class="btn btn-info" ng-click="me.bindUpdate(data)">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" last-text="&raquo;" first-text="&laquo;" next-text="&rsaquo;" previous-text="&lsaquo;"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!--Form Section-->
+    <div class="menu-panel" ng-hide="!me.showUpdate">
+        <div class="panel-inside-padding">
+            <form name="MyForm" class="form-horizontal row-striped">                
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">
+                            Kode Warna
+                            <span class="mandatory">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" required="required" name="KodeWarna" class="form-control text-uppercase" ng-model="me.colorCode" ng-disabled="me.showUpdate" ng-pattern="/^[a-zA-Z0-9]*$/" ng-maxlength="4" />
+                        <validation-message input="MyForm.KodeWarna" title="Kode Warna" mismatch="harus berformat alphanumeric"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label" for="ColourType">Tipe Warna<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="radio" ng-model="me.colorType" name="TipeWarna" value="Exterior" /> EXT
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="radio" ng-model="me.colorType" name="TipeWarna" value="Interior" checked="checked" /> INT
+                    </div>
+                    
+                </div>                
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">
+                            Deskripsi Warna(Ind)
+                            <span class="mandatory">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input required="required" type="text" name="DeskripsiWarnaIdn" class="form-control text-uppercase" ng-model="me.indonesianName" ng-pattern="/^[a-zA-Z0-9\s\-.&,\'/]+$/" ng-maxlength="255" />
+                        <validation-message input="MyForm.DeskripsiWarnaIdn" title="Deskripsi Warna(Ind)" mismatch="harus berformat alphanumeric"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">
+                            Deskripsi Warna(Eng)
+                            <span class="mandatory">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input required="required" type="text" name="DeskripsiWarnaEng" class="form-control text-uppercase" ng-model="me.englishName" ng-pattern="/^[a-zA-Z0-9\s\-.&,\'/]+$/" ng-maxlength="255" />
+                        <validation-message input="MyForm.DeskripsiWarnaEng" title="Deskripsi Warna(Eng)" mismatch="harus berformat alphanumeric"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="text-right" ng-hide="!me.showUpdate">
+        <button class="buttonSubmit btn btn-primary" ng-disabled="MyForm.$invalid" ng-click="me.update(MyForm)" >Update</button>
+        <button class="buttonSubmit btn btn-danger" ng-click="me.cancel(MyForm)">Batal</button>
+    </div>
+</div>

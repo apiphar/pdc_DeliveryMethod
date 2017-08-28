@@ -1,0 +1,29 @@
+﻿{{#insert}}
+<label class="control-label">Apakah anda yakin ingin menyimpan data?</label>
+{{/insert}}
+{{#update}}
+<label class="control-label">Apakah anda yakin ingin menyimpan data?</label>
+{{/update}}
+{{#delete}}
+<label class="control-label">Apakah anda yakin data ingin dihapus?</label>
+{{/delete}}
+
+<div class="table-responsive">
+    <table class="table">
+        {{#grid}}
+        <tr>
+            <td>
+                {{#key}}
+                <strong>{{key}}</strong>
+                {{/key}}
+            </td>
+
+            <td class="text-uppercase">
+                {{#value}}
+                {{value}}
+                {{/value}}
+            </td>
+        </tr>
+        {{/grid}}
+    </table>
+</div>

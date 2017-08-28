@@ -1,0 +1,72 @@
+﻿<div class="col-xs-12 col-md-12 col-sm-12">
+    <div class="menu-panel" ng-if="me.divOpen">
+        <div class="panel-inside-padding">
+            <form name="dccpForm" class="form-horizontal row-striped">
+                <div class="form-group  ">
+                    <div class="col-sm-2">
+                        <label class="control-label">Tanggal </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" ng-model="me.editDccpModel.tanggal" disabled required />
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="control-label">Trip </label>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" ng-model="me.editDccpModel.trip" disabled required />
+                    </div>
+                </div>
+
+                <div class="form-group  ">
+                    <div class="col-sm-2">
+                        <label class="control-label">Lokasi Asal </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" ng-model="me.editDccpModel.asal" disabled required />
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="control-label">Load </label>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" ng-model="me.editDccpModel.load" disabled required />
+                    </div>
+                </div>
+
+                <div class="form-group  ">
+                    <div class="col-sm-2">
+                        <label class="control-label">Lokasi Tujuan </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" ng-model="me.editDccpModel.tujuan" disabled required />
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="control-label">Shift </label>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" ng-model="me.editDccpModel.shift" disabled required />
+                    </div>
+                </div>
+
+                <div class="form-group  ">
+
+                    <div class="col-sm-2"><label class="control-label">Unit Ready </label></div>
+                    <div class="col-sm-2"><input type="text" class="form-control" ng-model="me.editDccpModel.qty" disabled required /></div>
+                    <div class="col-sm-2"><label  class="control-label">Unit Ready(Adjust) </label></div>
+                    <div class="col-sm-2">
+                    <input type="text" name="UnitReady" class="form-control" ng-model="me.editDccpModel.adjust" ng-pattern="/^[0-9]+$/" required="required" />
+                    <validation-message input="dccpForm.UnitReady" mismatch="harus berformat numeric"></validation-message>
+                    </div>
+
+                    <div class="col-sm-2"><label class="control-label">Unit Estimasi </label></div>
+                    <div class="col-sm-2"><input type="text" class="form-control" ng-model="me.editDccpModel.estimasi " disabled required /></div>
+                </div>
+
+                <div class="text-right" ng-if="me.divOpen">
+                    <button type="button" ng-disabled="dccpForm.$invalid" ng-click="me.updateData()" class="btn btn-primary">Update</button>
+                    <button type="button" ng-click="me.batal(dccpForm)" class="btn btn-danger">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</div>

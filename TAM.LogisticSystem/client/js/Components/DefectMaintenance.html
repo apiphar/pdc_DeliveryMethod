@@ -1,0 +1,236 @@
+﻿<style>
+    body {
+        background-color: #edf3f9;
+    }
+
+    fieldset {
+        padding: 1em;
+        border: 1px solid rgba(0, 0, 0, .5);
+        color: grey;
+        border-radius: 10px;
+        background: white;
+    }
+</style>
+
+<div class="container">
+
+    <div class="container">
+        <div class="form-group">
+
+            <h2>
+               Defect Maintenance
+                <div class="pull-right">
+                    <button  type="submit" class="btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate" ng-click="me.checkInput()" >Simpan</button>
+                    <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit" ng-click="me.checkUpdate()" >Update</button>
+                    <button type="reset" class="buttonSubmit btn btn-default" ng-click="me.name=null">Batal</button>
+                </div>
+            </h2>
+             
+            <hr style="border-top-color: #999999;" />
+        </div>
+    </div>
+
+    <fieldset>
+        <div class="container">
+
+            <!--<div class="row">
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default">Left</button>
+                    <button type="button" class="btn btn-default">Middle</button>
+                    <button type="button" class="btn btn-default">Right</button>
+                </div>
+            </div>-->
+            <div class="navbar-left">
+                Tampilkan
+                <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                item per halaman
+                <p class="text-primary">Defect list </p>
+            </div>
+            <table class="table table-striped table-bordered">
+               
+                <thead>
+                    <tr>
+                        <!--<th class="text-primary"><a href="" ng-click="ord='data.itemName'">Inspection Part Name</a></th>-->
+                        <th class="text-primary">Name</th>
+                       
+                        <th class="text-primary">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.name" /></th>
+                     
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="data in (result = (me.Data | filter:me.Search)) | orderBy:'+name'|limitTo: me.pageSize : (me.currentPage-1) * me.pageSize">
+                        <td ng-bind="data.name"></td>
+                     
+                        <td>
+                            <button  (click)="clicked()"  type="button" class="btn btn-info" ng-click="me.selectData(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalDelete" ng-click="me.selectData(data)"><i class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="4" class="text-warning">Data Not Found!!!</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </fieldset>
+
+    <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+
+    <fieldset>
+        <div class="container">
+            <div class="form-horizontal">
+
+                <form name="frmdata">
+                    <div class="form-group">
+                        <label class="col-sm-3">Name</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" ng-model="me.name" ng-minlength="0" ng-maxlength="30" name="txtName"/>
+
+                            <i>
+                                <p class="error" ng-show="frmData.txtName.$error.minlength">
+                                    Data yang dimasukan terlalu pendek!
+                                </p>
+                                <p class="error" ng-show="frmData.txtName.$error.maxlength">
+                                    Data yang dimasukan terlalu panjang!
+                                </p>
+                            </i>
+
+                        </div>
+                    </div>
+                </form>
+               
+            </div>
+        </div>
+    </fieldset>
+
+    <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+
+    <div class="container">
+
+        <div class="form-group">
+            <div class="pull-right">
+                <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate" ng-click="me.checkUpdate()" >Simpan</button>
+                <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit" ng-click="me.checkUpdate()" >Update</button>
+                <button type="reset" class="buttonSubmit btn btn-default" ng-click="me.name=null">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalShowCreate" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure want to save this name ?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Defect Name</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.name"></label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.createData()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalDelete" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure  ?</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="hidden" ng-bind="me.defectId"/>
+                        <strong style="color:red;">
+                            You are Going to delete {{me.name}}. All information...
+                            </strong>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.deleteData()" data-dismiss="modal">Yes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalShowEdit" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure want to edit this Name ?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Defect Name</label>
+                            <div class="col-sm-4">
+                                <input type="hidden" ng-bind="me.defectId" />
+                                <label typeof="" class="control-label" ng-bind="me.name"></label>
+                                <!--@*<input type="text" class="form-control" ng-model="newUser.nama" />*@-->
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.updateData()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+ 
+
+<!--<p>
+    <button type="button" class="btn btn-primary" ng-click="me.Increment()">Click me</button>
+</p>
+<p>
+    <span ng-bind="me.Count"></span>
+    <span ng-if="me.Count % 2 === 0">Even</span>
+    <span ng-if="me.Count % 2 !== 0">Odd</span>
+</p>-->
+<!--<p ng-bind="me.Value"></p>-->
+
+<!--<p ng-bind="me.Data"></p>
+<p ng-bind="me.DataSide"></p>
+<p ng-bind="me.DataById"></p>-->
+
+<!--<p ng-bind="me.Create"></p>-->

@@ -1,0 +1,74 @@
+﻿<form>
+    <div class="panel panel-default panel-sales">
+        <div class="navbar">
+            <div class="panel-heading">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><button class="btn btn-danger btn-sales">Download</button></li>
+                    <li><button class="btn btn-primary btn-sales">Upload</button></li>
+                </ul>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th><a ng-click="me.order('deliveryVendorCode')">Kode Vendor</a></th>
+                    <th><a ng-click="me.order('cityLegCode')">Kode City Leg</a></th>
+                    <th><a ng-click="me.order('deliveryMethodCode')">Kode Moda</a></th>
+                    <th><a ng-click="me.order('isSingleTrip')">Jenis Pengiriman</a></th>
+                    <th><a ng-click="me.order('validDate')">Berlaku Mulai</a></th>
+                    <th><a ng-click="me.order('currencySymbol')">Currency</a></th>
+                    <th><a ng-click="me.order('nominal')">Biaya</a></th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input class="form-control col-sm-2" ng-model="searchInput.deliveryVendorCode" ng-keyup="me.search(this)" /></td>
+                    <td><input class="form-control col-sm-2" ng-model="searchInput.cityLegCode" ng-keyup="me.search(this)" /></td>
+                    <td><input class="form-control col-sm-2" ng-model="searchInput.deliveryMethodCode" ng-keyup="me.search(this)" /></td>
+                    <td><input class="form-control col-sm-2" ng-model="searchInput.isSingleTrip" ng-keyup="me.search(this)" /></td>
+                    <td><input class="form-control col-sm-2" ng-model="searchInput.validDate" ng-keyup="me.search(this)" /></td>
+                    <td><input class="form-control col-sm-2" ng-model="searchInput.currencySymbol" ng-keyup="me.search(this)" /></td>
+                    <td><input class="form-control col-sm-2" ng-model="searchInput.nominal" ng-keyup="me.search(this)" /></td>
+                    <td></td>
+                </tr>
+                <tr ng-repeat="data in (result = (me.masterRitasePriceViewModels | filter : searchInput  | orderBy : me.orderString :me.orderState)) track by data.cityLegRitaseCostId"
+                    ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                    <td ng-bind="data.deliveryVendorCode"></td>
+                    <td ng-bind="data.cityLegCode"></td>
+                    <td ng-bind="data.deliveryMethodCode"></td>
+                    <td ng-bind="data.isSingleTrip"></td>
+                    <td ng-bind="data.validDate | date:'MM/dd/yyyy'"></td>
+                    <td ng-bind="data.currencySymbol"></td>
+                    <td ng-bind="data.nominal"></td>
+                    <td>
+                        <button type="button" class="btn btn-info btn-action" ng-click="me.selectEdit(data)"><i class="glyphicon glyphicon-edit icon-sales"></i></button>
+                        <button type="button" class="btn btn-danger btn-action" ng-click="me.deleteData(data)" data-toggle="modal" data-target="#ModalDelete"><i class="glyphicon glyphicon-trash icon-sales"></i></button>
+                    </td>
+                </tr>
+                <tr ng-if="result.length < 1">
+                    <td colspan="4" class="text-warning">Data Not Found !</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="text-center" colspan="8">
+                        <div class="container-fluid paging-sales">
+                            <div class="navbar-right">
+                                Tampilkan
+                                <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="item for item in me.pageSizes"></select>
+                                item per halaman
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="text-center">
+            <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages"></ul>
+        </div>
+    </div>
+
+</form>
+

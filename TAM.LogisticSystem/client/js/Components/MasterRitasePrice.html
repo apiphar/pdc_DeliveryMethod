@@ -1,0 +1,225 @@
+﻿<form class="form-horizontal">
+    <div class="navbar">
+        <div class="panel-heading">
+            <ul class="nav navbar-nav navbar-right">
+                <li><button class="btn btn-danger btn-sales">Download</button></li>
+                <li><button class="btn btn-primary btn-sales">Upload</button></li>
+            </ul>
+        </div>
+    </div>
+    <fieldset>
+        <div class="fieldset-padding">
+            <div class="panel panel-default panel-sales">
+                <hr />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><a ng-click="me.order('deliveryVendorCode')">Kode Vendor</a></th>
+                            <th><a ng-click="me.order('cityLegCode')">Kode City Leg</a></th>
+                            <th><a ng-click="me.order('deliveryMethodCode')">Kode Moda</a></th>
+                            <th><a ng-click="me.order('isSingleTrip')">Jenis Pengiriman</a></th>
+                            <th><a ng-click="me.order('validDate')">Berlaku Mulai</a></th>
+                            <th><a ng-click="me.order('currencySymbol')">Currency</a></th>
+                            <th><a ng-click="me.order('nominal')">Biaya</a></th>
+                            <th class="action-form">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input class="form-control col-sm-2" ng-model="searchInput.deliveryVendorCode" ng-keyup="me.search(this)" /></td>
+                            <td><input class="form-control col-sm-2" ng-model="searchInput.cityLegCode" ng-keyup="me.search(this)" /></td>
+                            <td><input class="form-control col-sm-2" ng-model="searchInput.deliveryMethodCode" ng-keyup="me.search(this)" /></td>
+                            <td><input class="form-control col-sm-2" ng-model="searchInput.isSingleTrip" ng-keyup="me.search(this)" /></td>
+                            <td><input class="form-control col-sm-2" ng-model="searchInput.validDate" ng-keyup="me.search(this)" /></td>
+                            <td><input class="form-control col-sm-2" ng-model="searchInput.currencySymbol" ng-keyup="me.search(this)" /></td>
+                            <td><input class="form-control col-sm-2" ng-model="searchInput.nominal" ng-keyup="me.search(this)" /></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-repeat="data in (result = (me.masterRitasePriceViewModels | filter : searchInput  | orderBy : me.orderString :me.orderState)) track by data.cityLegRitaseCostId"
+                            ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.deliveryVendorCode"></td>
+                            <td ng-bind="data.cityLegCode"></td>
+                            <td ng-bind="data.deliveryMethodCode"></td>
+                            <td ng-bind="data.isSingleTrip"></td>
+                            <td ng-bind="data.validDate | date:'MM/dd/yyyy'"></td>
+                            <td ng-bind="data.currencySymbol"></td>
+                            <td ng-bind="data.nominal"></td>
+                            <td>
+                                <button type="button" class="btn btn-info" ng-click="me.selectEdit(data)"><i class="glyphicon glyphicon-edit icon-sales"></i></button>
+                                <button type="button" class="btn btn-danger" ng-click="me.deleteData(data)"><i class="glyphicon glyphicon-trash icon-sales"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length < 1">
+                            <td colspan="4" class="text-warning">Data Not Found !</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="text-center" colspan="8">
+                                <div class="container-fluid paging-sales">
+                                    <div class="navbar-right">
+                                        Tampilkan
+                                        <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="item for item in me.pageSizes"></select>
+                                        item per halaman
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div class="text-center">
+                    <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages"></ul>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>
+<br />
+<br />
+<div class="addData">
+    <fieldset ng-if="me.flag">
+        <form name="add" ng-submit="me.addData(add)" class="form-horizontal">
+            <div class="fieldset-padding">
+                <div class="panel panel-default panel-sales">
+                    <table class="table table-striped">
+                        <tr>
+                            <td width="150px">Kode Vendor</td>
+                            <td>
+                                <select ng-model="me.masterRitasePriceInput.deliveryVendorCode" ng-options="dv.deliveryVendorCode as dv.deliveryVendorCode for dv in me.deliveryVendor" class="form-control" required><option value="">(Please Choose One)</option></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kode City Leg</td>
+                            <td>
+                                <select ng-model="me.masterRitasePriceInput.cityLegCode" ng-options="cl.cityLegCode as cl.cityLegCode for cl in me.cityLeg" class="form-control" required><option value="">(Please Choose One)</option></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kode Moda</td>
+                            <td>
+                                <select ng-model="me.masterRitasePriceInput.deliveryMethodCode" ng-options="dm.deliveryMethodCode as dm.deliveryMethodCode for dm in me.deliveryMethod" class="form-control" required><option value="">(Please Choose One)</option></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jenis Pengiriman</td>
+                            <td>
+                                <label>
+                                    <input type="radio" ng-model="me.masterRitasePriceInput.isSingleTrip" value="false" name="trip" required>
+                                    Single Trip
+                                </label>
+                                <label>
+                                    <input type="radio" ng-model="me.masterRitasePriceInput.isSingleTrip" value="true" name="trip">
+                                    Round Trip
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Berlaku Mulai</td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" ng-model="me.masterRitasePriceInput.validDate" is-open="me.isOpenDate" ng-required="true" close-text="Close" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="me.openDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Currency</td>
+                            <td>
+                                <select ng-model="me.masterRitasePriceInput.currencySymbol" ng-options="cs.currencySymbol as cs.currencySymbol for cs in me.currencySymbol" class="form-control" required><option value="">(Please Choose One)</option></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Biaya</td>
+                            <td>
+                                <input class="form-control" ng-model="me.masterRitasePriceInput.nominal" type="number" required min="1" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="container-fluid paging-sales">
+                    <div class="navbar-right">
+                        <button class="btn btn-primary btn-sales" type="submit">Simpan</button>
+                        <button class="btn btn-danger btn-sales" type="reset" ng-click="me.clearForm(add)">Batal</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+    <fieldset ng-if="!me.flag">
+        <form name="edit" ng-submit="me.updateData(edit)" class="form-horizontal">
+            <div class="fieldset-padding">
+                <div class="panel panel-default panel-sales">
+                    <table class="table table-striped">
+                        <tr>
+                            <td width="150">Kode Vendor</td>
+                            <td>
+                                <select ng-model="me.masterRitasePriceEditModel.deliveryVendorCode" ng-options="dv.deliveryVendorCode as dv.deliveryVendorCode for dv in me.deliveryVendor" class="form-control" required><option value="">(Please Choose One)</option></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kode City Leg</td>
+                            <td>
+                                <select ng-model="me.masterRitasePriceEditModel.cityLegCode" ng-options="cl.cityLegCode as cl.cityLegCode for cl in me.cityLeg" class="form-control" required><option value="">(Please Choose One)</option></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kode Moda</td>
+                            <td>
+                                <select ng-model="me.masterRitasePriceEditModel.deliveryMethodCode" ng-options="dm.deliveryMethodCode as dm.deliveryMethodCode for dm in me.deliveryMethod" class="form-control" required><option value="">(Please Choose One)</option></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jenis Pengiriman</td>
+                            <td>
+                                <label>
+                                    <input type="radio" ng-model="me.masterRitasePriceEditModel.isSingleTrip" ng-checked="me.masterRitasePriceEditModel.isSingleTrip === 'Single Trip'" value="Single Trip" name="trip" required>
+                                    Single Trip
+                                </label>
+                                <label>
+                                    <input type="radio" ng-model="me.masterRitasePriceEditModel.isSingleTrip" ng-checked="me.masterRitasePriceEditModel.isSingleTrip === 'Round Trip'" value="Round Trip" name="trip" required>
+                                    Round Trip
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Berlaku Mulai</td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" ng-model="me.masterRitasePriceEditModel.validDate" is-open="me.isOpenDate" ng-required="true" close-text="Close"/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="me.openDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Currency</td>
+                            <td>
+                                <select ng-model="me.masterRitasePriceEditModel.currencySymbol" ng-options="cs.currencySymbol as cs.currencySymbol for cs in me.currencySymbol" class="form-control" required><option value="">(Please Choose One)</option></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Biaya</td>
+                            <td>
+                                <input class="form-control" ng-model="me.masterRitasePriceEditModel.nominal" type="number" required min="1" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="paging-sales">
+                    <div class="navbar-right">
+                        <button class="btn btn-primary btn-sales" type="submit">Ubah</button>
+                        <button class="btn btn-danger btn-sales" type="reset" ng-click="me.clearFormEdit(edit)">Batal</button>
+                        <button class="btn btn-danger btn-sales" type="button" ng-click="me.changeForm()">Back</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+</div>
+
+
+
+

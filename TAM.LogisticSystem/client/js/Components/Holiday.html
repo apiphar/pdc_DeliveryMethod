@@ -1,0 +1,161 @@
+﻿<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Master Kalender Libur Kerja</h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <form class="form-horizontal row-striped" name="kalenderForm">
+                        <div class="form-group">
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+
+                                <div class="col-sm-4">
+                                    <label class="control-label">Lokasi<span class="mandatory"> *</span></label>
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <ui-select ng-model="vm.selectedLocation" theme="bootstrap" name="locationCode" ng-change="vm.changingLocation(vm.mainArray | filter :  vm.selectedYear | filter: vm.selectedLocation )">
+                                        <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.name}}</ui-select-match>
+                                        <ui-select-choices repeat="l.locationCode as l in vm.locations | filter: $select.search">
+                                            <span ng-bind-html="l.locationCode| highlight: $select.search"></span>  -
+                                            <span ng-bind-html="l.name| highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+                                <div class="col-sm-4">
+                                    <label class="control-label">Tahun<span class="mandatory"> *</span></label>
+                                </div>
+
+
+                                <div class="col-sm-8">
+
+                                    <ui-select ng-disabled="!vm.selectedLocation" ng-model="vm.selectedYear" theme="bootstrap" name="year" ng-change="vm.setCalendar(vm.mainArray | filter :  vm.selectedYear | filter: vm.selectedLocation )">
+                                        <ui-select-match placeholder="Pilih salah satu">{{$select.selected}}</ui-select-match>
+                                        <ui-select-choices repeat="selectedYear in vm.years | filter: $select.search">
+                                            <span ng-bind-html="selectedYear| highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label class="control-label">Default Hari Libur</label>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label class="checkbox-inline" ng-if="!vm.selectedYear">
+                                        <input type="checkbox" ng-model="vm.chkSaturday" ng-change="vm.selectDeselectSaturday()" disabled /><span class="text-success" disabled>Sabtu</span>
+                                    </label>
+                                    <label class="checkbox-inline" ng-if="vm.selectedYear">
+                                        <input type="checkbox" ng-model="vm.chkSaturday" ng-change="vm.selectDeselectSaturday()" /><span class="text-success">Sabtu</span>
+                                    </label>
+                                    <label class="checkbox-inline" ng-if="!vm.selectedYear">
+                                        <input type="checkbox" ng-model="vm.chkSunday" ng-change="vm.selectDeselectSunday()" disabled /><span class="text-danger" disabled>Minggu</span>
+                                    </label>
+                                    <label class="checkbox-inline" ng-if="vm.selectedYear">
+                                        <input type="checkbox" ng-model="vm.chkSunday" ng-change="vm.selectDeselectSunday()" /><span class="text-danger">Minggu</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="col-sm-offset-4 col-sm-4">
+                                    <div uib-datepicker ng-model="vm.selectedDate" datepicker-options="vm.option"
+                                         min-date="vm.option.minDate" ng-change="vm.appendNewDate(vm.mainArray | filter :  vm.selectedYear | filter: vm.selectedLocation)"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <p class="form-note"><span class="mandatory">*</span> : Field mandatory harus diisi</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-sm-6">
+
+
+                    <div class="container-fluid paging-sales">
+                        <div class="navbar-right">
+                            <p>
+                                Tampilkan
+                                <select ng-model="vm.pageSize" ng-change="vm.setPage(vm.currentPage)" ng-options="data for data in vm.pageSizes"></select>
+                                item per halaman
+                            </p>
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-5"><a href="" ng-click="vm.order('dateDate')">Tanggal</a></th>
+                                <th class="col-sm-5"><a href="" ng-click="vm.order('name')">Lokasi</a></th>
+                                <th class="col-sm-1"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in (result = (vm.mainArray | filter :  vm.selectedYear | filter: vm.selectedLocation | orderBy: vm.orderString: vm.orderState )) track by $index"
+                                ng-if="$index >= ((vm.currentPage-1) * vm.pageSize) && $index < (vm.currentPage * vm.pageSize)">
+                                <td ng-bind="data.dateDate  | date: 'dd-MMM-yyyy'"></td>
+                                <td>{{data.locationCode}} - {{data.name}}</td>
+                                <td><button ng-disabled="vm.selectedYear===undefined" type="button" class="glyphicon glyphicon-trash btn btn-danger" ng-click="vm.deleteOldDate(data,vm.mainArray | filter :  vm.selectedYear | filter: vm.selectedLocation, kalenderForm)"></button></td>
+                            </tr>
+                            <tr ng-if="result.length < 1">
+                                <td colspan="4" class="text-warning text-center">Data Tidak Ditemukan!</td>
+                            </tr>
+                            <tr ng-if="result.length == undefined">
+                                <td colspan="4" class="text-warning text-center"><i>Loading...</i></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <div class="text-right">
+
+                        <ul uib-pagination total-items="result.length" ng-model="vm.currentPage" max-size="vm.maxSize" items-per-page="vm.pageSize" class="pagination-sm" boundary-links="true" num-pages="vm.numPages"
+                            previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="text-right">
+
+        <button ng-click="vm.saveDate(vm.mainArray | filter :  vm.selectedYear | filter: vm.selectedLocation,kalenderForm)" class="btn  btn-info" type="button" ng-disabled="vm.selectedYear===undefined">Simpan</button>
+        <button ng-click="vm.resetAll(kalenderForm)" class="btn btn-danger" type="button">Batal</button>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

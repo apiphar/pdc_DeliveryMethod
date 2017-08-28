@@ -1,0 +1,98 @@
+﻿<div ng-show="me.showDestinationCity" class="col-sm-12">
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th ng-click="me.order('cityName')">Destination City</th>
+                        <th ng-click="me.order('estimatedArrivalTimeToString')">Estimation Date Arrival</th>
+                        <th ng-click="me.order('estimatedArrivalTimeToString')">Estimation Time Arrival</th>
+                        <th class="action-3"></th>
+                    </tr>
+
+                    <tr>
+                        <td><input type="text" class="form-control" ng-model="Search.cityName" ng-keyup="me.search(this)" /></td>
+                        <td><input type="text" class="form-control" ng-model="Search.estimatedArrivalTimeToString" ng-keyup="me.search(this)" /></td>
+                        <td><input type="text" class="form-control" ng-model="Search.estimatedArrivalDateToString" ng-keyup="me.search(this)" /></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="me.tempDestinationCities.length == 0 || me.tempDestinationCities === undefined || result.length < 1">
+                        <td class="text-center" colspan="4">Data tidak ditemukan</td>
+                    </tr>
+
+                    <tr ng-repeat="destinationCity in (result = (me.tempDestinationCities | filter : Search | orderBy : me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="destinationCity.cityName"></td>
+                        <td ng-bind="destinationCity.estimatedArrivalTimeToString | date: 'HH:mm'"></td>
+                        <td ng-bind="destinationCity.estimatedArrivalDateToString | date: 'dd-MMM-yyyy'"></td>
+                        <td>
+                            <button type="button" ng-if="destinationCity.viewOnly" ng-click="me.editDestinationCity(destinationCity)" class="btn btn-info">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button type="button" ng-if="destinationCity.viewOnly" ng-click="me.deleteDestinationCity(destinationCity)" class="btn btn-danger">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                            <button type="button" ng-if="destinationCity.viewOnly" ng-click="me.showSourceLocationPanel(destinationCity.tempVoyageNodeId,destinationCity.voyageNodeId)" class="btn btn-default">
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <form name="deliveryShippingScheduleDestinationForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Destination City<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.destinationCityForm.destinationCity" ng-change="me.checkDestinationCity()" theme="bootstrap" ng-required="true">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.cityForShipmentCode}} - {{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="destinationCity in me.destinationCities | filter: $select.search">
+                                <span ng-bind-html="destinationCity.cityForShipmentCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="destinationCity.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-bind="me.destinationCityForm.errorMessageDestinationCity" ng-if="me.destinationCityForm.errorMessageDestinationCity"></span>
+                    </div>
+                </div>
+
+                <div class="form-group form-datepicker">
+                    <div class="col-sm-3">
+                        <label class="control-label">Estimation Time Arrival<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="EstimatedArrival" uib-datepicker-popup="dd MMM yyyy" ng-model="me.destinationCityForm.estimatedTimeOfArrival" ng-change="me.checkEstimatedArrival();" is-open="deliveryDatepickerIsOpen"
+                                   ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="deliveryDatepickerIsOpen = !deliveryDatepickerIsOpen">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <span class="field-validation-error" ng-bind="me.destinationCityForm.errorMessageestimatedTimeOfArrival" ng-if="me.destinationCityForm.errorMessageestimatedTimeOfArrival"></span>
+                    </div>
+                    <div class="col-sm-3">
+                        <div uib-timepicker ng-model="me.destinationCityForm.estimatedTimeOfArrival" ng-change="me.checkEstimatedArrival();" hour-step="me.hourStep" minute-step="me.minuteStep" show-meridian="false"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <button type="submit" ng-if="!me.destinationEdit" ng-click="me.addDestinationCity(deliveryShippingScheduleDestinationForm)" ng-disabled="deliveryShippingScheduleDestinationForm.$invalid || me.destinationCityForm.validateForm" class="btn btn-primary">Simpan</button>
+                    <button type="submit" ng-if="me.destinationEdit" ng-click="me.updateDestinationCity(deliveryShippingScheduleDestinationForm)" ng-disabled="deliveryShippingScheduleDestinationForm.$invalid || me.destinationCityForm.validateForm" class="btn btn-primary">Update</button>
+                    <button ng-click="me.resetForm(deliveryShippingScheduleDestinationForm)" class="btn btn-danger">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

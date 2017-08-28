@@ -1,0 +1,168 @@
+﻿<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h1>SPU Default Lead Time Configuration</h1>
+    <div class="header-line"></div>
+
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <h4 class="h4-aqua">SPU Default Lead Time List</h4>
+
+            <p class="text-right">
+                Tampilkan <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select> item per halaman
+            </p>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('locationName')">Lokasi</th>
+                            <th ng-click="me.order('processStatus')">Proses</th>
+                            <th ng-click="me.order('leadTime')">Lead Time</th>
+                            <th class="action"></th>
+                        </tr>
+
+                        <tr>
+                            <td><input type="text" class="form-control" ng-model="Search.locationName" ng-keyup="me.search(this)" /></td>
+                            <td><input type="text" class="form-control" ng-model="Search.processStatus" ng-keyup="me.search(this)" /></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="me.spuDefaultLeadTimeConfigurationPage.spuDefaultLeadTimes.length == 0">
+                            <td colspan="4">Data tidak ditemukan</td>
+                        </tr>
+
+                        <tr ng-repeat="defaultLeadTime in (result = (me.spuDefaultLeadTimeConfigurationPage.spuDefaultLeadTimes | filter : Search | orderBy : me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="defaultLeadTime.locationName"></td>
+                            <td ng-bind="defaultLeadTime.processStatus"></td>
+                            <td>
+                                {{me.convertToLeadTimeDay(defaultLeadTime.leadTime)}} Hari {{me.convertToLeadTimeHour(defaultLeadTime.leadTime)}} Jam {{me.convertToLeadTimeMinute(defaultLeadTime.leadTime)}} Menit
+                            </td>
+                            <td>
+                                <button ng-click="me.setUpdateForm(defaultLeadTime.routingMasterCode, defaultLeadTime.locationCode, defaultLeadTime.locationName, defaultLeadTime.processForLineId, defaultLeadTime.processStatus, defaultLeadTime.leadTime)" class="btn btn-info">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </button>
+                                <button ng-click="me.deleteData(defaultLeadTime.routingMasterCode, defaultLeadTime.locationCode, defaultLeadTime.locationName, defaultLeadTime.processForLineId, defaultLeadTime.processStatus, defaultLeadTime.leadTime)" class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize"
+                    class="pagination-sm" boundary-links="true" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </div>
+
+    <form name="SPUDefaultLeadTimeConfigurationForm" id="SPUDefaultLeadTimeConfigurationForm" ng-submit="me.submitForm(SPUDefaultLeadTimeConfigurationForm)" class="form-horizontal">
+        <div class="menu-panel">
+            <div class="panel-inside-padding row">
+                <h4 class="h4-aqua" ng-if="me.isUpdate === false">Create a New Default Lead Time</h4>
+
+                <h4 class="h4-aqua" ng-if="me.isUpdate === true">
+                    Update Default Lead Time
+                </h4>
+
+                <div class="col-sm-12">
+                    <div class="row-striped">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Lokasi<span class="mandatory">*</span></label>
+                            </div>
+
+                            <div class="col-sm-9">
+                                <ui-select ng-model="me.selectedLocation" theme="bootstrap" ng-required="true">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.locationName}}</ui-select-match>
+                                    <ui-select-choices repeat="location in me.spuDefaultLeadTimeConfigurationPage.locations | filter: $select.search">
+                                        <span ng-bind-html="location.locationCode | highlight: $select.search"></span> -
+                                        <span ng-bind-html="location.locationName | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Proses<span class="mandatory">*</span></label>
+                            </div>
+
+                            <div class="col-sm-9">
+                                <ui-select ng-model="me.selectedProcess" theme="bootstrap" ng-required="true">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.processForLineId}} - {{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="processStatus as processStatus in me.spuDefaultLeadTimeConfigurationPage.processStatusList | filter: $select.search">
+                                        <span ng-bind-html="processStatus.processForLineId | highlight: $select.search"></span> -
+                                        <span ng-bind-html="processStatus.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Lead Time<span class="mandatory">*</span></label>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <input ng-model="me.leadTime.day"
+                                       type="number"
+                                       name="LeadTimeDay"
+                                       min="0"
+                                       class="form-control"
+                                       required />
+                            </div>
+
+                            <div class="col-sm-1">
+                                <label class="control-label">Hari</label>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <input ng-model="me.leadTime.hour"
+                                       type="number"
+                                       name="LeadTimeHour"
+                                       min="0"
+                                       class="form-control" 
+                                       required/>
+                            </div>
+
+                            <div class="col-sm-1">
+                                <label class="control-label">Jam</label>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <input ng-model="me.leadTime.minute"
+                                       type="number"
+                                       name="LeadTimeMinute"
+                                       min="0"
+                                       class="form-control" 
+                                       required/>
+                            </div>
+
+                            <div class="col-sm-1">
+                                <label class="control-label">Menit</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary" ng-if="me.isUpdate === false" ng-disabled="!me.isFormValid(SPUDefaultLeadTimeConfigurationForm)">Simpan</button>
+            <button type="submit" class="btn btn-primary" ng-if="me.isUpdate === true">Update</button>
+
+
+            <button type="button"
+                    ng-click="me.resetForm(SPUDefaultLeadTimeConfigurationForm); SPUDefaultLeadTimeConfigurationForm.$setPristine()" class="btn btn-danger">
+                Batal
+            </button>
+        </div>
+    </form>
+</div>

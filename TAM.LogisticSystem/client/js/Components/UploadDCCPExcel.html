@@ -1,0 +1,62 @@
+﻿<div class="upload-dccp-excel">
+    <div class="col-sm-12"><br /></div>
+
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <h3>Upload DCCP Excel</h3>
+        <hr class="header-line" />
+
+        <fieldset>
+            <div class="fieldset-padding">
+                <form class="form-horizontal">
+                    <div class="form-group fbb">
+                        <div class="col-sm-3">
+                            <label class="control-label">Tanggal</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" ng-model="me.currentDate | date: 'd/M/yyyy'" class="form-control" disabled />
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="file"
+                                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                   ngf-select
+                                   ng-model="me.file"
+                                   required />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <div class="col-sm-12">
+            <div class="pull-right">
+                <button type="submit" ng-click="me.uploadDCCP()" class="btn btn-blue">Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <fieldset>
+            <div class="fieldset-padding">
+                <div class="fbb">
+                    Keterangan:
+                </div>
+
+                <div>
+                    &nbsp;
+                    <div ng-hide="me.recordUploaded == null">
+                        <span ng-bind="me.recordUploaded"></span> rekor sudah diupload
+                    </div>
+                </div>
+
+                <div class="fbb">&nbsp;</div>
+                <div>&nbsp;</div>
+                <div class="fbb">&nbsp;</div>
+                <div>&nbsp;</div>
+                <div class="fbb">&nbsp;</div>
+                <div>&nbsp;</div>
+                <div class="fbb">&nbsp;</div>
+                <div>&nbsp;</div>
+            </div>
+        </fieldset>
+    </div>
+</div>

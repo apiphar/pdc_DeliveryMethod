@@ -1,0 +1,50 @@
+﻿@model List<TAM.LogisticSystem.Entities.AppRoleMenuMapping>
+
+@{
+    ViewBag.Title = "Role-Menu Mapping";
+    ViewBag.Page = RoleMenuEnum.MenuAdministrator;
+}
+
+<h2>
+    Role-Menu Mapping
+    <small>Index</small>
+</h2>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">
+        <span class="glyphicon glyphicon-plus"></span>
+        Create New
+    </a>
+</p>
+
+@if (TempData["RoleMenuDelete"] != null)
+{
+    <p class="help-block">
+        @TempData["RoleMenuDelete"]
+    </p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Role</th>
+            <th>Menu</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var map in Model)
+        {
+            <tr>
+                <td>@map.AppRoleName</td>
+                <td>@map.AppMenuName</td>
+                <td>
+                    <a class="btn btn-xs btn-danger" href="@Url.Action("Delete", new { role=map.AppRoleName, menu=map.AppMenuName })">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

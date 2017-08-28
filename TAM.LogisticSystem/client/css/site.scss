@@ -1,0 +1,24 @@
+﻿@import 'bootstrap-sass/assets/stylesheets/bootstrap';
+@import 'navbar-fixed-side';
+
+@import 'angular-ui-bootstrap/dist/ui-bootstrap-csp';
+@import 'ui-select/dist/select';
+
+@import 'alertifyjs/build/css/alertify';
+@import 'alertifyjs/build/css/themes/default';
+
+@import 'aspnet-validation';
+@import 'angular-custom';
+
+body {
+    min-height: 100vh;
+}
+
+.navbar {
+    border-radius: 0;
+}
+
+@import 'tango';
+@import 'tls/navbar';
+@import 'tls/UploadDownload';
+@import 'tls/afi.scss';

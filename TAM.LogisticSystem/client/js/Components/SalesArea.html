@@ -1,0 +1,117 @@
+﻿<div ng-if="me.pageState == true" class="Page">
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-md-6">
+				<h1>
+					Master Sales Area
+				</h1>
+			</div>
+			<div class="col-md-6 text-right">
+				<h1>
+					<button class="btn btn-primary" ng-click="me.download(result)">
+						Download
+					</button>
+					<button class="btn btn-default" ng-click="me.upload()">
+						Upload
+					</button>
+				</h1>
+			</div>
+		</div>
+		<div class="header-line"></div>
+		<div class="menu-panel">
+			<div class="text-right">
+				<p>
+					Tampilkan
+					<select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select> item per halaman
+					item per halaman
+				</p>
+			</div>
+
+			<div class="table-responsive">
+				<table class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th ng-click="me.order('areaId')">Kode Sales Area</th>
+							<th ng-click="me.order('description')">Sales Area</th>
+							<th class="action"></th>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchFilter.salesAreaCode" />
+							</td>
+							<td>
+								<input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchFilter.description" />
+							</td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-if="result.length == 0 && !me.loading">
+							<td colspan="3" class="text-center">Data tidak ditemukan</td>
+						</tr>
+                        <tr ng-if="me.loading">
+                            <td colspan="3" class="text-center"><i>Loading ...</i></td>
+                        </tr>
+						<tr ng-repeat="data in (result = (me.dataSalesArea | filter: me.searchFilter | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+							<td ng-bind="data.salesAreaCode"></td>
+							<td ng-bind="data.description"></td>
+							<td class="action">
+								<button type="button" class="btn btn-info" ng-click="me.selectEdit(data);me.updateState = true;">
+									<span class="glyphicon glyphicon-edit"></span>
+								</button>
+								<button type="button" class="btn btn-danger" ng-click="me.deleteData(data, SalesAreaForm)">
+									<span class="glyphicon glyphicon-trash"></span>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="text-right">
+				<ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+			</div>
+		</div>
+
+		<div class="menu-panel">
+			<div class="panel-inside-padding">
+				<form name="SalesAreaForm" class="form-horizontal row-striped">
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">Kode Sales Area<span class="mandatory">*</span></label>
+						</div>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" name="KodeSalesArea" ng-model="me.areaId" ng-disabled="me.updateState" required="required" ng-maxlength="16" ng-change="me.checkAreaId(me.areaId)" ng-pattern="me.regexCode">
+							<validation-message input="SalesAreaForm.KodeSalesArea" title="Kode Sales Area" mismatch="harus berformat alphanumeric"></validation-message>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">Sales Area<span class="mandatory">*</span></label>
+						</div>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" name="SalesArea" ng-model="me.description" required="required" ng-maxlength="255" ng-pattern="me.regexName">
+							<validation-message input="SalesAreaForm.SalesArea" title="Sales Area" mismatch="harus berformat alphanumeric"></validation-message>
+						</div>
+					</div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+				</form>
+			</div>
+		</div>
+
+		<div class="text-right">
+			<span ng-if="!me.editCheck">
+				<button class="btn btn-primary" ng-click="me.addData(SalesAreaForm)" ng-disabled="SalesAreaForm.$invalid">Simpan</button>
+			</span>
+			<span ng-if="me.editCheck">
+				<button class="btn btn-primary" ng-click="me.updateData(SalesAreaForm)" ng-disabled="SalesAreaForm.$invalid">Update</button>
+			</span>
+			<span>
+				<button class="btn btn-danger" ng-click="me.reset(SalesAreaForm);me.updateState = false;">Batal</button>
+			</span>
+		</div>
+	</div>
+</div>

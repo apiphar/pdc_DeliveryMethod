@@ -1,0 +1,184 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="~/css/tango.min.css" />
+
+<div class="page" ng-app="TangoApp" ng-controller="PDIController">
+    <div class="toolbar">
+        <div class="title-wrapper">PDI Completion</div>
+        <div class="notification-container">
+            <div id="success-notification-bar" class="alert alert-success" role="alert"></div>
+            <div id="failed-notification-bar" class="alert alert-danger" role="alert"></div>
+        </div>
+        <div class="button-wrapper">
+            <button class="btn btn-danger" ng-click="buttonExecute_onClick()">
+                Execute
+            </button>
+            <button class="btn btn-primary" ng-click="buttonUpdateParking_onClick()">
+                Update Parking
+            </button>
+            <button class="btn btn-warning" ng-click="buttonClear_onClick()">
+                Clear
+            </button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="header">
+            <div class="left form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="">Username</label>
+                    <div class="col-sm-8">
+                        <input ng-model="username" type="text" readonly="readonly" class="form-control" name="" id="" placeholder="Username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="">Department</label>
+                    <div class="col-sm-8">
+                        <input ng-model="department" type="text" readonly="readonly" class="form-control" name="" id="" placeholder="Department">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="">Division</label>
+                    <div class="col-sm-8">
+                        <input ng-model="division" type="text" readonly="readonly" class="form-control" name="" id="" placeholder="Division">
+                    </div>
+                </div>
+            </div>
+
+            <div class="right">
+                <div class="parking-line-wrapper">
+                    <div class="title">&nbsp;</div>
+                    <div class="parking-line">
+                        <input ng-model="parkingLineSuggestion" name="" id="" class="" type="text" value="-" />
+                    </div>
+                </div>
+                <div class="parking-line-wrapper">
+                    <div class="title">Parking Suggestion</div>
+                    <div class="parking-line">
+                        <input ng-model="parkingLineOptional" name="" id="" readonly="readonly" class="" type="text" value="-" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cleaner" />
+
+        <div class="content wrapper">
+            <div class="pdi-completion">
+                <div class="vehicle-information form-horizontal" id="vehicle-information">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="">Frame Number</label>
+                        <div class="col-sm-8">
+                            <input  ng-model="frameNumber" ng-change="frameNumber_onChange()" type="text" class="form-control" name="" id="" placeholder="Frame Number">
+                            <div class="error-message">
+                                {{validationMessage.frameNumber}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="">Engine Number</label>
+                        <div class="col-sm-8">
+                            <input  ng-model="engineNumber" type="text" class="form-control" name="" id="" placeholder="Engine Number">
+
+                            <div class="error-message">
+                                {{validationMessage.engineNumber}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="">Key Number</label>
+                        <div class="col-sm-8">
+                            <input  ng-model="keyNumber" type="text" class="form-control" name="" id="" placeholder="Key Number">
+                            <div class="error-message">
+                                {{validationMessage.keyNumber}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-ng-wrapper" id="button-vehicle-inspection">
+                    <button class="btn btn-danger" ng-model="buttonInspectionArea" ng-click="buttonInspectionArea_onClick()">
+                        NG
+                    </button>
+                </div>
+
+                <div class="cleaner"></div>
+
+                <div class="vehicle-description" id="vehicle-description">
+                    <h3>Vehicle Information</h3>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="">Model</label>
+                            <div class="col-sm-8">
+                                <input ng-change="validateInputs()" ng-model="vehicleModel" type="text" readonly="readonly" class="form-control" name="" id="" placeholder="Vehicle Model">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="">Type</label>
+                            <div class="col-sm-8">
+                                <input ng-change="validateInputs()" ng-model="vehicleType" type="text" readonly="readonly" class="form-control" name="" id="" placeholder="Vehicle Type">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="">Color</label>
+                            <div class="col-sm-8">
+                                <input ng-change="validateInputs()" ng-model="vehicleColor" type="text" readonly="readonly" class="form-control" name="" id="" placeholder="Vehicle Color">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="">Outlet</label>
+                            <div class="col-sm-8">
+                                <input ng-change="validateInputs()" ng-model="vehicleOutlet" type="text" readonly="readonly" class="form-control" name="" id="" placeholder="Outlet">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cleaner"></div>
+
+                <div class="inspection-area" id="inspection-area">
+                    <div class="action-bar">
+                        <button ng-model="buttonInspectionAreaBack" ng-click="buttonInspectionAreaBack_onClick()" class="btn btn-primary">< Back</button>
+                    </div>
+                    <div class="vehicle">
+                        <div class="">
+                            <h1>Exterior</h1>
+                        </div>
+                        <button id="buttonInspectionAreaChecklistExterior1" class="btn btn-1 btn-danger" ng-click="buttonInspectionAreaChecklist_onClick('EX', 1, 'buttonInspectionAreaChecklistExterior1')">NG 1</button>
+                        <button id="buttonInspectionAreaChecklistExterior2" class="btn btn-2 btn-danger" ng-click="buttonInspectionAreaChecklist_onClick('EX', 2, 'buttonInspectionAreaChecklistExterior2')">NG 2</button>
+                        <button id="buttonInspectionAreaChecklistExterior3" class="btn btn-3 btn-danger" ng-click="buttonInspectionAreaChecklist_onClick('EX', 3, 'buttonInspectionAreaChecklistExterior3')">NG 3</button>
+                        <button id="buttonInspectionAreaChecklistExterior4" class="btn btn-4 btn-danger" ng-click="buttonInspectionAreaChecklist_onClick('EX', 4, 'buttonInspectionAreaChecklistExterior4')">NG 4</button>
+                        <div id="inspection-master-checklist-container" class="inspection-master-checklist-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td>Area</td>
+                                        <td>Description</td>
+                                        <td>Data</td>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+
+                            <div class="button-container">
+                                <button ng-click="buttonInspectionMasterChecklistSubmit_onClick()">OK</button>
+                            </div>
+                        </div>
+                        <img atl="" src="@Url.Content("~/images/pdi/vehicle.png")" />
+                    </div>
+                    <div class="vehicle">
+                        <div class="">
+                            <h1>Interior</h1>
+                        </div>
+                        <button id="buttonInspectionAreaChecklistInterior1" class="btn btn-1 btn-danger" ng-click="buttonInspectionAreaChecklist_onClick('IN', 1, 'buttonInspectionAreaChecklistInterior1')">NG 1</button>
+                        <button id="buttonInspectionAreaChecklistInterior2" class="btn btn-2 btn-danger" ng-click="buttonInspectionAreaChecklist_onClick('IN', 2, 'buttonInspectionAreaChecklistInterior2')">NG 2</button>
+                        <button id="buttonInspectionAreaChecklistInterior3" class="btn btn-3 btn-danger" ng-click="buttonInspectionAreaChecklist_onClick('IN', 3, 'buttonInspectionAreaChecklistInterior3')">NG 3</button>
+                        <button id="buttonInspectionAreaChecklistInterior4" class="btn btn-4 btn-danger" ng-click="buttonInspectionAreaChecklist_onClick('IN', 4, 'buttonInspectionAreaChecklistInterior4')">NG 4</button>
+                        <img atl="" src="@Url.Content("~/images/pdi/vehicle.png")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

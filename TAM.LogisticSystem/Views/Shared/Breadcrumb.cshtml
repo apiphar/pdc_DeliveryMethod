@@ -1,0 +1,14 @@
+﻿@{
+    var breadcrumbs = ViewBag.Breadcrumb as List<string>;
+    if (breadcrumbs != null)
+    {
+        <ol class="breadcrumb">
+            @{
+                foreach (var breadcrumb in breadcrumbs)
+                {
+                    <li>@breadcrumb</li>
+                }
+            }
+        </ol>
+    }
+}

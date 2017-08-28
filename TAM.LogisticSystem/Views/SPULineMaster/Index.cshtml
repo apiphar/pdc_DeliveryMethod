@@ -1,0 +1,14 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = "Spec Up Line Master";
+    ViewBag.BreadCrumb = new List<string> {
+        "Master",
+        "Spec Up Line Master"
+    };
+}
+<div ng-app="aspnet">
+    <spu-line-master><div class="loading"></div></spu-line-master>
+    <upload-download></upload-download>
+</div>

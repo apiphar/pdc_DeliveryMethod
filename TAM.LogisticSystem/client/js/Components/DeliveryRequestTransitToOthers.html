@@ -1,0 +1,95 @@
+﻿<h4 class="form-group h4-aqua">Informasi Pengiriman</h4>
+<div class="form-group"><hr class="header-line" /></div>
+<div class="row-striped">
+    <div class="form-group">
+        <div class="col-sm-3">
+            <label class="control-label">Tipe<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-sm-6">
+            <ui-select ng-model="me.deliveryRequestTransitToOthers.deliveryLocation" theme="bootstrap" ng-change="me.getLocationName();me.validationTipe();me.broadcast()">
+                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationType}}</ui-select-match>
+                <ui-select-choices repeat="deliveryLocationType in me.deliveryLocationType | filter: $select.search">
+                    <div ng-bind-html="deliveryLocationType.locationType | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
+            <span class="field-validation-error" ng-bind="me.errorMsgTipe" ng-hide="me.validateTipe === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3">
+            <label class="control-label">Nama<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-sm-6">
+            <ui-select ng-model="me.deliveryRequestTransitToOthers.deliveryLocationName" theme="bootstrap" ng-change="me.getLocationAddress();me.validationNama();me.broadcast()">
+                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationName}}</ui-select-match>
+                <ui-select-choices repeat="deliveryLocationName in me.deliveryLocationName | filter: $select.search">
+                    <div ng-bind-html="deliveryLocationName.locationName | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
+            <span class="field-validation-error" ng-bind="me.errorMsgNama" ng-hide="me.validateNama === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3">
+            <label class="control-label">Alamat<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" ng-model="me.deliveryRequestTransitToOthers.locationAddress" disabled />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3">
+            <label class="control-label">Prakiraan Lead Time<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-sm-1">
+            <input type="number" class="form-control" ng-model="me.deliveryRequestTransitToOthers.leadTimeDay" ng-change="me.broadcast();me.validationLeadTime();me.broadcast()" ng-model-options="{debounce: 500}" maxlength="10" />
+        </div>
+        <div class="col-sm-1">
+            <label class="control-label">Hari</label>
+        </div>
+        <div class="col-sm-1">
+            <input type="number" class="form-control" ng-model="me.deliveryRequestTransitToOthers.leadTimeHour" ng-change="me.broadcast();me.validationLeadTime();me.broadcast()" ng-model-options="{debounce: 500}" maxlength="10" />
+        </div>
+        <div class="col-sm-1">
+            <label class="control-label">Jam</label>
+        </div>
+        <div class="col-sm-1">
+            <input type="number" class="form-control" ng-model="me.deliveryRequestTransitToOthers.leadTimeMinute" ng-change="me.broadcast();me.validationLeadTime();me.broadcast()" ng-model-options="{debounce: 500}" maxlength="10" />
+        </div>
+        <div class="col-sm-1">
+            <label class="control-label">Menit</label>
+        </div>
+        <div class="col-sm-offset-3 col-sm-9">
+            <span class="field-validation-error" ng-bind="me.errorMsgLeadTime" ng-hide="me.validateLeadTime === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3">
+            <label class="control-label">Tanggal Pengambilan<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-sm-6">
+            <div class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup="dd-MMM-yyyy"
+                       ng-model="me.deliveryRequestTransitToOthers.pickUpDate" is-open="me.popup1.opened" datepicker-options="dateOptions"
+                       close-text="Close" readonly ng-change="me.validationPickUpDate();me.broadcast()" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="me.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </div>
+            <span class="field-validation-error" ng-bind="me.errorMsgPickUpDate" ng-hide="me.validatePickUpDate === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-9">
+            <input type="radio" name="deliveryTransitMethod" value="Normal" ng-model="me.deliveryRequestTransitToOthers.deliveryRequestTransitType" class="radio radio-inline" ng-click="me.resetValidateDetail();me.broadcast()" /> Normal
+            <input type="radio" name="deliveryTransitMethod" value="SelfPickToOthers" ng-model="me.deliveryRequestTransitToOthers.deliveryRequestTransitType" class="radio radio-inline" ng-click="me.resetValidateDetail();me.broadcast()" /> Self Pick To Others
+        </div>
+    </div>
+
+    <p ng-show="me.deliveryRequestTransitToOthers.deliveryRequestTransitType === 'Normal'"><i>* Pengiriman unit kendaraan menjadi tanggung jawab PDC</i></p>
+    <p ng-show="me.deliveryRequestTransitToOthers.deliveryRequestTransitType === 'SelfPickToOthers'"><i>* Pengiriman dan pengambilan unit kendaraan menjadi branch tujuan</i></p>
+
+
+    <delivery-request-transit-to-others-normal ng-show="me.deliveryRequestTransitToOthers.deliveryRequestTransitType === 'Normal'"></delivery-request-transit-to-others-normal>
+    <delivery-request-transit-to-others-self-pick-to-others ng-show="me.deliveryRequestTransitToOthers.deliveryRequestTransitType === 'SelfPickToOthers'"></delivery-request-transit-to-others-self-pick-to-others>
+</div>

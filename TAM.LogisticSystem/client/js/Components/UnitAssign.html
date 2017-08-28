@@ -1,0 +1,228 @@
+﻿<div class="col-md-12" ng-if="me.showAssignByUnit == true">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                Unit Assign
+            </h1>
+        </div>
+        <div class="col-md-6 text-right">
+            <h1>
+                <button ng-click="me.showDetail()" class="btn btn-default">Detail</button>
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>   
+
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <div class="row">
+                <div class="col-md-7">
+                    <form class="form-horizontal row-striped" name="myForm">
+                        <!--Form Section-->
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                <label class="control-label">Voyage No.<span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control text-uppercase" name="voyage" ng-model="me.voyage" ng-model-options="{debounce:1000}" ng-change="me.getDetailVoyage()" ng-pattern="/^[A-Za-z0-9]+$/" ng-maxlength="16" required />
+                                <validation-message input="myForm.voyage" title="Voyage No" mismatch="harus berformat alphanumeric"></validation-message>
+                                <span ng-show="me.stringErrorShow" class="field-validation-error">{{me.stringError}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                <label class="control-label">Vendor</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" ng-model="me.unitAssignDataModel.allVoyage.vendor" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                <label class="control-label">Vessel</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" ng-model="me.unitAssignDataModel.allVoyage.vessel" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                <label class="control-label">Estimation Time Departure</label>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" value="{{me.unitAssignDataModel.allVoyage.estimationTimeDeparture | date : 'dd-MMM-yyyy'}}" readonly />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" value="{{me.unitAssignDataModel.allVoyage.estimationTimeDeparture | date: 'HH:mm'}}" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                <label class="control-label"><i class="mandatory">* Field mandatory harus diiisi</i></label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-5 form-horizontal panel-right-form">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <input type="text" ng-model="me.unitAssignDataModel.allVoyage.capacityVessel" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-8">
+                            <label class="control-label"><span class="mandatory">*</span>Total Kapasitas Vessel</label>
+                        </div>
+                    </div>
+                    <div class="col-md-11">
+                        <div class="header-line"></div>
+                    </div>
+                    <div class="col-md-1">
+                        <span>&nbsp</span>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <input type="text" ng-model="me.unitAssignDataModel.allVoyage.totalUnitAssign" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-8">
+                            <label class="control-label"><span class="mandatory">*</span>Unit yang sudah di assign</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <input type="text" ng-model="me.unitAssignDataModel.allVoyage.totalUnitPreBookedInPorted" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-8">
+                            <label class="control-label"><span class="mandatory">*</span>Unit pre-booked & sudah di port</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <input type="text" ng-model="me.unitAssignDataModel.allVoyage.totalUnitPreBookedNotPorted" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-8">
+                            <label class="control-label"><span class="mandatory">*</span>Unit pre-booked & belum di port</label>
+                        </div>
+                    </div>
+                    <div class="col-md-11">
+                        <div class="header-line"></div>
+                    </div>
+                    <div class="col-md-1">
+                        <span>+</span>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <input type="text" ng-model="me.unitAssignDataModel.allVoyage.totalAll" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-8">
+                            <label class="control-label"><span class="mandatory">*</span>Total unit pre-booked</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Detail Section-->
+    <div class="menu-panel">
+            <h1>
+                Daftar Frame Number
+            </h1>
+            <div class="header-line"></div>
+
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-primary"><p ng-click="me.order('frameNumber')">Frame No.</p></th>
+                            <th class="text-primary"><p ng-click="me.order('katashiki')">Katashiki</p></th>
+                            <th class="text-primary"><p ng-click="me.order('suffix')">Suffix</p></th>
+                            <th class="text-primary"><p ng-click="me.order('model')">Model</p></th>
+                            <th class="text-primary"><p ng-click="me.order('tipe')">Tipe</p></th>
+                            <th class="text-primary"><p ng-click="me.order('warna')">Warna</p></th>
+                            <th class="text-primary"><p ng-click="me.order('branch')">Branch</p></th>
+                            <th class="text-primary"><p ng-click="me.order('etd')">ETD PDC R</p></th>
+                            <th class="text-primary"><p ng-click="me.order('customerAssignModel')">Customer Assign</p></th>
+                            <th class="text-primary"><p ng-click="me.order('requestPDD')">Requested PDD</p></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.frameNumber" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.katashiki" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.suffix" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.model" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.tipe" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.warna" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.branch" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.etdString" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.customerAssignModel" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.requestedPDDString" ng-keyup="me.search(this)" />
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="me.loadingTable===true">
+                            <td colspan="10" class="text-center">Loading...</td>
+                        </tr>
+                        <tr ng-if="result.length == 0">
+                            <td colspan="10" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="me.dataTidakDitemukan === true">
+                            <td colspan="10" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-repeat="item in (result = (me.unitAssignDataModel.allUnit | filter : me.searchTable  | orderBy : me.orderString :me.orderState))"
+                            ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="item.frameNumber"></td>
+                            <td ng-bind="item.katashiki"></td>
+                            <td ng-bind="item.suffix"></td>
+                            <td ng-bind="item.model"></td>
+                            <td ng-bind="item.tipe"></td>
+                            <td ng-bind="item.warna"></td>
+                            <td ng-bind="item.branch"></td>
+                            <td ng-bind="item.etdString" class="td-min-width"></td>
+                            <td class="text-center"> <input type="checkbox" ng-checked="item.customerAssign" disabled /> </td>
+                            <td ng-bind="item.requestedPDDString"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        
+    </div>
+    <div class="text-right">
+        <button class="btn btn-primary" ng-click="me.saveData(myForm)" ng-disabled="myForm.$invalid || me.simpanButton">Simpan</button>
+        <button class="btn btn-danger" ng-click="me.cancel(myForm)">Batal</button>
+    </div>
+</div>

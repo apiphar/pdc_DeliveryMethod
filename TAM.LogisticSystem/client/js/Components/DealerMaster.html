@@ -1,0 +1,126 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>
+                    Master Dealer
+                </h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <h1>
+                    <button class="btn btn-primary" ng-click="me.download(result)">Download</button>
+                </h1>
+            </div>
+        </div>
+        <div class="header-line"></div>
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <p class="text-right">
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th ng-click="me.order('dealerCode')">Kode Dealer</th>
+                                <th ng-click="me.order('dealerName')">Nama Dealer</th>
+                                <th ng-click="me.order('dealerAddress')">Alamat Dealer</th>
+                                <th ng-click="me.order('dealerTypeString')">Kode Group Dealer</th>
+                                <th class="action-1"></th>
+                            </tr>
+                            <tr>
+                                <th><input ng-model="me.search.dealerCode" class="form-control" /></th>
+                                <th><input ng-model="me.search.dealerName" class="form-control" /></th>
+                                <th><input ng-model="me.search.dealerAddress" class="form-control" /></th>
+                                <th><input ng-model="me.search.dealerTypeString" class="form-control" /></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in (result = (me.dealerMasterViewModels | filter : me.search  | orderBy : me.orderString :me.orderState)) track by item.dealerCode"
+                                ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                                <td ng-bind="item.dealerCode"></td>
+                                <td ng-bind="item.dealerName"></td>
+                                <td ng-bind="item.dealerAddress"></td>
+                                <td ng-bind="item.dealerTypeString"></td>
+                                <td class="action-1">
+                                    <button type="button" ng-click="me.fillForm(item)" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span></button>
+                                </td>
+                            </tr>
+                            <tr ng-if="result.length < 1">
+                                <td colspan="5" class="text-center">Data tidak ditemukan</td>
+                            </tr>
+                            <tr ng-if="result.length == undefined">
+                                <td colspan="5" class="text-center"><i>Loading...</i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-right">
+                        <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form name="dealerMasterForm" class="form-horizontal" ng-if="me.onUpdateClick == true">
+            <div class="menu-panel">
+                <div class="panel panel-inside-padding">
+                    <div class="row-striped">
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">Kode Dealer <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input name="kodeDealer" ng-model="me.dealerMasterSend.dealerCode" ng-pattern="me.codePattern" ng-maxlength="16" ng-disabled="true" class="form-control" required />
+                                <validation-message title="Kode Dealer" input="dealerMasterForm.kodeDealer"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">Dealer <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input name="dealer" ng-model="me.dealerMasterSend.dealerName" ng-pattern="me.namePattern" ng-maxlength="255" class="form-control" required />
+                                <validation-message title="Dealer" input="dealerMasterForm.dealer"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">Alamat Dealer <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input name="address" ng-model="me.dealerMasterSend.dealerAddress" ng-maxlength="255" class="form-control" required />
+                                <validation-message title="Alamat" input="dealerMasterForm.address"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">Kode Group Dealer <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <ui-select name="dealerTypeCode" ng-model="me.dealerMasterSend.dealerTypeCode" theme="bootstrap">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.dealerTypeCode}} - {{$select.selected.dealerTypeName}}</ui-select-match>
+                                    <ui-select-choices repeat="item in me.dealerTypeCodes | filter: $select.search">
+                                        <span ng-bind-html="item.dealerTypeCode | highlight: $select.search"></span> - 
+                                        <small ng-bind-html="item.dealerTypeName | highlight: $select.search"></small>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <span class="field-validation-error" ng-if="me.dealerMasterSend.dealerTypeCode == null && dealerMasterForm.dealerTypeCode.$touched">Lokasi harus dipilih</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <p class="form-note"><span class="mandatory">*</span>: Field mandatory harus diisi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="submit" ng-click="me.updateData(dealerMasterForm)" ng-disabled="me.disableButton() || dealerMasterForm.$invalid" class="btn btn-primary">Update</button>
+                <button type="button" ng-click="me.setPristine(dealerMasterForm)" class="btn btn-danger">Batal</button>
+            </div>
+        </form>
+    </div>
+</div>

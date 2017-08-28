@@ -1,0 +1,33 @@
+﻿<div class="table-responsive">
+    <table class="tbLog" width="500">
+        <tr>
+            <td>Status :</td>
+            <td>{{status}}</td>
+        </tr>
+        <tr>
+            <td>Proses :</td>
+            <td>{{prosess}}</td>
+        </tr>
+        <tr>
+            <td>Module :</td>
+            <td>{{module}}</td>
+        </tr>
+        <tr>
+            <td>Menu :</td>
+            <td>{{menu}}</td>
+        </tr>
+        <tr>
+            <td>Download Link :</td>
+
+            {{#statusState}}
+            <td>
+                <a href="/api/v1/UploadDownloadApi/DownloadById/{{logUploadDownloadId}}/{{fileName}}" target="_blank">{{fileName}}</a>
+            </td>
+            {{/statusState}}
+            {{^statusState}}
+            <td></td>
+            {{/statusState}}
+        </tr>
+    </table>
+</div>
+<a href="/LogUploadDownload" target="_blank" class="btn btn-default pull-left mt25">Log</a>

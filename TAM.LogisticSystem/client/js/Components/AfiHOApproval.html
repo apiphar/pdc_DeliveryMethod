@@ -1,0 +1,157 @@
+﻿<div class="col-xs-12">
+    <h1>HO Approval</h1>
+    <div class="header-line"></div>
+
+    <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <form name="afiHOSearchingForm" class="form-horizontal row-striped" ng-submit="me.doSearch()">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Frame No</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control text-uppercase" name="frameNo" ng-model="me.searchSubmission.frameNo" ng-maxlength="30" ng-pattern="/^[A-Za-z0-9]*$/">
+                            <validation-message input="afiHOSearchingForm.frameNo" mismatch="harus alphanumeric" title="Frame Number"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Type<span class="mandatory">*</span></label>
+                        <div class="col-xs-7" ng-init="me.searchSubmission.type='MHK'">
+                            <label class="radio-inline"><input type="radio" ng-model="me.searchSubmission.type" value="MHK" name="rbType">MHK</label>
+                            <label class="radio-inline"><input type="radio" ng-model="me.searchSubmission.type" value="CKD" name="rbType">CKD</label>
+                            <label class="radio-inline"><input type="radio" ng-model="me.searchSubmission.type" value="CBU" name="rbType">CBU</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Branch</label>
+                        <div class="col-xs-7">
+                            <ui-select ng-model="me.searchSubmission.branch" class="text-uppercase" theme="bootstrap">
+                                <ui-select-match placeholder="Pilih salah satu" allow-clear="true">{{$select.selected.afiBranchCode}} - {{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="data in me.branchData | filter: $select.search">
+                                    <span ng-bind-html="data.afiBranchCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="data.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Tanggal Pengajuan</label>
+                        <div class="col-xs-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" ng-model="me.searchSubmission.tanggalPengajuan" is-open="openedPengajuan" close-text="Close" datepicker-options="me.dateOptions" alt-input-formats="me.altInputFormats" ng-change="me.tanggalChanged()" readonly/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="openedPengajuan=!openedPengajuan"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <label class="control-label col-xs-1">Sampai</label>
+                        <div class="col-xs-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" ng-model="me.searchSubmission.sampai" is-open="openedSampai" close-text="Close" datepicker-options="me.dateOptionsSampai" alt-input-formats="me.altInputFormats" ng-change="me.tanggalChangedSampai()" readonly/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="openedSampai=!openedSampai"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Status Pengajuan<span class="mandatory">*</span></label>
+                        <div class="col-xs-7 rb-group" ng-init="me.searchSubmission.statusPengajuan='Normal'">
+                            <label class="radio-inline"><input type="radio" ng-model="me.searchSubmission.statusPengajuan" value="Normal" name="rbStatus">Normal</label>
+                            <label class="radio-inline"><input type="radio" ng-model="me.searchSubmission.statusPengajuan" value="Revisi" name="rbStatus">Revisi</label>
+                            <label class="radio-inline"><input type="radio" ng-model="me.searchSubmission.statusPengajuan" value="Ex-Cancel" name="rbStatus">Ex-Cancel</label>
+                            <input type="submit" class="btn btn-primary pull-right" id="btnCari" value="Cari" ng-disabled="afiHOSearchingForm.$invalid">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </div>
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-options="data for data in me.pageSizes"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered tableAfi">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" ng-model="me.cbMain" ng-change="me.selectAll()" id="cbSelect" name="cbSelectAll">
+                        </th>
+                        <th class="th100">Frame No</th>
+                        <th class="th130">No Application</th>
+                        <th class="th100">Tanggal DO</th>
+                        <th class="th100">Model Name</th>
+                        <th class="th100">Color</th>
+                        <th class="th100">Jenis</th>
+                        <th class="th100">Model</th>
+                        <th class="th100">Chassis</th>
+                        <th class="th160">Branch</th>
+                        <th class="th130">No Reference</th>
+                        <th class="th130">Nama Customer</th>
+                        <th class="th100">No ID</th>
+                        <th class="thAddress">Alamat</th>
+                        <th class="th100">Provinsi</th>
+                        <th class="th100">Kota</th>
+                        <th class="th100">Kode Pos</th>
+                        <th class="th100">Tanggal Efektif</th>
+                        <th class="th160">TanggalAju</th>
+                        <th class="th160">Region</th>
+                        <th class="th100">Tipe Pengajuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-hide="me.loader==true">
+                        <td colspan="21" class="text-center">
+                            <i>Loading...</i>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="data in (result = me.hoApprovalData)"
+                        ng-if="$index >= ((me.currentPage-1)*me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td>
+                            <input type="checkbox" ng-model="data.select" ng-change="me.checkboxChanged()">
+                        </td>
+                        <td ng-bind="data.frameNumber"></td>
+                        <td ng-bind="data.applicationNumber"></td>
+                        <td ng-bind="data.doDate |date:'dd MMM yyyy'"></td>
+                        <td ng-bind="data.modelName"></td>
+                        <td ng-bind="data.color"></td>
+                        <td ng-bind="data.jenis"></td>
+                        <td ng-bind="data.model"></td>
+                        <td ng-bind="data.chassis"></td>
+                        <td ng-bind="data.branch"></td>
+                        <td ng-bind="data.referenceNumber"></td>
+                        <td ng-bind="data.customerName"></td>
+                        <td ng-bind="data.ktp"></td>
+                        <td ng-bind="(data.address1+'/'+data.address2+'/'+data.address3)"></td>
+                        <td ng-bind="data.province"></td>
+                        <td ng-bind="data.city"></td>
+                        <td ng-bind="data.postalCode"></td>
+                        <td ng-bind="data.tanggalEfektif |date:'dd MMM yyyy'"></td>
+                        <td ng-bind="data.tanggalAjuAFI |date:'dd MMM yyyy HH:mm'"></td>
+                        <td ng-bind="data.region"></td>
+                        <td ng-bind="data.tipePengajuanName"></td>
+                    </tr>
+                    <tr ng-if="me.hoApprovalData.length==0 || me.hoApprovalData==null ">
+                        <td colspan="21"><center>Data tidak ditemukan</center></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-right">
+            <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize"
+                class="pagination-sm" boundary-links="true" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+
+    <div class="pull-right">
+        <button type="submit" class="frmSubmit btn btn-primary" ng-click="me.processToTamDialog()">Proccess to TAM</button>
+        <button type="reset" class="buttonSubmit btn btn-danger" ng-click="me.returnToOutletDialog()">Return to Outlet</button>
+    </div>
+</div>

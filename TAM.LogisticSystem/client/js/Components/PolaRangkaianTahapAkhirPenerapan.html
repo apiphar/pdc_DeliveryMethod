@@ -1,0 +1,195 @@
+﻿<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>
+                Pola Rangkaian: Tahap Akhir - Penerapan
+            </h1>
+        </div>
+    </div>
+
+    <div class="header-line"></div>
+
+    <form name="PolaRangkaianTahapAkhirPenerapanForm">
+        <div class="menu-panel">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                    item per halaman
+                </p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('processTailTemplateCode')">Kode Pola</th>
+                            <th ng-click="me.order('description')">Keterangan</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input class="form-control col-sm-2" ng-model="me.searchFilter.processTailTemplateCode" ng-keyup="me.search(result)" />
+                            </td>
+                            <td>
+                                <input class="form-control col-sm-2" ng-model="me.searchFilter.description" ng-keyup="me.search(result)" />
+                            </td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="result.length == 0 && !me.loading">
+                            <td colspan="3" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="me.loading">
+                            <td colspan="3" class="text-center"><i>Loading ...</i></td>
+                        </tr>
+                        <tr ng-repeat="data in (result = (me.dataRangkaianTahapAkhirPenerapan.routingDictionaryTail | filter: me.searchFilter | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.processTailTemplateCode"></td>
+                            <td ng-bind="data.description"></td>
+                            <td class="text-center">
+                                <input type="radio" name="routingHead" ng-click="me.selectRouting(data)" ng-model="data.selected"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+
+        <div class="menu-panel col-md-6">
+            <div class="form-group">
+                <h3>Dealer & Branch <span class="mandatory">*</span></h3>
+            </div>
+
+            <div class="header-line"></div>
+
+            <div class="form-group">
+                <label class="control-label">Pola Diterapkan ke:</label>
+            </div>
+            <div class="form-group">
+                <label class="control-label">
+                    <input type="checkbox"
+                           ng-model="me.allDealer"
+                           ng-change="me.selectAllDealer(me.allDealer)"
+                           ng-click="me.generate = false" />(Select All)
+                </label>
+            </div>
+            <div class="form-group">
+                <div class="pre-scrollable">
+                    <uib-accordion close-others="false">
+                        <!-- Repeat Dealer -->
+                        <div uib-accordion-group class="panel-default" is-open="me.status.isDealerOpen[dealer.dealerCode]" ng-repeat="dealer in me.dataRangkaianTahapAkhirPenerapan.dealer">
+                            <uib-accordion close-others="false">
+                                <uib-accordion-heading>
+                                    <input type="checkbox"
+                                           ng-model="dealer.selected"
+                                           ng-click="me.selectDealer($event, dealer.selected, dealer.dealerCode);me.stateAllDealer()" />
+                                    <label>
+                                        <i class="glyphicon" ng-class="{'glyphicon-collapse-down': me.status.isDealerOpen[dealer.dealerCode], 'glyphicon-expand': !me.status.isDealerOpen[dealer.dealerCode]}"></i>
+                                        {{dealer.name}}
+                                    </label>
+                                </uib-accordion-heading>
+
+                                <!-- Repeat Branch -->
+                                <div ng-repeat="branch in me.filterBranch(dealer.dealerCode)">
+                                    <label>
+                                        <input type="checkbox"
+                                               ng-model="branch.selected"
+                                               ng-click="me.stateDealer(dealer)" />{{branch.branchName}}
+                                    </label>
+                                </div>
+                                <!-- End Repeat Branch -->
+
+                            </uib-accordion>
+                        </div>
+                        <!-- End Repeat Dealer -->
+
+                    </uib-accordion>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+            </div>
+        </div>
+        <div class="menu-panel col-md-6">
+            <div class="form-group">
+                <h3>Katashiki - Suffix <span class="mandatory">*</span></h3>
+            </div>
+
+            <div class="header-line"></div>
+
+            <div class="form-group">
+                <label class="control-label">Pola Diterapkan ke:</label>
+            </div>
+            <div class="form-group">
+                <label class="control-label">
+                    <input type="checkbox" ng-model="me.allModel" ng-change="me.selectAllModel(me.allModel)" />
+                    (Select All)
+                </label>
+            </div>
+            <div class="form-group">
+                <div class="pre-scrollable">
+                    <uib-accordion close-others="false">
+                        <!-- Repeat Model -->
+                        <div uib-accordion-group class="panel-default" is-open="me.status.isModelOpen[model.carModelCode]" ng-repeat="model in me.dataRangkaianTahapAkhirPenerapan.carModel">
+                            <uib-accordion close-others="false">
+                                <uib-accordion-heading>
+                                    <input type="checkbox" ng-click="me.selectModel($event, model.selected, model.carModelCode, $parent.$parent.$parent);me.stateAllModel()" ng-model="model.selected" />
+                                    <label>
+                                        <i class="glyphicon" ng-class="{'glyphicon-collapse-down': me.status.isModelOpen[model.carModelCode], 'glyphicon-expand': !me.status.isModelOpen[model.carModelCode]}"></i>
+                                        {{model.name}}
+                                    </label>
+                                </uib-accordion-heading>
+
+                                <!-- Repeat Series -->
+                                <div uib-accordion-group class="panel-default" is-open="me.status.isSeriesOpen[series.carSeriesCode]" ng-repeat="series in me.filterSeries(model.carModelCode)">
+                                    <uib-accordion close-others="false">
+                                        <uib-accordion-heading>
+                                            <input type="checkbox" ng-click="me.selectSeries($event, series.selected, series.carSeriesCode);me.stateModel(model)" ng-model="series.selected" />
+                                            <label>
+                                                <i class="glyphicon" ng-class="{'glyphicon-collapse-down': me.status.isSeriesOpen[series.carSeriesCode], 'glyphicon-expand': !me.status.isSeriesOpen[series.carSeriesCode]}"></i>
+                                                {{series.name}}
+                                            </label>
+                                        </uib-accordion-heading>
+
+                                        <!-- Repeat Suffix -->
+                                        <div ng-repeat="suffix in me.filterSuffix(series.carSeriesCode)">
+                                            <label><input type="checkbox" ng-model="suffix.selected" ng-click="me.stateSeries(series)"/>{{suffix.katashiki + " - " + suffix.suffix + " - " + suffix.name}}</label>
+                                        </div>
+                                        <!-- End Repeat Suffix -->
+
+                                    </uib-accordion>
+                                </div>
+                                <!-- End Repeat Series -->
+
+                            </uib-accordion>
+                        </div>
+                        <!-- End Repeat Model -->
+
+                    </uib-accordion>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+            </div>
+        </div>
+    </form>
+
+    <div class="text-right">
+        <span>
+            <button class="btn btn-primary" ng-click="me.addData(PolaRangkaianTahapAkhirPenerapanForm)" ng-disabled="!me.validation()">Simpan</button>
+        </span>
+        <span>
+            <button class="btn btn-danger" ng-click="me.reset(PolaRangkaianTahapAkhirPenerapanForm)">Batal</button>
+        </span>
+        <span>
+            <button class="btn btn-default" ng-click="me.back()">Kembali</button>
+        </span>
+    </div>
+</div>

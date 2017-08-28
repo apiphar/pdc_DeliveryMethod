@@ -1,0 +1,38 @@
+﻿<!--<div class="row">
+    <div class="col-sm-4">
+        <label class="control-label">Kode Cluster</label>
+    </div>
+    <div class="col-sm-8">
+        <label class="control-label">{{clusterCode}}</label>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <label class="control-label">Cluster</label>
+    </div>
+    <div class="col-sm-8">
+        <label class="control-label">{{name}}</label>
+    </div>
+</div>-->
+
+{{#action}}
+<label class="control-label">{{action}}</label>
+{{/action}}
+
+<table class="table">
+    {{#grid}}
+    <tr>
+        <td>
+            {{#key}}
+            <strong>{{key}}</strong>
+            {{/key}}
+        </td>
+
+        <td>
+            {{#value}}
+            {{value}}
+            {{/value}}
+        </td>
+    </tr>
+    {{/grid}}
+</table>

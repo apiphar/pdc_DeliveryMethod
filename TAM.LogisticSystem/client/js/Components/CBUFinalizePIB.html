@@ -1,0 +1,163 @@
+﻿<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 fbb">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <h4 class="h4-color">
+                Finalize PIB
+            </h4>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="pull-right form-group">
+                <button type="button" ng-click="me.validate()" class="btn btn-danger" ng-disabled="me.finalizeEnable">Validate</button>
+                <button type="button" ng-click="me.finalizePIB()" class="btn btn-primary" ng-disabled="me.finalizeDisable">Finalize</button>
+                <button type="button" ng-click="me.cancel()" class="btn btn-default" ng-disabled="me.finalizeDisable">Cancel</button>
+            </div>
+        </div>
+        <hr class="header-line" />
+        <fieldset>
+            <div class="fieldset-padding">
+                <form>
+                    <div class="form-group">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Upload PIB Data</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input type="text" class="form-control" ng-model="me.textFile" ng-disabled="me.finalizeEnable"/>
+                        </div>
+                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                            <label class="btn btn-default">
+                                ...
+                                <input name="excelFile"
+                                       accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                       ng-hide="true"
+                                       ngf-select
+                                       ng-model="me.file"
+                                       ng-change="me.uploadFile()"
+                                       type="file" 
+                                       ng-disabled="me.finalizeEnable" required />
+                            </label>
+                        </div>
+                        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                            &nbsp;
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="fieldset-padding">
+                <form name="finalizeInfo">
+                    <div class="form-group">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">No Aju</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input type="text" class="form-control" ng-model="me.noAju" readonly />
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Currency</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <select ng-model="me.currencyModel"                 
+                                    ng-options="item.currency for item in me.currencyModels track by item.currency"
+                                    disabled>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">No PIB</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input type="text" class="form-control" ng-model="me.excelModel.noPIB" readonly />
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">NDPBM</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input type="text" class="form-control" ng-model="me.currencyModel.ndpbm" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">PIB Date</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input type="text" class="form-control" ng-model="me.excelModel.pibDate" readonly />
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Schema</label>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <input name="schema"type="text" class="form-control" ng-model="me.schema" ng-disabled="me.finalizeEnable" required ="required"/>
+                            
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Approved Date</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input type="text" class="form-control" ng-model="me.excelModel.approvedDate" readonly />
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            &nbsp;
+                            <validation-message input="finalizeInfo.schema"></validation-message>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="fieldset-padding overflowAuto">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Invoice No</th>
+                            <th>Frame No</th>
+                            <th>Engine No</th>
+                            <th>Katashiki</th>
+                            <th>Global Suffix</th>
+                            <th>Local Suffix</th>
+                            <th>HSCode</th>
+                            <th>ED No</th>
+                            <th>Price</th>
+                            <th>Price Rupiah</th>
+                            <th>BM</th>
+                            <th>Import Value</th>
+                            <th>PPH</th>
+                            <th>PPN</th>
+                            <th>PPNBM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in me.finalizeTableModels">
+                            <td ng-bind="item.invoiceNumber"></td>
+                            <td ng-bind="item.frameNumber"></td>
+                            <td ng-bind="item.engineNumber"></td>
+                            <td ng-bind="item.katashiki"></td>
+                            <td ng-bind="item.globalSuffix"></td>
+                            <td ng-bind="item.localSuffix"></td>
+                            <td ng-bind="item.hsCode"></td>
+                            <td ng-bind="item.edNumber"></td>
+                            <td ng-bind="item.price"></td>
+                            <td ng-bind="item.priceRupiah"></td>
+                            <td ng-bind="item.bm"></td>
+                            <td ng-bind="item.importValue"></td>
+                            <td ng-bind="item.pph"></td>
+                            <td ng-bind="item.ppn"></td>
+                            <td ng-bind="item.ppnbm"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <div class="pull-right form-group">
+            <button type="button" ng-click="me.validate()" class="btn btn-danger" ng-disabled="me.finalizeEnable">Validate</button>
+            <button type="button" ng-click="me.finalizePIB()" class="btn btn-primary" ng-disabled="me.finalizeDisable">Finalize</button>
+            <button type="button" ng-click="me.cancel()" class="btn btn-default" ng-disabled="me.finalizeDisable">Cancel</button>
+        </div>
+    </div>
+</div>

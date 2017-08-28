@@ -1,0 +1,157 @@
+﻿<div class="col-xs-12 col-md-12 col-sm-12">
+    <h1>Penyesuaian Tanggal Produksi</h1>
+    <hr class="header-line" />
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr></tr>
+                    <tr>
+                        <th colspan="2"></th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="2"><a>---Bukan Akhir Bulan---</a></th>
+                        <th colspan="2"><a>---Akhir Bulan---</a></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th colspan="2"><a href="" ng-click="me.order('plant')">Plant</a></th>
+                        <th><a href="" ng-click="me.order('dateStart')">Mulai Jam</a></th>
+                        <th><a href="" ng-click="me.order('dateEnd')"> Jam Selesai</a></th>
+                        <th><a href="" ng-click="me.order('bukanAkhirBulan')"> Tanggal Sistem</a></th>
+                        <th><a href="" ng-click=""> Tanggal Produksi</a></th>
+                        <th><a href="" ng-click="me.order('akhirBulan')">Tanggal Sistem</a></th>
+                        <th><a href="" ng-click=""> Tanggal Produksi</a></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width="35%" colspan="2"><input class="form-control " ng-model="Search.plant" ng-keyup="me.search(this)" /></td>
+                        <td width="10%"><input class="form-control " ng-model="Search.penampungDateStart" ng-keyup="me.search(this)" /></td>
+                        <td width="10%"><input class="form-control " ng-model="Search.penampungDateEnd" ng-keyup="me.search(this)" /></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr ng-repeat="item in (result = (me.listProkduksiModel  | filter : Search | orderBy : me.orderString :me.orderState))"
+                        ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td colspan="2">
+                        <span ng-bind="item.plant"></span> -
+                        <span ng-bind="item.nama"></span>
+                        </td>
+                        <td ng-bind="item.penampungDateStart" class="text-center"></td>
+                        <td ng-bind="item.penampungDateEnd" class="text-center"></td>
+                        <td class="text-center"><input type="radio" ng-checked="!item.bukanAkhirBulan" disabled></td>
+                        <td class="text-center"><input type="radio" ng-checked="item.bukanAkhirBulan" disabled></td>
+                        <td class="text-center"><input type="radio" ng-checked="!item.akhirBulan" disabled></td">
+                        <td class="text-center"><input type="radio" ng-checked="item.akhirBulan" disabled></td>
+                        <td width="140">
+                            <button type="button" class="btn btn-info" ng-click="me.getSingleModel(item)">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button type="button" class="btn btn-danger" ng-click="me.deleteData(item)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length < 1">
+                        <td colspan="8" class="text-center text-warning">Data Tidak Ditemukan !</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-right">
+            <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages"
+                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="penyesuaiantanggalproduksiForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label class="control-label">Plant<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-4" ng-if="!me.editTrue">
+                        <ui-select ng-model="me.singleProkduksiModel.plant" theme="bootstrap">
+                            <ui-select-match placeholder="Pilih salah satu:">{{$select.selected.plantName}}</ui-select-match>
+                            <ui-select-choices repeat="plant.plantName as plant in me.listPlant | filter: $select.search">
+                                <span ng-bind-html="plant.plantName | highlight: $select.search"></span>-
+                                <span ng-bind-html="plant.nama| highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-4" ng-if="me.editTrue">
+                        <div class="input-group">
+                            <input type="text" ng-model="me.singleProkduksiModel.plant" class="form-control" disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label class="control-label label-PTP">Mulai Jam<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <div uib-timepicker ng-model="me.singleProkduksiModel.dateStart" ng-change="changed()" show-meridian="false" required></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="control-label label-PTP">s/d</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <div uib-timepicker ng-model="me.singleProkduksiModel.dateEnd" ng-change="changed()" show-meridian="false" required></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        &nbsp;
+                    </div>
+                    
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Bukan Akhir Bulan<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="radio" value="false" name="me.singleProkduksiModel.bukanAkhirBulan" ng-checked="me.singleProkduksiModel.bukanAkhirBulan==false" ng-model="me.singleProkduksiModel.bukanAkhirBulan"> Tanggal Sistem
+                        <input type="radio" value="true" name="me.singleProkduksiModel.bukanAkhirBulan" ng-checked="me.singleProkduksiModel.bukanAkhirBulan==true" ng-model="me.singleProkduksiModel.bukanAkhirBulan"> Tanggal Produksi
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Akhir Bulan<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="radio" value="false" name="me.singleProkduksiModel.akhirBulan" ng-checked="me.singleProkduksiModel.akhirBulan==false" ng-model="me.singleProkduksiModel.akhirBulan"> Tanggal Sistem
+                        <input type="radio" value="true" name="me.singleProkduksiModel.akhirBulan" ng-checked="me.singleProkduksiModel.akhirBulan==true" ng-model="me.singleProkduksiModel.akhirBulan"> Tanggal Produksi
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div> 
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <button class="btn btn-primary" ng-disabled="penyesuaiantanggalproduksiForm.$invalid" ng-if="!me.editTrue" ng-click="me.postData()">Simpan</button>
+        <button class="btn btn-primary" ng-disabled="penyesuaiantanggalproduksiForm.$invalid" ng-if="me.editTrue" ng-click="me.updateData()">Edit</button>
+        <button class="btn btn-danger" ng-click="me.cancel(penyesuaiantanggalproduksiForm)">Batal</button>
+    </div>
+</div>

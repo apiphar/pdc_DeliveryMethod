@@ -1,0 +1,151 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>
+                Master Region
+            </h1>
+        </div>
+        <div class="col-sm-6 text-right">
+            <h1>
+                <button type="button" class="buttonSubmit btn btn-primary" ng-click="me.download(result)">Download</button>
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+
+    <div class="menu-panel">
+        <div>
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('regionCode')">Kode Region</th>
+                            <th ng-click="me.order('type')">Tipe Region</th>
+                            <th ng-click="me.order('name')">Region</th>
+                            <th ng-click="me.order('parentRegionCode')">Parent Region</th>
+                            <th ng-click="me.order('postCode')">Kode Pos</th>
+                            <th class="action-1"></th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchString.regionCode" ng-keyup="me.search(this)" />
+                            </th>
+                            <th>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchString.type" ng-keyup="me.search(this)" />
+                            </th>
+                            <th>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchString.name" ng-keyup="me.search(this)" />
+                            </th>
+                            <th>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchString.parentRegionCode" ng-keyup="me.search(this)" />
+                            </th>
+                            <th>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchString.postCode" ng-keyup="me.search(this)" />
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="region in (result =  (me.data | filter : me.searchString:me.allowNullValue | orderBy : me.orderString :me.orderState)) track by region.regionCode "
+                            ng-if="$index >= ((me.currentPage-1)*me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="region.regionCode"></td>
+                            <td ng-bind="region.type"></td>
+                            <td ng-bind="region.name"></td>
+                            <td ng-bind="region.parentRegionCode?region.parentRegionCode+' - '+me.getRegionName(region.parentRegionCode):''"></td>
+                            <td ng-bind="region.postCode"></td>
+                            <td class="action-1">
+                                <button type="button" class="btn btn-primary" ng-click="me.selectUpdate(region)"><i class="glyphicon glyphicon-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length == 0">
+                            <td colspan="6" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="me.loader">
+                            <td colspan="6" class="text-center"><i>Loading ...</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize"
+                    class="pagination-sm" boundary-links="true" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="me.isUpdate">
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <form name="RegionForm" class="form-horizontal row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Kode Region<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control text-uppercase" ng-model="me.region.regionCode" id="txtId" name="RegionCode" ng-disabled="me.buttonState==1" ng-maxlength="16" required="required" ng-pattern="/^[A-Za-z0-9]+$/">
+                            <validation-message input="RegionForm.RegionCode" title="Kode Region" mismatch="harus Alpha Numeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Tipe Region<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control text-uppercase" name="RegionType" ng-model="me.region.regionType" ng-maxlength="4" required="required" ng-pattern="/^[A-Za-z0-9-.&,/' ]+$/">
+                            <validation-message input="RegionForm.RegionType" title="Tipe Region" mismatch="harus Alpha Numeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Region<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control text-uppercase" name="RegionName" ng-model="me.region.name" ng-maxlength="255" required="required" ng-pattern="/^[a-zA-Z0-9-.&,/' ]+$/">
+                            <validation-message input="RegionForm.RegionName" title="Region" mismatch="harus Alpha Numeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Parent Region</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <ui-select ng-model="me.region.parentCode" theme="bootstrap">
+                                <ui-select-match allow-clear="true" placeholder="Pilih salah satu">{{$select.selected.regionCode}} - {{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="region in me.data | filter: $select.search">
+                                    <span ng-bind-html="region.regionCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="region.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Kode Pos<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control text-uppercase" name="PostCode" ng-model="me.region.postCode" ng-maxlength="5" required="required" ng-pattern="/^[0-9]+$/">
+                            <validation-message input="RegionForm.PostCode" title="Kode Pos" mismatch="harus Numeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary" ng-if="me.buttonState==1" ng-click="me.updateRegion(RegionForm)" ng-disabled="me.btnDisableCheck(RegionForm)">Update</button>
+            <button type="reset" class="btn btn-danger" ng-click="me.clear(RegionForm)">Batal</button>
+        </div>
+    </div>
+</div>

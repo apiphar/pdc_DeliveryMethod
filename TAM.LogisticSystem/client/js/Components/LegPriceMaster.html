@@ -1,0 +1,325 @@
+﻿<div ng-if="me.pageState === true" class="col-md-12">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                Leg Price Master
+            </h1>
+        </div>
+        <div class="col-md-6 text-right">
+            <h1>
+                <button class="btn btn-default" ng-click="me.download(result)">
+                    Download
+                </button>
+                <button class="btn btn-primary" ng-click="me.upload()">
+                    Upload
+                </button>
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-primary col-md-1" ng-click="me.order('cityLegCostCode')">Kode Price Leg</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('deliveryVendorNameView')">Kode Vendor</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('carSeriesNameView')">Kode Model Series</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('cityLegNameView')">Kode City Leg</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('deliveryMethodNameView')">Kode Moda</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('validDateView')">Tanggal Berlaku</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('currencyNameView')">Currency</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('nominal')">Biaya</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('needAdditionalCityLegCostCode')">Subtitusi</th>
+                        <th class="col-md-3"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.Search.cityLegCostCode"/></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.Search.deliveryVendorNameView" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.Search.carSeriesNameView" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.Search.cityLegNameView" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.Search.deliveryMethodNameView" /></th>
+                        <th class="col-md-2"><input class="form-control" ng-model="me.Search.validDateView" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.Search.currencyNameView" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.Search.nominal" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.Search.headOfficeAddress" /></th>
+                        <th class="col-md-2"></th>
+                    </tr>
+                    <tr ng-repeat="data in (result = (me.legPriceMasterViewModelList | filter:me.Search | orderBy: me.orderString :me.orderState )) track by data.cityLegCostCode"
+                        ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td class="col-md-1" ng-bind="data.cityLegCostCode"></td>
+                        <td class="col-md-1" ng-bind="data.deliveryVendorNameView"></td>
+                        <td class="col-md-1" ng-bind="data.carSeriesNameView"></td>
+                        <td class="col-md-1" ng-bind="data.cityLegNameView"></td>
+                        <td class="col-md-1" ng-bind="data.deliveryMethodNameView"></td>
+                        <td class="col-md-1" ng-bind="data.validDateView"></td>
+                        <!--<td ng-bind="data.validFrom | date: 'yyyy-MM-dd'"></td>-->
+                        <td class="col-md-1" ng-bind="data.currencyNameView"></td>
+                        <td class="col-md-1" ng-bind="data.nominal"></td>
+                        <td class="col-md-1" ng-bind="data.needAdditionalCityLegCostCode"></td>
+
+                        <td class="col-md-2">
+                            <button (click)="clicked()" type="button" class="btn btn-info btn-action" ng-click="me.selectEdit(data)">
+                                <i class="glyphicon glyphicon-edit icon-sales"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-action" ng-click="me.selectDelete(data,MyForm)">
+                                <i class="glyphicon glyphicon-trash icon-sales"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="10" class="text-warning">Data tidak ditemukan</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-right">
+            <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+    <div class="menu-panel" ng-hide="me.show">
+        <div class="panel-inside-padding">
+            <form name="MyForm" class="form-horizontal row-striped">
+                <div class="form-group" ng-if="me.showEdit==false">
+                    <label class="col-sm-2">Kode Price Leg <span class="mandatory"> *</span></label>
+                    <div class="col-sm-5">
+                        <input name="CityLegCostCode" class="form-control" type="text" ng-model="me.legPriceMasterCreateModel.cityLegCostCode" required pattern="[a-zA-Z0-9]*" ng-change="me.validationCityLegCostCode()" ng-maxlength="16"/>
+                        <validation-message title="Kode Price Leg" input="MyForm.CityLegCostCode"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="me.showEdit==true">
+                    <label class="col-sm-2">Kode Price Leg<span class="mandatory"> *</span></label>
+                    <div class="col-sm-5">
+                        <input class="form-control" type="text" ng-model="me.legPriceMasterCreateModel.cityLegCostCode" disabled />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">Kode Vendor <span class="mandatory"> *</span></label>
+                    <div class="col-sm-5">
+                        <ui-select id="VendorCode" name="VendorCode" ng-model="me.legPriceMasterCreateModel.deliveryVendor" theme="bootstrap" ng-click="me.validationDeliveryVendorCode()" ng-change="me.validationDeliveryVendorCode()" ng-required="me.vendor.deliveryVendorCode === null">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.deliveryVendorCode}}</ui-select-match>
+                            <ui-select-choices repeat="vendorCode in me.deliveryVendorModelList | filter: $select.search">
+                                <span ng-bind-html="vendorCode.deliveryVendorCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="vendorCode.deliveryVendorName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-bind="me.errorMsgDeliveryVendorCode" ng-hide="me.validateDeliveryVendorCodeDetail === true"></span>
+                        <!--<select class="form-control" ng-model="me.vendor" ng-options="option as option.deliveryVendorCode for option in me.vendorCodeData track by option.deliveryVendorCode" ng-change="me.cascadeForModel()"></select>-->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2">Kode Moda <span class="mandatory"> *</span></label>
+                    <div class="col-sm-5">
+                        <ui-select ng-model="me.legPriceMasterCreateModel.deliveryMethod" theme="bootstrap" ng-click="me.validationDeliveryMethodCode()" ng-change="me.validationDeliveryMethodCode()">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.deliveryMethodCode}}</ui-select-match>
+                            <ui-select-choices repeat="methodCode in me.deliveryMethodModelList | filter: $select.search">
+                                <span ng-bind-html="methodCode.deliveryMethodCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="methodCode.deliveryMethodName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-bind="me.errorMsgDeliveryMethodCode" ng-hide="me.validateDeliveryMethodCodeDetail === true"></span>
+                        <!--<select class="form-control" ng-model="me.methodCode" ng-options="option as option.deliveryMethodCode for option in me.methodCodeData track by option.deliveryMethodCode" ng-change="me.cascadeForModel()"></select>-->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2">Kode City Leg <span class="mandatory"> *</span></label>
+                    <div class="col-sm-5">
+                        <ui-select ng-model="me.legPriceMasterCreateModel.cityLeg" theme="bootstrap" ng-click="me.validationCityLegCode()" ng-change="me.validationCityLegCode()">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.cityLegCode}}</ui-select-match>
+                            <ui-select-choices repeat="nameKodeCityLeg in me.cityLegModelList | filter: $select.search">
+                                <span ng-bind-html="nameKodeCityLeg.cityLegCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="nameKodeCityLeg.cityLegName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-bind="me.errorMsgCityLegCode" ng-hide="me.validateCityLegCodeDetail === true"></span>
+                        <!--<select class="form-control" ng-model="me.nameKodeCityLeg" ng-options="option as option.cityLegCode for option in me.kodeCityLegData track by option.cityLegCode" ng-change="me.cascadeForModel()"></select>-->
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2">Kode Model Series <span class="mandatory"> *</span></label>
+                    <div class="col-sm-5">
+                        <ui-select ng-model="me.legPriceMasterCreateModel.carSeries" theme="bootstrap" ng-click="me.validationCarSeriesCode()" ng-change="me.validationCarSeriesCode()">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.carSeriesCode}}</ui-select-match>
+                            <ui-select-choices repeat="NameSeries in me.carSeriesModelList | filter: $select.search">
+                                <span ng-bind-html="NameSeries.carSeriesCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="NameSeries.carSeriesName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-bind="me.errorMsgCarSeriesCode" ng-hide="me.validateCarSeriesCodeDetail === true"></span>
+                        <!--<select class="form-control" ng-model="me.NameSeries" ng-options="option as option.carSeriesCode for option in me.nameData track by option.carSeriesCode" ng-change="me.cascadeForModel()"></select>-->
+
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2">Currency <span class="mandatory"> *</span></label>
+                    <div class="col-sm-5">
+                        <ui-select ng-model="me.legPriceMasterCreateModel.currency" theme="bootstrap" ng-click="me.validationCurrencySymbol()" ng-change="me.validationCurrencySymbol()">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.currencySymbol}}</ui-select-match>
+                            <ui-select-choices repeat="currency in me.currencyModelList | filter: $select.search">
+                                <span ng-bind-html="currency.currencySymbol | highlight: $select.search"></span> -
+                                <span ng-bind-html="currency.currencyName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-bind="me.errorMsgCurrencySymbol" ng-hide="me.validateCurrencySymbolDetail === true"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2">Biaya <span class="mandatory"> *</span></label>
+                    <div class="col-sm-5">
+                        <input name="Cost" class="form-control" type="text" ng-model="me.legPriceMasterCreateModel.nominal" ng-change="me.validationNominal()" required pattern="[0-9]*" />
+                        <validation-message title="Biaya" input="MyForm.Cost"></validation-message>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2">Tanggal Berlaku<span class="mandatory"> *</span></label>
+                    <div class="col-sm-5">
+                        <!--<input class="form-control" type="date" ng-model="me.validDate" />-->
+                        <div class="input-group">
+                            <input name="ValidDateFrom" type="text" class="form-control" ng-click="me.validationValidDate()" ng-change="me.validationValidDate()" uib-datepicker-popup="dd-MMM-yyyy"
+                                   ng-model="me.legPriceMasterCreateModel.validDate" is-open="me.opened" datepicker-options="dateOptions"
+                                   close-text="Close" readonly required/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="me.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>                          
+                        </div>
+                        <validation-message title="Tanggal Berlaku" input="MyForm.ValidDateFrom"></validation-message>
+                    </div>
+                </div>
+                
+                
+                <div class="form-group">
+                    <label class="col-sm-2">Substitusi</label>
+                    <div class="col-sm-5">
+                        <input name="Substitusi" class="form-control" type="text" ng-model="me.legPriceMasterCreateModel.needAdditionalCityLegCostCode" readonly required/>
+                        <validation-message input="MyForm.Substitusi"></validation-message>
+                    </div>
+                    <div>
+                        <button type="button" ng-click="me.showData();me.SearchDetail = undefined;me.currentPage = 1">---</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label class="control-label form-note"><i>*: Field Mandatory harus diisi</i></label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="menu-panel" ng-if="me.show">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="col-md-1"></th>
+                        <th class="text-primary col-md-1" ng-click="me.order('cityLegCostCode')">Kode Price Leg</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('deliveryVendorNameView')">Kode Vendor</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('carSeriesNameView')">Kode Model Series</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('cityLegNameView')">Kode City Leg</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('deliveryMethodNameView')">Kode Moda</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('validDateView')">Tanggal Berlaku</th>
+                        <th class="text-primary col-md-1" ng-click="me.order('nominal')">Currency</th>
+                        <th class="text-primary col-md-2" ng-click="me.order('nominal')">Biaya</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="col-md-1"></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.SearchDetail.cityLegCostCode" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.SearchDetail.deliveryVendorNameView" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.SearchDetail.carSeriesNameView" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.SearchDetail.cityLegNameView" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.SearchDetail.deliveryMethodNameView" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.SearchDetail.validDateView" /></th>
+                        <th class="col-md-1"><input class="form-control" ng-model="me.SearchDetail.currencyNameView" /></th>
+                        <th class="col-md-2"><input class="form-control" ng-model="me.SearchDetail.nominal" /></th>                       
+                    </tr>
+                    <tr ng-repeat="data in (result = (me.legPriceMasterViewModelList | filter:me.SearchDetail | orderBy: me.orderString :me.orderState )) track by data.cityLegCostCode"
+                        ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td>
+                            <input type="radio" ng-click="me.selectCode(data)" />
+                        </td>
+                        <td class="col-md-1" ng-bind="data.cityLegCostCode"></td>
+                        <td class="col-md-2" ng-bind="data.deliveryVendorNameView"></td>
+                        <td class="col-md-2" ng-bind="data.carSeriesNameView"></td>
+                        <td class="col-md-2" ng-bind="data.cityLegNameView"></td>
+                        <td class="col-md-1" ng-bind="data.deliveryMethodNameView"></td>
+                        <td class="col-md-2" ng-bind="data.validDateView"></td>
+                        <td class="col-md-1" ng-bind="data.currencyNameView"></td>
+                        <td class="col-md-2" ng-bind="data.nominal"></td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="9" class="text-warning">Data tidak ditemukan</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+            <button type="submit" class="frmSubmit btn btn-primary" data-target="#ModalShowCreate" ng-click="me.closeData(data)">Pilih</button>
+            <button type="reset" class="btn btn-danger" ng-click="me.batalData()">Batal</button>
+        </div>
+        <!--<div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="text-primary">Kode Price Leg</th>
+                        <th class="text-primary">Kode Vendor</th>
+                        <th class="text-primary">Kode Model Series</th>
+                        <th class="text-primary">Kode City Leg</th>
+                        <th class="text-primary">Moda Code</th>
+                        <th class="text-primary">Tanggal Berlaku</th>
+                        <th class="text-primary">Currency</th>
+                        <th class="text-primary">Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in (result = (me.Data | filter:me.Search)) | orderBy:'+name'">
+                        <td>
+                            <input type="radio" ng-click="me.selectCode(data)" />
+                        </td>
+                        <td ng-bind="data.cityLegCostCode"></td>
+                        <td ng-bind="data.deliveryVendorCode"></td>
+                        <td ng-bind="data.carSeriesCode"></td>
+                        <td ng-bind="data.cityLegCode"></td>
+                        <td ng-bind="data.deliveryMethodCode"></td>
+                        <td ng-bind="data.validDate | date: 'yyyy-MM-dd'"></td>
+                        <td ng-bind="data.validFrom | date: 'yyyy-MM-dd'"></td>
+                        <td ng-bind="data.currencySymbol"></td>
+                        <td ng-bind="data.nominal"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="frmSubmit btn btn-primary" data-target="#ModalShowCreate" ng-click="me.closeData(data)">Pilih</button>
+            <button type="reset" class="btn btn-danger" ng-click="me.batalData()">Batal</button>
+        </div>-->
+
+    </div>
+
+    <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+    <div class="form-group">
+        <div class="pull-right">
+            <button type="submit" class="frmSubmit btn btn-primary" ng-click="me.insertData()" ng-if="me.created==true" ng-disabled="me.validate === false">Simpan</button>
+            <button type="submit" class="frmSubmit btn btn-primary" ng-click="me.editData()" ng-if="me.edited==true" ng-disabled="me.validate === false">Update</button>
+            <button type="reset" class="buttonSubmit btn btn-danger" ng-click="me.refreshData()">Batal</button>
+        </div>
+    </div>
+
+</div>
+

@@ -1,0 +1,155 @@
+﻿<div class="col-md-12">
+    <h1>
+        Maintenance Shift Kerja
+    </h1>
+    <div class="header-line"></div> 
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th ng-click="me.order('locationCode')">Lokasi</th>
+                        <th ng-click="me.order('shiftCode')">Shift</th>
+                        <th ng-click="me.order('start')">Mulai Kerja</th>
+                        <th ng-click="me.order('finish')">Selesai Kerja</th>
+                        <th class="action"></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchString.locationCode" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchString.shiftCode" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchString.penampungDateFrom" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchString.penampungDateTo" />
+                        </td>
+                        <td></td>
+                    </tr>
+                    
+                </thead>
+                <tbody>
+                    <tr ng-if="me.totalItems== 0 || me.listAllData.maintenanceShiftKerjaFullModel.length == 0">
+                        <td class="text-center" colspan="6">Data tidak ditemukan</td>
+                    </tr>
+                    <tr ng-if="me.isLoading== true">
+                        <td class="text-center" colspan="6"><i>Loading ...</i></td>
+                    </tr>
+                    <tr ng-repeat="data in (result = (me.listAllData.maintenanceShiftKerjaFullModel | filter: me.searchString | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="data.locationCode"></td>
+                        <td ng-bind="data.shiftCode"></td>
+                        <td ng-bind="data.penampungDateFrom"></td>
+                        <td ng-bind="data.penampungDateTo"></td>
+                        <td class="action">
+                            <button type="button" class="btn btn-info" ng-click="me.selectSingleData(data)">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button type="button" class="btn btn-danger" ng-click="me.deleteData(data,shiftKerja)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-right">
+            <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="shiftKerja" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label class="control-label">Kode Lokasi<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <ui-select ng-model="me.singleViewModel.locationCode" theme="bootstrap" required name="location" >
+                                <ui-select-match placeholder="Pilih salah satu" >{{$select.selected.locationCode}} - {{$select.selected.nama}}</ui-select-match>
+                                <ui-select-choices repeat="location.locationCode as location in me.listAllData.lokasiModel | filter: $select.search">
+                                    <span  ng-bind-html="location.locationCode | highlight: $select.search"></span> -
+                                    <span  ng-bind-html="location.nama| highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label class="control-label">Kode Shift<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <ui-select ng-model="me.singleViewModel.shiftCode" theme="bootstrap" required name="ShiftCode" >
+                                <ui-select-match placeholder="Pilih salah satu" >{{$select.selected.shiftCode}}</ui-select-match>
+                                <ui-select-choices repeat="shift.shiftCode as shift in me.listAllData.shiftModel | filter: $select.search">
+                                    <span ng-bind-html="shift.shiftCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="shift.description | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-datepicker">
+                    <div class="row">
+                        <!--/Date From/-->
+                        <div class="col-sm-2">
+                            <label class="control-label">Mulai Kerja<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup="dd-MMM-yyyy" ng-model="me.singleViewModel.start" is-open="deliveryDatepicker1IsOpen"
+                                       ng-required="true" close-text="Close" ng-change="me.dateChange(shiftKerja)" readonly required name="TanggalMulai" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="deliveryDatepicker1IsOpen = !deliveryDatepicker1IsOpen">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>                            
+                        </div>
+                        <div class="col-sm-2">
+                            <div uib-timepicker ng-model="me.singleViewModel.start" hour-step="me.hourStep" minute-step="me.minuteStep" show-meridian="false" ng-change="me.dateChange()"></div>
+                        </div>
+                        <!--/Date To/-->
+                        <div class="col-sm-2">
+                            <label class="control-label">Selesai Kerja<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="input-group">
+                                <input type="text" ng-model="me.singleViewModel.finish" class="form-control" uib-datepicker-popup="dd-MMM-yyyy"  is-open="deliveryDatepickerIsOpen"
+                                       ng-required="true" close-text="Close" readonly required name="TanggalSelesai" datepicker-options="me.dateEndoption" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="deliveryDatepickerIsOpen = !deliveryDatepickerIsOpen">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div uib-timepicker ng-model="me.singleViewModel.finish" hour-step="me.hourStep" minute-step="me.minuteStep" show-meridian="false" min="me.singleViewModel.dateFrom"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="text-right">
+        <button type="button" ng-disabled="shiftKerja.$invalid || me.singleViewModel.finish <= me.singleViewModel.start||me.singleViewModel.locationCode== null||me.singleViewModel.shiftCode== null " ng-if="!me.editValue" ng-click="me.submitData(shiftKerja)" class="btn btn-primary">Simpan</button>
+        <button type="button" ng-disabled="shiftKerja.$invalid || me.singleViewModel.finish <= me.singleViewModel.start||me.singleViewModel.locationCode== null||me.singleViewModel.shiftCode== null " ng-if="me.editValue" ng-click="me.editData(shiftKerja)" class="btn btn-primary">Update</button>
+        <button type="button" class="btn btn-danger" ng-click="me.resetForm(shiftKerja)">Batal</button>
+    </div>
+</div>

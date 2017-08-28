@@ -1,0 +1,12 @@
+﻿
+
+    <div class="form-group">
+        <div class="col-md-9">
+            <input type="radio" value="1" disabled ng-checked="me.cancelDeliveryRequestViewModel.deliveryRequestTransitTypeId === 1"  class="radio radio-inline" /> Return to PDC
+            <input type="radio" value="2" disabled ng-checked="me.cancelDeliveryRequestViewModel.deliveryRequestTransitTypeId === 2"  class="radio radio-inline" /> Return to Others PDC
+            <input type="text" class="form-inline" disabled ng-model="me.cancelDeliveryRequestViewModel.otherPdcLocation" />
+            <input type="radio" value="3" disabled ng-checked="me.cancelDeliveryRequestViewModel.deliveryRequestTransitTypeId === 3" class="radio radio-inline" /> Self Pick From Others
+        </div>
+    </div>
+        
+<cancel-delivery-request-transit-to-others-self-pick-from-others ng-show="me.cancelDeliveryRequestViewModel.deliveryRequestTransitTypeId === 3"></cancel-delivery-request-transit-to-others-self-pick-from-others>

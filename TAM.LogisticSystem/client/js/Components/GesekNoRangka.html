@@ -1,0 +1,106 @@
+﻿<div class="col-md-12">
+    <h1>Gesek Nomor Rangka</h1>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="GesekNoRangkaForm" class="form-horizontal" ng-submit="me.checkDataByFrameNo(GesekNoRangkaForm)">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row-striped">
+                            <div class="form-group">
+                                <label class="control-label col-sm-2 black">Frame No <span class="mandatory">*</span></label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input ng-disabled="me.formDisableFlag==true" ng-change="me.resetCustomErrorMessage()" type="text" class="form-control" ng-model="me.frameNo" name="FrameNo" required="required" maxlength="17" ng-minlength="17" ng-pattern="me.regexCode">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-default">
+                                                <span class="glyphicon glyphicon glyphicon-search" aria-hidden="true"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <validation-message input="GesekNoRangkaForm.FrameNo" title="Frame No."></validation-message>      
+                                    <span ng-bind="me.errorMessage" class="field-validation-error"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Katashiki-Suffix</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" ng-model="me.data.katashiki" disabled>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" ng-model="me.data.suffix" disabled>
+                                </div>
+                                <div class="col-sm-1"></div>
+                                <label class="control-label col-sm-2">Model</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" ng-model="me.data.model" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Tipe</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" ng-model="me.data.jenis" disabled>
+                                </div>
+                                <div class="col-sm-1"></div>
+                                <label class="control-label col-sm-2">Warna</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" ng-model="me.data.color" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Branch</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" ng-model="me.data.branchName" disabled>
+                                </div>
+                                <div class="col-sm-1"></div>
+                                <label class="control-label col-sm-2">ETD PDC R</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" value="{{me.data.etdpdc | date:'dd-MMM-yyyy'}}" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Customer Assign</label>
+                                <div class="col-sm-4">
+                                    <div class="radio-inline">
+                                        <input type="checkbox" ng-model="me.data.hasCustomer" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1"></div>
+                                <label class="control-label col-sm-2">Requested PDD</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" value="{{me.data.requestedPDD | date:'dd-MMM-yyyy'}}" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Lokasi</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" ng-model="me.location" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Tanggal</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" value="{{(me.tanggal | date:'dd MMM yyyy')}}" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Ketentuan Gesek</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" ng-model="me.data.jumlahGesek" disabled>
+                                </div>
+                                <h5 class="col-sm-1">Kali</h5>
+                                <div class="col-sm-5">
+                                    <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary" ng-click="me.saveGesekan(GesekNoRangkaForm)" ng-disabled="me.btnDisableFlag==true">Simpan</button>
+        <button type="reset" class="btn btn-danger" ng-click="me.reset(GesekNoRangkaForm)">Batal</button>
+    </div>
+</div>

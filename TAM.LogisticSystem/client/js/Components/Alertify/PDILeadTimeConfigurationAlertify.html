@@ -1,0 +1,40 @@
+﻿<label class="control-label">Apakah anda yakin ingin menyimpan data?</label>
+
+<div class="table-responsive pre-scrollable">
+    <table class="table">
+        <tr>
+            <td>
+                <strong>Lokasi</strong>
+            </td>
+            <td class="text-uppercase">
+                {{Lokasi}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Takt Time</strong>
+            </td>
+            <td class="text-uppercase">
+                {{Takt Time}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Jumlah Pos</strong>
+            </td>
+            <td class="text-uppercase">
+                {{Jumlah Pos}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Katashiki - Suffix</strong>
+            </td>
+            {{#KatashikiSuffix}}
+            <td class="text-uppercase katsu-row">
+                <p>{{katashiki}} - {{suffix}}</p>
+            </td>
+            {{/KatashikiSuffix}}
+        </tr>
+    </table>
+</div>

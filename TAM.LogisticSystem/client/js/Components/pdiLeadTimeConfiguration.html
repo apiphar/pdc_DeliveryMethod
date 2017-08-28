@@ -1,0 +1,212 @@
+﻿<div ng-if="me.pageState == true" class="Page">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>PDI Lead Time Configuration</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <h1>
+                    <button type="button" class="btn btn-primary" ng-click="me.download(result)">Download</button>
+                    <button type="button" class="btn btn-default" ng-click="me.upload()">Upload</button>
+                </h1>
+
+            </div>
+        </div>
+        <div class="header-line"></div>
+        <div class="menu-panel">
+            <div class="text-right">
+                <p>Tampilkan <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select> item per halaman</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('locationCode')">Lokasi</th>
+                            <th ng-click="me.order('katashiki')">Katashiki</th>
+                            <th ng-click="me.order('suffix')">Suffix</th>
+                            <th ng-click="me.order('taktSeconds')">Takt Time</th>
+                            <th ng-click="me.order('post')">Jumlah Pos</th>
+                            <th class="action"></th>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.locationString"></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.katashiki"></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.suffix"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in (result = (me.pdiLeadTimeConfigurations | filter : me.searchTable | orderBy : me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.locationString"></td>
+                            <td ng-bind="data.katashiki"></td>
+                            <td ng-bind="data.suffix"></td>
+                            <td ng-bind="data.taktTimeString"></td>
+                            <td ng-bind="data.post"></td>
+                            <td class="action">
+                                <button type="button" ng-click="me.setUpdateForm(data)" class="btn btn-info">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </button>
+                                <button ng-click="me.deletePDILeadTimeConfiguration(data, PDILeadTimeConfigurationForm)" class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length === 0">
+                            <td colspan="6" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="me.pdiLeadTimeConfigurations == null">
+                            <td colspan="6" class="text-center"><i>Loading...</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <form name="PDILeadTimeConfigurationForm" class="form-horizontal row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Lokasi<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <ui-select ng-model="me.submitForm.locationCode" theme="bootstrap" name="LocationComboBox" ng-disabled="me.isUpdate === true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.locationName}}</ui-select-match>
+                                <ui-select-choices repeat="location.locationCode as location in me.locations | filter : $select.search">
+                                    <span ng-bind-html="location.locationCode | highlight : $select.search"></span> - <span ng-bind-html="location.locationName | highlight : $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Takt Time<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <input name="TaktTimeHour" type="number" class="form-control" ng-model="me.taktTimesForm.hour" min="0" max="23" ng-required="me.taktTimesForm.minute == null && me.taktTimesForm.second == null" pattern="^[0-9]*$" />
+                                </div>
+                                <div class="col-sm-1">
+                                    <label class="control-label">Jam</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input name="TaktTimeMinute" type="number" class="form-control" ng-model="me.taktTimesForm.minute" min="0" max="59" ng-required="me.taktTimesForm.hour == null && me.taktTimesForm.second == null" pattern="^[0-9]*$" />
+                                </div>
+                                <div class="col-sm-1">
+                                    <label class="control-label">Menit</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input name="TaktTimeSecond" type="number" class="form-control" ng-model="me.taktTimesForm.second" min="0" max="59" ng-required="me.taktTimesForm.hour == null && me.taktTimesForm.minute == null" pattern="^[0-9]*$" />
+                                </div>
+                                <div class="col-sm-1">
+                                    <label class="control-label">Detik</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">&nbsp;</div>
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <validation-message input="PDILeadTimeConfigurationForm.TaktTimeHour" title="Jam"></validation-message>
+                            <validation-message input="PDILeadTimeConfigurationForm.TaktTimeMinute" title="Menit"></validation-message>
+                            <validation-message input="PDILeadTimeConfigurationForm.TaktTimeSecond" title="Detik"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Jumlah Pos<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-1">
+                            <input name="JumlahPos" type="number" class="form-control" ng-model="me.submitForm.post" min="0" max="99" required ng-pattern="me.numberPattern" />
+                        </div>
+                        <div class="col-sm-9">&nbsp;</div>
+                        <div class="col-sm-9">&nbsp;</div>
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <validation-message input="PDILeadTimeConfigurationForm.JumlahPos" title="Jumlah Pos"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="menu-panel col-sm-6">
+            <h4 class="h4-aqua">Katashiki - Suffix<span class="mandatory">*</span></h4>
+            <ul class="scrollable-panel">
+                <li>
+                    <a role="button" ng-click="me.expandAll = !me.expandAll">
+                        <span ng-if="me.expandAll === true" class="glyphicon glyphicon-triangle-bottom"></span>
+                        <span ng-if="me.expandAll === false" class="glyphicon glyphicon-triangle-right"></span>
+                    </a>
+                    <label>
+                        <input type="checkbox" ng-model="me.selectAllCheckbox" ng-disabled="me.isUpdate === true" ng-click="me.setAllCheckboxes()" />
+                        <span>(Select All)</span>
+                    </label>
+                    <ul ng-hide="me.expandAll === false">
+                        <li ng-repeat="carModel in me.katashikiSuffixCheckboxes">
+                            <a role="button" ng-click="carModel.isExpand = !carModel.isExpand">
+                                <span ng-if="carModel.isExpand === true" class="glyphicon glyphicon-triangle-bottom"></span>
+                                <span ng-if="carModel.isExpand === false" class="glyphicon glyphicon-triangle-right"></span>
+                            </a>
+                            <label>
+                                <input type="checkbox" ng-model="carModel.isChecked" ng-click="me.setCarSeriesCheckboxes(carModel)" ng-disabled="me.isUpdate === true" />
+                                <span ng-bind="carModel.carModelName"></span>
+                            </label>
+                            <ul ng-hide="carModel.isExpand === false">
+                                <li ng-repeat="carSeries in carModel.carSeries">
+                                    <a role="button" ng-click="carSeries.isExpand = !carSeries.isExpand">
+                                        <span ng-if="carSeries.isExpand === true" class="glyphicon glyphicon-triangle-bottom"></span>
+                                        <span ng-if="carSeries.isExpand === false" class="glyphicon glyphicon-triangle-right"></span>
+                                    </a>
+                                    <label>
+                                        <input type="checkbox" ng-model="carSeries.isChecked" ng-click="me.setCarTypeKatashikiCheckboxes(carSeries, carModel)" ng-disabled="me.isUpdate === true" />
+                                        <span ng-bind="carSeries.carSeriesName"></span>
+                                    </label>
+                                    <ul ng-hide="carSeries.isExpand === false">
+                                        <li ng-repeat="carTypeKatashiki in carSeries.carTypeKatashikis">
+                                            <a role="button" ng-click="carTypeKatashiki.isExpand = !carTypeKatashiki.isExpand">
+                                                <span ng-if="carTypeKatashiki.isExpand === true" class="glyphicon glyphicon-triangle-bottom"></span>
+                                                <span ng-if="carTypeKatashiki.isExpand === false" class="glyphicon glyphicon-triangle-right"></span>
+                                            </a>
+                                            <label>
+                                                <input type="checkbox" ng-model="carTypeKatashiki.isChecked"
+                                                       ng-click="me.setCarTypeSuffixCheckboxes(carTypeKatashiki, carSeries, carModel)" ng-disabled="me.isUpdate === true" />
+                                                <span ng-bind="carTypeKatashiki.katashiki"></span>
+                                            </label>
+                                            <ul ng-hide="carTypeKatashiki.isExpand === false">
+                                                <li class="" ng-repeat="carTypeSuffix in carTypeKatashiki.suffixes">
+                                                    <label>
+                                                        <input type="checkbox" ng-model="carTypeSuffix.isChecked" ng-disabled="me.isUpdate === true" ng-click="me.checkSelectedSuffix(carTypeSuffix, carTypeKatashiki, carSeries, carModel)" />
+                                                        <span ng-bind="carTypeSuffix.suffix"></span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="text-right col-sm-12">
+                <button type="button" ng-click="me.formOnSubmit(PDILeadTimeConfigurationForm)" class="btn btn-primary" ng-if="me.isUpdate === false" ng-disabled="me.isKatashikiSuffixChecked === false || PDILeadTimeConfigurationForm.$invalid || me.submitForm.locationCode == null">Simpan</button>
+                <button type="button" ng-click="me.formOnSubmit(PDILeadTimeConfigurationForm)" class="btn btn-primary" ng-if="me.isUpdate === true" ng-disabled="PDILeadTimeConfigurationForm.$invalid || me.submitForm.locationCode == null">Update</button>
+                <button type="button" ng-click="me.resetForm(PDILeadTimeConfigurationForm)" class="btn btn-danger">Batal</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,159 @@
+﻿<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-10">
+            <h1>
+
+                Maintenance Rute Production & Lead Time
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th ng-click="me.order('namaLocation')">Lokasi</th>
+                        <th ng-click="me.order('ordering')">No. Urut</th>
+                        <th ng-click="me.order('katashiki')">Katashiki</th>
+                        <th ng-click="me.order('suffix')">Suffix</th>
+                        <th ng-click="me.order('namaType')" class="text-primary text-nowrap">Model & Type</th>
+                        <th ng-click="me.order('routingMasterCode')">Rute</th>
+                        <th ng-click="me.order('leadMinutes')">Lead Time</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.namaLocation" /></th>
+                        <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.ordering" /></th>
+                        <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.katashiki" /></th>
+                        <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.suffix" /></th>
+                        <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.namaType" /></th>
+                        <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.routingMasterCode" /></th>
+                        <th><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.leadMinutes" /></th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="data in (result = (me.Data | filter: Search | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="data.namaLocation"></td>
+                        <td ng-bind="data.ordering"></td>
+                        <td ng-bind="data.katashiki"></td>
+                        <td ng-bind="data.suffix"></td>
+                        <td ng-bind="data.namaType"></td>
+                        <td ng-bind="data.routingMasterCode"></td>
+                        <td ng-bind="data.leadMinutes"></td>
+                        <td class="text-nowrap">
+                            <button id="btnEdit" type="button" class="btn btn-info" ng-click="me.selectEdit(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                            <button type="button" class="btn btn-danger" ng-click="me.confirmationDelete('Delete', data)"><i class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="8" class="text-center">Data tidak ditemukan</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-right">
+            <ul uib-pagination total-items="result.length" ng-model="me.currentPage" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="exampleForm" class="form-horizontal row-striped">
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Lokasi</label>
+                    </div>
+                    <div class="col-sm-3">
+
+                        <ui-select ng-model="me.SelectedLocation" theme="bootstrap">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.namaLocation}}</ui-select-match>
+                            <ui-select-choices repeat="dataLocation in me.ActiveLocation | filter: $select.search">
+                                <span ng-bind-html="dataLocation.namaLocation | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+
+
+                    <div class="col-sm-2">
+                        <label class="control-label">No.Urut</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input class="form-control" ng-model="me.Ordering" id="NomorUrut" name="NomorUrut" />
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Katashiki</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.Katashiki" theme="bootstrap" on-select="me.cascadeForSuffix($item)">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.katashiki}}</ui-select-match>
+                            <ui-select-choices repeat="dataKatashiki in me.KatashikiData | filter: $select.search">
+                                <span ng-bind-html="dataKatashiki.katashiki | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <label class="control-label">Suffix</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.Suffix" theme="bootstrap" on-select="me.cascadeForModel($item)">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.suffix}}</ui-select-match>
+                            <ui-select-choices repeat="dataSuffix in me.SuffixData | filter: $select.search">
+                                <span ng-bind-html="dataSuffix.suffix | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <label class="control-label" ng-bind="me.CarModelData.carModelCode"></label>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Rute</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.SelectRoutingMaster" theme="bootstrap" on-select="me.cascadeForRute($item)">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.routingMasterCode}}</ui-select-match>
+                            <ui-select-choices repeat="dataRoutingMaster in me.ActiveRoutingMaster | filter: $select.search">
+                                <span ng-bind-html="dataRoutingMaster.routingMasterCode | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <label class="control-label" ng-bind="me.NamaRute"></label>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Lead Time</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input class="form-control" name="LeadMinutes" ng-model="me.LeadMinutes">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <br />
+    <div class="pull-right">
+        <button type="reset" id="btnReset" ng-click="me.clearForm()" class="btn btn-default"> Batal</button>
+        <button type="submit" id="btnSubmit" ng-click="me.confirmationDialog('Are you sure want to save this Exchange Rate ?', 'Create', MyForm)" ng-if="me.created==true" class="btn btn-primary"> Simpan</button>
+        <button type="submit" id="btnUpdate" class="btn btn-primary" ng-click="me.confirmationDialog('Are you sure want to update this Exchange Rate ?', 'Update', MyForm)" ng-if="me.edited==true">Update</button>
+    </div>
+</div>

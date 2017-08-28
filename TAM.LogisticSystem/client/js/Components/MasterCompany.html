@@ -1,0 +1,204 @@
+﻿<div ng-if="me.pageState == true" class="Page">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>Master Company</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <h1>
+                    <button type="button" class="btn btn-primary" ng-click="me.download(result)">Download</button>
+                </h1>
+            </div>
+        </div>
+        <div class="header-line"></div>
+        <div class="menu-panel">
+            <div class="text-right">
+                <p>Tampilkan <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPage(me.currentPage)"></select> item per halaman</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('dealerCode')">Kode Dealer</th>
+                            <th ng-click="me.order('companyCode')">Kode Company</th>
+                            <th ng-click="me.order('name')">Company</th>
+                            <th ng-click="me.order('npwpAddress')">Alamat NPWP</th>
+                            <th ng-click="me.order('sapCode')">Kode Company SAP</th>
+                            <th ng-click="me.order('phone')">No. Telp.</th>
+                            <th ng-click="me.order('fax')">No. Fax</th>
+                            <th ng-click="me.order('email')">Email</th>
+                            <th ng-click="me.order('tradeName')">Trade Name</th>
+                            <th ng-click="me.order('npwp')">NPWP</th>
+                            <th ng-click="me.order('isDealerFinancing')">Dealer Financing</th>
+                            <th ng-click="me.order('termOfPaymentDay')">TOP</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.dealerString" /></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.companyCode" /></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.name" /></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.npwpAddress" /></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.sapCode" /></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.phone" /></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.fax" /></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.email" /></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.tradeName" /></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.npwp" /></td>
+                            <td><input type="checkbox" ng-change="me.search(this)" ng-model="me.searchTable.isDealerFinancing" /></td>
+                            <td><input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.termOfPaymentDay" /></td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in (result = (me.masterCompaniesData | filter: me.searchTable | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage - 1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.dealerString"></td>
+                            <td ng-bind="data.companyCode"></td>
+                            <td ng-bind="data.companyName"></td>
+                            <td ng-bind="data.npwpAddress"></td>
+                            <td ng-bind="data.sapCode"></td>
+                            <td ng-bind="data.phone"></td>
+                            <td ng-bind="data.fax"></td>
+                            <td ng-bind="data.email"></td>
+                            <td ng-bind="data.tradeName"></td>
+                            <td ng-bind="data.npwp"></td>
+                            <td><input type="checkbox" ng-checked="data.isDealerFinancing" ng-true-value="true" ng-false-value="false" disabled></td>
+                            <td ng-bind="data.termOfPaymentDayString"></td>
+                            <td class="action-1">
+                                <button type="button" class="btn btn-info" ng-click="me.setUpdate(data)">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length === 0">
+                            <td colspan="13" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="me.masterCompaniesData == null">
+                            <td colspan="13" class="text-center"><i>Loading...</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+        <div class="menu-panel" ng-show="me.isUpdate === true">
+            <div class="panel-inside-padding">
+                <form name="MasterCompanyForm" class="form-horizontal row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Kode Dealer<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <ui-select ng-model="me.masterCompanyData.dealerCode" theme="bootstrap" name="DealerCodeComboBox">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.dealerCode}} - {{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="dealer.dealerCode as dealer in me.masterCompanyDealersData | filter: $select.search">
+                                    <span ng-bind-html="dealer.dealerCode | highlight: $select.search"></span> - 
+                                    <span ng-bind-html="dealer.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                            <span class="mandatory" ng-show="me.masterCompanyData.dealerCode == null && MasterCompanyForm.DealerCodeComboBox.$touched">Kode Dealer harus dipilih</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">No Fax</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="NoFax" ng-model="me.masterCompanyData.fax" ng-maxlength="32" ng-pattern="me.numericPattern" />
+                            <validation-message input="MasterCompanyForm.NoFax"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Kode Company<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="KodeCompany" ng-model="me.masterCompanyData.companyCode" required ng-maxlength="16" ng-pattern="me.codePattern" ng-disabled="me.isUpdate === true" />
+                            <validation-message input="MasterCompanyForm.KodeCompany"></validation-message>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Email<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="email" class="form-control" name="Email" ng-model="me.masterCompanyData.email" required ng-maxlength="255" />
+                            <validation-message input="MasterCompanyForm.Email"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Company<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="Company" ng-model="me.masterCompanyData.companyName" required ng-maxlength="255" ng-pattern="me.namePattern" />
+                            <validation-message input="MasterCompanyForm.Company"></validation-message>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Trade Name<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="TradeName" ng-model="me.masterCompanyData.tradeName" required ng-maxlength="255" />
+                            <validation-message input="MasterCompanyForm.TradeName"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Alamat NPWP<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="AlamatNPWP" ng-model="me.masterCompanyData.npwpAddress" required ng-maxlength="255" />
+                            <validation-message input="MasterCompanyForm.AlamatNPWP"></validation-message>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">NPWP<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="NPWP" ng-model="me.masterCompanyData.npwp" required ng-maxlength="32" ng-pattern="me.npwpPattern" />
+                            <validation-message input="MasterCompanyForm.NPWP"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Kode Company SAP<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="KodeCompanySAP" ng-model="me.masterCompanyData.sapCode" required ng-pattern="me.codePattern" ng-maxlength="8" />
+                            <validation-message input="MasterCompanyForm.KodeCompanySAP"></validation-message>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Dealer Financing</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="checkbox" name="DealerFinancing" ng-model="me.masterCompanyData.isDealerFinancing" ng -checked="me.masterCompanyData.isDealerFinancing" />
+                            <validation-message input="MasterCompanyForm.DealerFinancing"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">No Telp.</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="NoTelp" ng-model="me.masterCompanyData.phone" ng-maxlength="32" ng-pattern="me.numericPattern" />
+                            <validation-message input="MasterCompanyForm.NoTelp"></validation-message>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Term of Payment<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="number" class="form-control" name="TermofPayment" min="0" ng-model="me.masterCompanyData.termOfPaymentDay" required ng-pattern="me.numericPattern" />
+                            <validation-message input="MasterCompanyForm.TermofPayment"></validation-message>
+                        </div>
+                        <div class="col-sm-1">
+                            <label class="control-label">Hari</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="text-right" ng-show="me.isUpdate === true">
+            <button type="button" ng-click="me.update(MasterCompanyForm)" class="btn btn-primary" ng-disabled="MasterCompanyForm.$invalid || me.masterCompanyData.dealerCode == null">Update</button>
+            <button type="button" ng-click="me.resetForm(MasterCompanyForm)" class="btn btn-danger">Batal</button>
+        </div>
+    </div>
+</div>

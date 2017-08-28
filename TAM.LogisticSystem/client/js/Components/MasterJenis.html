@@ -1,0 +1,127 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>
+                    Master Jenis
+                </h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <h1>
+                    <button type="button" class="btn btn-primary" ng-click="me.download(result)">Download</button>
+                    <button type="button" class="btn btn-default" ng-click="me.upload()">Upload</button>
+                </h1>
+            </div>
+        </div>
+        <div class="header-line"></div>
+
+        <div class="menu-panel">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                    item per halaman
+                </p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('afiCarTypeCode')">Kode Jenis</th>
+                            <th ng-click="me.order('jenis')">Jenis</th>
+                            <th ng-click="me.order('model')">Model</th>
+                            <th class="action"></th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchData.afiCarTypeCode" />
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchData.jenis" />
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchData.model" />
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr ng-repeat="data in (result = (me.masterJenisViewModel | filter : me.searchData  | orderBy : me.orderString :me.orderState)) track by data.afiCarTypeCode"
+                            ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td><span ng-bind="data.afiCarTypeCode"></span></td>
+                            <td><span ng-bind="data.jenis"></span></td>
+                            <td><span ng-bind="data.model"></span></td>
+                            <td class="action">
+                                <button type="button" class="btn btn-info" ng-click="me.selectEdit(data)">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </button>
+                                <button type="button" class="btn btn-danger" ng-click="me.deleteData(data, MasterJenisForm)">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length < 1">
+                            <td colspan="6" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="result.length == undefined" class="text-center">
+                            <td colspan="6"><i>Loading...</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm"
+                    boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+
+
+        <form name="MasterJenisForm" class="form-horizontal" ng-submit="me.addData(MasterJenisForm)">
+            <div class="menu-panel">
+                <div class="panel-inside-padding">
+                    <div class="row-striped">
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">Kode Jenis <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" name="kodeJenis" ng-model="me.afiCarTypeCode" ng-pattern="me.regexCode" ng-maxlength="16" ng-disabled="me.disableInput" required/>
+                                <validation-message title="Kode Jenis" input="MasterJenisForm.kodeJenis"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">Jenis <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" name="jenis" class="form-control" ng-model="me.jenis" ng-pattern="me.regexName" ng-maxlength="255" required />
+                                <validation-message title="Jenis" input="MasterJenisForm.jenis"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">Model <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" name="model" class="form-control" ng-model="me.model" ng-pattern="me.regexName" ng-maxlength="255" required/>
+                                <validation-message title="Model" input="MasterJenisForm.model"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary" ng-if="!me.editCheck" ng-disabled="MasterJenisForm.$invalid">Simpan</button>
+                <button type="button" class="btn btn-primary" ng-if="me.editCheck" ng-click="me.updateData(MasterJenisForm)">Update</button>
+                <button type="button" class="btn btn-danger" ng-click="me.reset(MasterJenisForm)">Batal</button>
+            </div>
+        </form>
+    </div>
+</div>

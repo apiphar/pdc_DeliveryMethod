@@ -1,0 +1,104 @@
+﻿<div class="col-md-12" ng-if="me.showDetail === true">
+    <h1>
+        Unit Assign Detail
+    </h1>
+    <div class="header-line"></div>
+
+    <div class="text-right">
+        <p>
+            Tampilkan
+            <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+            item per halaman
+        </p>
+    </div>
+
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-primary"><p ng-click="me.order('frameNumber')">Frame No.</p></th>
+                            <th class="text-primary"><p ng-click="me.order('katashiki')">Katashiki</p></th>
+                            <th class="text-primary"><p ng-click="me.order('suffix')">Suffix</p></th>
+                            <th class="text-primary"><p ng-click="me.order('model')">Model</p></th>
+                            <th class="text-primary"><p ng-click="me.order('tipe')">Tipe</p></th>
+                            <th class="text-primary"><p ng-click="me.order('warna')">Warna</p></th>
+                            <th class="text-primary"><p ng-click="me.order('branch')">Branch</p></th>
+                            <th class="text-primary"><p ng-click="me.order('etd')">ETD PDC R</p></th>
+                            <th class="text-primary"><p ng-click="me.order('customerAssignModel')">Customer Assign</p></th>
+                            <th class="text-primary"><p ng-click="me.order('requestedPDD')">Requested PDD</p></th>
+                            <th class="text-primary"><p ng-click="me.order('location')">Lokasi Sekarang</p></th>
+                            <th class="text-primary"><p ng-click="me.order('status')">Status</p></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.frameNumber" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.katashiki" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.suffix" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.model" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.tipe" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.warna" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.branch" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.etdString" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.customerAssignModel" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.requestedPDDString" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.location" ng-keyup="me.search(this)" />
+                            </td>
+                            <td>
+                                <input type="text" name="txtSearch" class="form-control" ng-model="me.searchTable.status" ng-keyup="me.search(this)" />
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="result.length == 0">
+                            <td colspan="12" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-repeat="item in (result = (me.unitListDetailByVoyage | filter : me.searchTable  | orderBy : me.orderString :me.orderState))"
+                            ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="item.frameNumber"></td>
+                            <td ng-bind="item.katashiki"></td>
+                            <td ng-bind="item.suffix"></td>
+                            <td ng-bind="item.model"></td>
+                            <td ng-bind="item.tipe"></td>
+                            <td ng-bind="item.warna"></td>
+                            <td ng-bind="item.branch"></td>
+                            <td ng-bind="item.etdString" class="N-table-minWidth"></td>
+                            <td class="text-center"> <input type="checkbox" ng-checked="item.customerAssign" disabled /> </td>
+                            <td ng-bind="item.requestedPDDString"></td>
+                            <td ng-bind="item.location"></td>
+                            <td ng-bind="item.status"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="text-right">
+        <button class="btn btn-primary" ng-click="me.showAssignByUnit()">Kembali</button>
+    </div>
+</div>

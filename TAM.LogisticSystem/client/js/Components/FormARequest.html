@@ -1,0 +1,89 @@
+﻿<div class="col-sm-12">
+    <h1>Aju Form-A</h1>
+
+    <div class="header-line"></div>
+
+    <div class="menu-panel">
+        <div class="fieldset-padding">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">No Invoice</label>
+                    </div>
+                    <div class="col-sm-10">
+                        <input type="text" ng-model="me.invoiceNumber" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">No PIB</label>
+                    </div>
+                    <div class="col-sm-10">
+                        <input type="text" ng-model="me.nomorPIB" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <button class="btn" ng-click="me.searchInvoices()">Cari</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="menu-panel">
+        <div class="fieldset-padding">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-options="pageSize as pageSize for pageSize in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th><a ng-click="me.order('frameNumber')">Frame No</a></th>
+                            <th><a ng-click="me.order('invoiceNumber')">No Invoice</a></th>
+                            <th><a ng-click="me.order('invoiceDate')">Tgl Invoice</a></th>
+                            <th><a ng-click="me.order('nomorPIB')">No PIB</a></th>
+                            <th><a ng-click="me.order('tanggalPIB')">Tanggal PIB</a></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="invoice in me.searchInvoicesList | orderBy : me.orderString : me.orderState track by $index"
+                            ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="invoice.frameNumber"></td>
+                            <td ng-bind="invoice.invoiceNumber"></td>
+                            <td ng-bind="invoice.invoiceDate | date: 'dd/MM/yyyy - H:mm:ss'"></td>
+                            <td ng-bind="invoice.nomorPIB"></td>
+                            <td ng-bind="invoice.tanggalPIB | date: 'dd/MM/yyyy - H:mm:ss'"></td>
+                            <td><input type="checkbox" ng-model="invoice.isAction" /></td>
+                        </tr>
+
+                        <tr ng-show="me.searchInvoicesList == null || me.searchInvoicesList.length == 0">
+                            <td class="text-center" colspan="6">Data tidak ditemukan</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize"
+                    class="pagination-sm" boundary-links="true" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+
+            <div class="text-right">
+                <button class="btn btn-primary" ng-disabled="me.searchInvoicesList == null || me.searchInvoicesList.length == 0 || me.loading == true" ng-click="me.updatePIB()">
+                    <span ng-hide="me.loading == true">Simpan</span>
+                    <span ng-show="me.loading == true" class="glyphicon glyphicon-refresh"></span>
+                </button>
+                <button class="btn" ng-click="me.emptyInput()">Batal</button>
+            </div>
+        </div>
+    </div>
+</div>

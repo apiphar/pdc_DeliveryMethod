@@ -1,0 +1,150 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>Master City Leg</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <h1>
+                    <button type="button" ng-click="me.download(result)" class="btn btn-primary">Download</button>
+                    <button type="button" ng-click="me.upload()" class="btn btn-default">Upload</button>
+                </h1>
+            </div>
+        </div>
+        <div class="header-line"></div>
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <p class="text-right">
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th ng-click="me.order('cityLegCode')">Kode City Leg</th>
+                                <th ng-click="me.order('cityLegName')">City Leg</th>
+                                <th ng-click="me.order('cityFrom')">Kode City Leg From</th>
+                                <th ng-click="me.order('cityTo')">Kode City Leg To</th>
+                                <th ng-click="me.order('calculatingSwappingCost')">Menghitung Biaya Swapping</th>
+                                <th class="action"></th>
+                            </tr>
+                            <tr>
+                                <th><input type="text" ng-keypress="me.setPage()" ng-model="me.search.cityLegCode" class="form-control" /></th>
+                                <th><input type="text" ng-keypress="me.setPage()" ng-model="me.search.cityLegName" class="form-control" /></th>
+                                <th><input type="text" ng-keypress="me.setPage()" ng-model="me.search.cityFromGrid" class="form-control" /></th>
+                                <th><input type="text" ng-keypress="me.setPage()" ng-model="me.search.cityToGrid" class="form-control" /></th>
+                                <th><input type="text" ng-keypress="me.setPage()" ng-model="me.search.calculatingSwappingCost" class="form-control" /></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in (result = (me.cityLegViewModels | filter : me.search  | orderBy : me.orderString :me.orderState)) track by item.cityLegCode"
+                                ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                                <td ng-bind="item.cityLegCode"></td>
+                                <td ng-bind="item.cityLegName"></td>
+                                <td ng-bind="item.cityFromGrid"></td>
+                                <td ng-bind="item.cityToGrid"></td>
+                                <td ng-bind="item.calculatingSwappingCost"></td>
+                                <td class="action">
+                                    <button type="button" ng-click="me.fillForm(item)" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span></button>
+                                    <button type="button" ng-click="me.deleteData(item, cityLegForm)" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+                                </td>
+                            </tr>
+                            <tr ng-if="result.length == undefined">
+                                <td colspan="6" class="text-center"><i>Loading...</i></td>
+                            </tr>
+                            <tr ng-if="result.length === 0">
+                                <td colspan="6" class="text-center">Data tidak ditemukan</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-right">
+                    <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                </div>
+            </div>
+        </div>
+        <form name="cityLegForm" class="form-horizontal">
+            <div class="menu-panel">
+                <div class="panel-inside-padding">
+                    <div class="row-striped">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Kode City Leg <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input name="cityLegCode" ng-model="me.cityLegSendViewModel.cityLegCode" ng-disabled="me.updateClick" ng-pattern="me.codePattern" ng-maxlength="16" class="form-control" required />
+                                <validation-message title="Kode City Leg" input="cityLegForm.cityLegCode"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">City Leg <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input name="cityLeg" ng-model="me.cityLegSendViewModel.cityLegName" ng-pattern="me.namePattern" ng-maxlength="255" class="form-control" required />
+                                <validation-message title="City Leg" input="cityLegForm.cityLeg" mismatch="harus dalam alphabet"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Kode City Leg From <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <ui-select name="cityFrom" ng-model="me.cityLegSendViewModel.cityFrom"
+                                           theme="bootstrap" ng-change="me.checkLocation()">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.cityForLegCode}} - {{$select.selected.cityName}}</ui-select-match>
+                                    <ui-select-choices repeat="item.cityForLegCode as item in me.cityLegLocation | filter: $select.search">
+                                        <span ng-bind-html="item.cityForLegCode | highlight: $select.search"></span> -
+                                        <small ng-bind-html="item.cityName | highlight: $select.search"></small>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <span class="field-validation-error" ng-if="me.cityLegSendViewModel.cityFrom == null && cityLegForm.cityFrom.$touched">Lokasi harus dipilih</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Kode City Leg To <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <ui-select name="cityTo" ng-model="me.cityLegSendViewModel.cityTo"
+                                           theme="bootstrap" ng-change="me.checkLocation()">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.cityForLegCode}} - {{$select.selected.cityName}}</ui-select-match>
+                                    <ui-select-choices repeat="item.cityForLegCode as item in me.cityLegLocation | filter: $select.search">
+                                        <span ng-bind-html="item.cityForLegCode | highlight: $select.search"></span> -
+                                        <small ng-bind-html="item.cityName | highlight: $select.search"></small>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <span class="field-validation-error" ng-if="me.cityLegSendViewModel.cityTo == null && cityLegForm.cityTo.$touched">Lokasi harus dipilih</span>
+                                <span ng-if="me.onSameLocation" class="field-validation-error">Kode City Leg From dan Kode City Leg To tidak boleh sama.</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Menghitung Biaya Swapping <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="radio" name="calculateSwappingCost" ng-model="me.cityLegSendViewModel.calculatingSwappingCost" ng-value="true" required /> Ya
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="radio" name="calculateSwappingCost" ng-model="me.cityLegSendViewModel.calculatingSwappingCost" ng-value="false" required /> Tidak
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="submit" ng-click="me.sendData(cityLegForm)" ng-disabled="me.disableButton(cityLegForm.$invalid)" ng-if="!me.updateClick" class="btn btn-primary">Simpan</button>
+                <button type="submit" ng-click="me.updateData(cityLegForm)" ng-disabled="me.disableButton(cityLegForm.$invalid)" ng-if="me.updateClick" class="btn btn-primary">Update</button>
+                <button type="button" ng-click="me.setPristine(cityLegForm)" class="btn btn-danger">Batal</button>
+            </div>
+        </form>
+    </div>
+</div>

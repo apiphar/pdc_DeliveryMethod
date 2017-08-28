@@ -1,0 +1,242 @@
+﻿<div class="col-md-12" ng-hide="!me.flag">
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>Unit Loading</h1>
+        </div>
+        <div class="col-sm-6 text-right">
+            <h1>
+                <button type="button" ng-click="me.broadcast()" class="btn btn-default">Detail</button>
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <form name="unitloading" class="form-horizontal">
+        <div class="menu-panel">
+            <div class="row panel-inside-padding">
+                <div class="col-sm-7">
+                    <div class="row-striped">
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="control-label">Voyage No. <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-7">
+                                <input ng-model-options="{debounce: 1000}" required="required" ng-pattern="me.regexCode" ng-maxlength="16" ng-change="me.searchUnitLoadingData(me.search)" ng-model="me.search" ype="text" name="voyageNumber" id="voyageNumber" class="form-control" />
+                                <validation-message  input="unitloading.voyageNumber" title="Voyage No"></validation-message>
+                                <span ng-bind="me.errorMessageVoyage" class="field-validation-error"></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="control-label">Vendor</label>
+                            </div>
+                            <div class="col-sm-7">
+                                <input type="text" name="vendor" ng-model="me.deliveryUnitLoadingModel.vendor" class="form-control" disabled />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="control-label">Vessel</label>
+                            </div>
+                            <div class="col-sm-7">
+                                <input type="text" name="vessel" ng-model="me.deliveryUnitLoadingModel.vessel" class="form-control" disabled />
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="control-label">Estimation Time Departure</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" name="estimationtimedeparture" value="{{me.deliveryUnitLoadingModel.estimationDeparture | date: 'dd-MMM-yyyy'}}" class="form-control" disabled />
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" name="estimationtimedeparture" value="{{me.deliveryUnitLoadingModel.estimationDeparture | date: 'HH:mm'}}" class="form-control" disabled />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="control-label">Frame No. <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <div class="multiple-input" ng-if="me.flagForm==false">
+                                        <textarea ng-model="me.frameNumberTextArea" class="form-control" rows="3" name="frameNumber"></textarea>
+                                        <button type="button" class="btn btn-primary" ng-click="me.inputFrameNumberTextArea(me.frameNumberTextArea,unitloading)">Ok</button>
+                                        <button type="button" class="btn btn-default" ng-click="me.showText()">Batal</button>
+                                    </div>
+                                    <input maxlength="17" type="text" ng-if="me.flagForm==true" name="frameNumber" id="frameNumber" ng-model="me.frameNumberInputField" ng-model-options="{debounce: 1000}" ng-change="me.inputFrameNumber(me.frameNumberInputField,unitloading)" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button" ng-click="me.showText()">--</button>
+                                    </span>
+                                </div>
+                                <span ng-bind="me.errorMessage" class="field-validation-error"></span>
+                                <div ng-repeat="item in me.errorListFrameNo track by $index">
+                                    <span ng-bind="item"  class="field-validation-error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-1"></div>
+                <div class="col-sm-5 panel-right-form">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <input type="text" name="capacity2" ng-model="me.deliveryUnitLoadingModel.capacity" class="form-control" disabled />
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <em>* Total kapasitas vessel</em>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-11">
+                        <div class="header-line"></div>
+                    </div>
+                    <div class="col-md-1">
+                        <span>&nbsp</span>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <input type="text" ng-model="me.totalFrameNumber" name="capacity" class="form-control" disabled required />
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <em>* Unit yang sudah dimuat ke kapal</em>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <input type="text" name="totalUnitAssign" ng-model="me.totalFrameNumberAssign" class="form-control" disabled />
+                        </div>
+                        <div class="col-sm-9">
+                            <em>* Sudah di assign tapi belum dimuat ke kapal</em>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <input type="text" name="totalUnitPreBookedInPorted" ng-model="me.deliveryUnitLoadingModel.totalUnitPreBookedInPorted" class="form-control" disabled />
+
+                        </div>
+                        <div class="col-sm-9">
+                            <em>* Unit Pre-Booked & sudah di port</em>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <input type="text" name="totalUnitPreBookedNotPorted" ng-model="me.deliveryUnitLoadingModel.totalUnitPreBookedNotPorted" class="form-control" disabled />
+                        </div>
+                        <div class="col-sm-9">
+                            <em>* Unit Pre-Booked & belum di port</em>
+                        </div>
+                    </div>
+                    <div class="col-md-11">
+                        <div class="header-line"></div>
+                    </div>
+                    <div class="col-md-1">
+                        <span>+</span>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <input type="text" name="totalUnitPreBookedNotPorted" ng-model="me.totalFrameNumberPreBooked" class="form-control" disabled />
+                        </div>
+                        <div class="col-sm-9">
+                            <em>* Total unit pre-booked</em>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <div class="col-md-12">
+                <h2 class="h4-aqua">
+                    Daftar Frame No
+                </h2>
+                <hr class="header-line" />
+            </div>
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('frameNo')">Frame No.</th>
+                            <th ng-click="me.order('katashiki')">Katashiki</th>
+                            <th ng-click="me.order('suffix')">Suffix</th>
+                            <th ng-click="me.order('model')">Model</th>
+                            <th ng-click="me.order('tipe')">Tipe</th>
+                            <th ng-click="me.order('warna')">Warna</th>
+                            <th ng-click="me.order('branch')">Branch</th>
+                            <th ng-click="me.order('estimatedPDCIn')">ETD PDC R</th>
+                            <th ng-click="me.order('customerAssign')">Customer Assign</th>
+                            <th ng-click="me.order('requestedDeliveryTime')">Requested PDD</th>
+                        </tr>
+                        <tr>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.frameNumber" ng-keyup="me.searchTable(this)" /></th>
+                            <th><input type="text" class="form-control col-sm-2" ng-model="me.searchInput.katashiki" ng-keyup="me.searchTable(this)" /></th>
+                            <th><input type="text" class="form-control col-sm-2" ng-model="me.searchInput.suffix" ng-keyup="me.searchTable(this)" /></th>
+                            <th><input type="text"  class="form-control col-sm-2" ng-model="me.searchInput.model" ng-keyup="me.searchTable(this)" /></th>
+                            <th><input type="text"  class="form-control col-sm-2" ng-model="me.searchInput.tipe" ng-keyup="me.searchTable(this)" /></th>
+                            <th><input type="text"  class="form-control col-sm-2" ng-model="me.searchInput.warna" ng-keyup="me.searchTable(this)" /></th>
+                            <th><input type="text"  class="form-control col-sm-2" ng-model="me.searchInput.branch" ng-keyup="me.searchTable(this)" /></th>
+                            <th><input type="text"  class="form-control col-sm-2" ng-model="me.searchInput.dateTempEPDC" ng-keyup="me.searchTable(this)" /></th>
+                            <th class="text-center">
+                                <input type="checkbox"
+                                       ng-model="me.searchInput.customerAssign"
+                                       name="customerAssign"
+                                       ng-true-value="true"
+                                       ng-false-value="false"
+                                       ng-change="me.searchTable(this)">
+
+                            </th>
+                            <th><input type="text"  class="form-control col-sm-2" ng-model="me.searchInput.dateTemp" ng-keyup="me.searchTable(this)" /></th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <tr ng-if="me.loader">
+                            <td colspan="11" class="text-center"><i>Loading...</i></td>
+                        </tr>
+                        <tr ng-repeat="data in (result = (me.frameNumberInputSelected | filter : me.searchInput  | orderBy : me.orderString :me.orderState)) track by $index"
+                            ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.frameNumber"></td>
+                            <td ng-bind="data.katashiki"></td>
+                            <td ng-bind="data.suffix"></td>
+                            <td ng-bind="data.model"></td>
+                            <td ng-bind="data.tipe"></td>
+                            <td ng-bind="data.warna"></td>
+                            <td ng-bind="data.branch"></td>
+                            <td ng-bind="data.dateTempEPDC"></td>
+                            <td class="text-center"><input type="checkbox" ng-checked="data.customerAssign" disabled /></td>
+                            <td ng-bind="data.dateTemp"></td>
+                        </tr>
+                        <tr ng-if="result.length < 1 && !me.loader" class="text-center">
+                            <td colspan="11">Data tidak ditemukan</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="text-right">
+        <button class="btn btn-primary" type="submit" ng-disabled="me.btnDisable==false" ng-click="me.updateDataLoaded(unitloading)">Simpan</button>
+        <button class="btn btn-danger" type="reset" ng-click="me.clearAllField(unitloading)">Batal</button>
+    </div>
+</div>

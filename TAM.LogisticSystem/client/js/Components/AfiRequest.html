@@ -1,0 +1,196 @@
+﻿<div class="col-xs-12">
+    <h1>Request AFI (Normal)</h1>
+    <div class="header-line"></div>
+</div>
+<form name="afiRequestFormCustomer" class="form-horizontal" ng-model="me.myForm">
+    <div class="col-xs-6">
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <div class="form-horizontal row-striped">
+                    
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Frame No <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <div class="input-group">
+                                <input class="form-control text-uppercase" id="txtId" name="frameNo" ng-model="me.vehicle.FrameNumber" ng-maxlength="30" ng-pattern="/^[A-Za-z0-9]+$/" ng-change="me.resetCustomError()" ng-keypress="$event.keyCode != 13 ? null:me.checkData($event,afiRequestFormCustomer)" ng-disabled="me.dataInsert" required>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="me.checkData($event,afiRequestFormCustomer)">
+                                        <span class="glyphicon glyphicon glyphicon-search" aria-hidden="true"></span>
+                                    </button>
+                                </span>
+                            </div>
+                            <validation-message input="afiRequestFormCustomer.frameNo" title="Frame No" mismatch="harus berformat alphanumeric"></validation-message>
+                            <span ng-bind="me.errorMessage" class="field-validation-error"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">DO Date</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control text-uppercase" value="{{me.vehicle.doDate | date:'dd-MMM-yyyy'}}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Branch</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control text-uppercase" ng-model="me.vehicle.branch" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <p class="form-note"> <span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <div class="form-horizontal row-striped">
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Kode Model</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control text-uppercase" ng-model="me.vehicle.carModelCode" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Nama Model</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control text-uppercase" ng-model="me.vehicle.carModelName" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Warna <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <input type="text" name="Warna" class="form-control text-uppercase" ng-model="me.dataInsert.color" ng-disabled="!me.dataInsert" ng-maxlength="20" required="required" ng-pattern="/^[a-zA-Z0-9\s\-.&,\'/]+$/">
+                            <validation-message input="afiRequestFormCustomer.Warna" mismatch="harus berformat alphanumeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Jenis </label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control text-uppercase" ng-model="me.dataInsert.jenis" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Model </label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control text-uppercase" ng-model="me.dataInsert.model" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Chassis Model </label>
+                        <div class="col-xs-7">
+                            <input type="text" ng-model="me.vehicle.chassis" name="Chassis" class="form-control text-uppercase" ng-disabled="me.dataInsert.model!='CHASSIS'" ng-maxlength="30" ng-pattern="/^[a-zA-Z0-9\s\-.&,\'/]+$/">
+                            <validation-message input="afiRequestFormCustomer.Chassis" mismatch="harus berformat alphanumeric"></validation-message>
+                        </div>
+                    </div>
+                    <input type="hidden" ng-model="me.vehicle.vehicleId" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <div class="form-horizontal row-striped">
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Nama Customer <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <input type="text" name="Nama" class="form-control text-uppercase" ng-model="me.dataInsert.name" ng-disabled="!me.dataInsert" ng-maxlength="30" ng-pattern="/^[a-zA-Z0-9\s\-.&,\'/]+$/" required="required">
+                            <validation-message input="afiRequestFormCustomer.Nama" title="Nama Customer" mismatch="harus berformat alphanumeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">No Identitas <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <input type="text" name="NoID" class="form-control text-uppercase" ng-model="me.dataInsert.ktp" ng-disabled="!me.dataInsert" ng-pattern="/^[A-Za-z0-9]+$/" ng-maxlength="50" required="required">
+                            <validation-message input="afiRequestFormCustomer.NoID" title="No Identitas" mismatch="harus berformat alphanumeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Alamat 1 <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <input type="text" name="Alamat1" class="form-control text-uppercase" ng-model="me.dataInsert.address1" ng-disabled="!me.dataInsert" required="required" ng-maxlength="30" ng-pattern="/^[a-zA-Z0-9\s\-.&,\'/]+$/">
+                            <validation-message input="afiRequestFormCustomer.Alamat1" mismatch="harus berformat alphanumeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Alamat 2 <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <input type="text" name="Alamat2" class="form-control text-uppercase" ng-model="me.dataInsert.address2" ng-disabled="!me.dataInsert" required="required" ng-maxlength="30" ng-pattern="/^[a-zA-Z0-9\s\-.&,\'/]+$/">
+                            <validation-message input="afiRequestFormCustomer.Alamat2" mismatch="harus berformat alphanumeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Alamat 3 <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <input type="text" name="Alamat3" class="form-control text-uppercase" ng-disabled="!me.dataInsert" ng-model="me.dataInsert.address3" required="required" ng-maxlength="30" ng-pattern="/^[a-zA-Z0-9\s\-.&,\'/]+$/">
+                            <validation-message input="afiRequestFormCustomer.Alamat3" mismatch="harus berformat alphanumeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Provinsi <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <ui-select ng-model="me.dataInsert.province" class="text-uppercase" theme="bootstrap" ng-disabled="!me.dataInsert" ng-change="me.getKabupaten()" required>
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.regionCode}} - {{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="data in me.provinsi | filter: $select.search">
+                                    <span ng-bind-html="data.regionCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="data.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Kota/Kabupaten <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <ui-select ng-model="me.dataInsert.city" class="text-uppercase" theme="bootstrap" ng-disabled="!me.dataInsert" required>
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.regionCode}} - {{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="data in me.kabupaten | filter: $select.search">
+                                    <span ng-bind-html="data.regionCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="data.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Kode Pos  <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <input type="text" name="KodePos" class="form-control text-uppercase" ng-model="me.dataInsert.postalCode" required="required" ng-pattern="/^[0-9]*$/" ng-minlength="5" ng-maxlength="5" ng-disabled="!me.dataInsert">
+                            <validation-message input="afiRequestFormCustomer.KodePos" mismatch="harus Numeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Tanggal Efektif Faktur <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <p class="input-group">
+                                <input type="text" name="TanggalEfektif" class="form-control text-uppercase" uib-datepicker-popup="dd-MMM-yyyy" ng-model="me.dataInsert.tanggalEfektif" ng-disabled="!me.dataInsert" is-open="me.popup" datepicker-options="me.dateOptions" ng-required="true" close-text="close" alt-input-formats="me.altInputFormats" ng-disabled="!me.dataInsert" required="required" readonly />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="me.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </p>
+                            <validation-message input="afiRequestFormCustomer.TanggalEfektif"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-5">Kode Region <span class="mandatory">*</span></label>
+                        <div class="col-xs-7">
+                            <ui-select ng-model="me.dataInsert.regionAFI" class="text-uppercase" theme="bootstrap" ng-disabled="!me.dataInsert" required>
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.afiRegionCode}} - {{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="data in me.regionAfiData | filter: $select.search">
+                                    <span ng-bind-html="data.afiRegionCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="data.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="col-xs-12">
+    <div class="pull-right">
+        <button type="submit" class="frmSubmit btn btn-primary" ng-click="me.postDataDialog(afiRequestFormCustomer)" ng-disabled="afiRequestFormCustomer.$invalid">Simpan</button>
+        <button type="reset" class="buttonSubmit btn btn-danger" ng-click="me.clearField(afiRequestFormCustomer)">Batal</button>
+    </div>
+</div>

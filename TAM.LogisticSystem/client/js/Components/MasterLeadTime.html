@@ -1,0 +1,277 @@
+﻿<style>
+    body {
+        background-color: #edf3f9;
+    }
+
+    fieldset {
+        padding: 1em;
+        border: 1px solid rgba(0, 0, 0, .5);
+        color: grey;
+        border-radius: 10px;
+        background: white;
+    }
+</style>
+
+<div class="container">
+    <form name="MyForm" ng-submit="me.checkForm(MyForm.value)">
+        <div class="container">
+            <div class="form-group">
+
+                <h2>
+                    Lead Time Location Master
+                    <span class="pull-right">
+                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate" ng-click="me.saveDataForModal()" ng-show="me.ShowEdit" ng-disabled="!MyForm.$valid">Simpan</button>
+                        <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit" ng-click="me.checkUpdate()" ng-hide="me.ShowEdit" ng-disabled="!MyForm.$valid">Update</button>
+                        <button type="reset" class="btn btn-default" ng-click="me.refreshData();MyForm.$setPristine()">Batal</button>
+                    </span>
+                </h2>
+
+                <hr style="border-top-color: #999999;" />
+            </div>
+        </div>
+
+        <fieldset>
+            <div class="container">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-primary">Lokasi</th>
+                            <th class="text-primary">Kode Rute</th>
+                            <th class="text-primary">Nama Rute</th>
+                            <th class="text-primary">Lead Time</th>
+
+                            <th class="text-primary col-sm-2">Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th><input class="form-control col-sm-2" ng-model="me.Search.locationCode" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.Search.routingMasterCode" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.Search.namaRute" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.Search.leadMinutes" /></th>
+
+
+
+                            <th></th>
+                        </tr>
+
+                        <tr ng-repeat="data in (result = (me.Data | filter:me.Search)) | orderBy:'+locationCode' | limitTo: me.pageSize : (me.currentPage-1) * me.pageSize">
+
+                            <td ng-bind="data.locationCode"></td>
+                            <td ng-bind="data.routingMasterCode"></td>
+                            <td ng-bind="data.namaRute"></td>
+                            <td ng-bind="data.leadMinutes"></td>
+
+
+                            <td>
+                                <button type="button" class="btn btn-info" ng-click="me.selectEdit(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalDelete" ng-click="me.selectDelete(data.locationCode)"><i class="glyphicon glyphicon-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length == 0">
+                            <td colspan="4" class="text-warning">Data Not Found!!!</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    <ul uib-pagination total-items="result.length" ng-model="me.currentPage" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                </div>
+            </div>
+        </fieldset>
+
+        <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+
+        </form>
+
+        <fieldset>
+            <div class="container">
+                <div class="form-horizontal">
+                    <form id="frmData" name="frmData">
+                        <div class="form-group">
+                            <label class="col-sm-2">Lokasi</label>
+                            <div class="col-sm-3">
+                                <div ng-if="me.ShowEdit==true">
+                                    <select class="form-control" ng-model="me.SelectedLocation" ng-change="me.selectItemOnChangeLocation()" ng-options="option.locationCode for option in me.ActiveUser track by option.locationCode" id="Location" name="Location">
+
+                                        <option>Please select</option>
+                                    </select>
+                                    <validation-message input="frmData.Location"></validation-message>
+                                </div>
+                                <div ng-if="me.ShowEdit==false">
+                                    <select class="form-control" ng-model="me.SelectedLocation" ng-change="me.selectItemOnChangeLocation()" ng-options="option.locationCode for option in me.ActiveUser track by option.locationCode" id="Location" name="Location" disabled>
+
+                                        <option>Please select</option>
+                                    </select>
+                                    <validation-message input="frmData.Location"></validation-message>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2">Kode Rute</label>
+                            <div class="col-sm-3">
+                                <div ng-if="me.ShowEdit==true">
+                                    <input type="text"id="RoutingMaster" name="RoutingMaster" class="form-control" ng-model="me.RoutingMasterCode" ng-change="me.cascadeForRute(me.RoutingMasterCode)" />
+
+                                    <validation-message input="frmData.RoutingMaster"></validation-message>
+                                    <div ng-show="me.checkDuplicate" class="field-validation-error" role="alert">
+                                        <label>Kombinasi Lokasi dan Kode Rute Sudah Ada !</label> 
+                                    </div>
+                                </div>
+                                <div ng-if="me.ShowEdit==false">
+                                    <input type="text"id="RoutingMasterCode" name="RoutingMasterCode" class="form-control" ng-model="me.RoutingMasterCode" ng-change="me.cascadeForRute(me.RoutingMasterCode)" disabled />
+
+                                </div>
+                            </div>
+
+                            <div class="col-sm-5">
+                                <label class="col-sm-1" ng-bind="me.ModelName"></label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2">Lead Time</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="LeadMinutes" class="form-control" ng-model="me.LeadMinutes" required="required" />
+                                <validation-message input="frmData.LeadMinutes"></validation-message>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="container">
+
+            <div class="form-group">
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate" ng-click="me.saveDataForModal()" ng-show="me.ShowEdit" ng-disabled="MyForm.$valid && me.checkDuplicate">Simpan</button>
+                    <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit" ng-click="me.checkUpdate()" ng-hide="me.ShowEdit" ng-disabled="!MyForm.$valid">Update</button>
+                    <button type="reset" class="btn btn-default" ng-click="me.refreshData();MyForm.$setPristine()">Batal</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="ModalShowCreate" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <form class="form-horizontal">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Are you sure want to save this details ?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Lokasi</label>
+                                <div class="col-sm-4">
+
+                                    <label typeof="" class="control-label" ng-bind="me.SelectedLocation.locationCode"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Kode Rute</label>
+                                <div class="col-sm-4">
+
+                                    <label typeof="" class="control-label" ng-bind="me.RoutingMasterCode" hidden="hidden"></label>
+                                    <label typeof="" class="control-label" ng-bind="me.ModelName"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Lead Time</label>
+                                <div class="col-sm-4">
+
+                                    <label typeof="" class="control-label" ng-bind="me.LeadMinutes"></label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" ng-click="me.createData(frmData)" data-dismiss="modal">Save</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="ModalShowEdit" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <form class="form-horizontal">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Are you sure want to edit this details ?</h4>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Lokasi</label>
+                                    <div class="col-sm-4">
+
+                                        <label typeof="" class="control-label" ng-bind="me.SelectedLocation.locationCode"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Kode Rute</label>
+                                    <div class="col-sm-4">
+
+                                        <label typeof="" class="control-label" ng-bind="me.RoutingMasterCode" hidden="hidden"></label>
+                                        <label typeof="" class="control-label" ng-bind="me.ModelName"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">Lead Time</label>
+                                    <div class="col-sm-4">
+
+                                        <label typeof="" class="control-label" ng-bind="me.LeadMinutes"></label>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-default" ng-click="me.updateData(frmData)" data-dismiss="modal">Save</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="ModalDelete" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure ?</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="hidden" ng-bind="me.LocationCodeTemp" />
+                        <strong style="color: red;">
+                            You are going to delete {{me.LocationCodeTemp}}. All information...
+
+
+                        </strong>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="me.deleteData()">Yes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+</div>

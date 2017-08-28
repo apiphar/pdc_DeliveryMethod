@@ -1,0 +1,14 @@
+﻿@*<div ng-app="aspnet" class="page">
+    <leg-Price-Master greet="@Url.Content("~/")"><H1>Loading...</H1></leg-Price-Master>
+</div>*@
+@{
+    ViewBag.Title = "Leg Price Master";
+    ViewBag.BreadCrumb = new List<string> {
+        "Master",
+        "Leg Price Master"
+    };
+}
+<div ng-app="aspnet" class="row">
+    <leg-Price-Master><div class="loading"></div></leg-Price-Master>
+    <upload-download></upload-download>
+</div>

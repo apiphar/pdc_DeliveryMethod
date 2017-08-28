@@ -1,0 +1,202 @@
+﻿
+
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                Company Master
+            </h1>
+        </div>
+        <div class="col-md-6 text-right">
+            <h1>
+                <button class="btn btn-primary">
+                    Download
+                </button>
+                <button class="btn btn-default">
+                    Upload
+                </button>
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>  
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th ng-click="me.order('dealerCode')" class="text-primary">Dealer Code</th>
+                        <th ng-click="me.order('companyCode')" class="text-primary">Company Code</th>
+                        <th ng-click="me.order('name')" class="text-primary">Company Name</th>
+                        <th ng-click="me.order('npwpAddress')" class="text-primary">Alamat NPWP</th>
+                        <th ng-click="me.order('sapCode')" class="text-primary">Kode Company SAP</th>
+                        <th ng-click="me.order('phone')" class="text-primary">No.Telp</th>
+                        <th ng-click="me.order('fax')" class="text-primary">No.Fax</th>
+                        <th ng-click="me.order('email')" class="text-primary">Email</th>
+                        <th ng-click="me.order('tradeName')" class="text-primary">Trade Name</th>
+                        <th ng-click="me.order('npwp')" class="text-primary">NPWP</th>
+                        <th ng-click="me.order('isDealerFinancing')" class="text-primary">Dealer Financing</th>
+                        <th class="text-primary">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input ng-model="me.Search.dealerCode" /></td>
+                        <td><input ng-model="me.Search.companyCode" /></td>
+                        <td><input ng-model="me.Search.name" /></td>
+                        <td><input ng-model="me.Search.npwpAddress" /></td>
+                        <td><input ng-model="me.Search.sapCode" /></td>
+                        <td><input ng-model="me.Search.phone" /></td>
+                        <td><input ng-model="me.Search.fax" /></td>
+                        <td><input ng-model="me.Search.email" /></td>
+                        <td><input ng-model="me.Search.tradeName" /></td>
+                        <td><input ng-model="me.Search.npwp" /></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr ng-repeat="data in (result = (me.Data | filter:me.Search | orderBy: me.orderString : me.orderState))  |limitTo: me.pageSize : (me.currentPage-1) * me.pageSize">
+                        <td ng-bind="data.dealerCode"></td>
+                        <td ng-bind="data.companyCode"></td>
+                        <td ng-bind="data.name"></td>
+                        <td ng-bind="data.npwpAddress"></td>
+                        <td ng-bind="data.sapCode"></td>
+                        <td ng-bind="data.phone"></td>
+                        <td ng-bind="data.fax"></td>
+                        <td ng-bind="data.email"></td>
+                        <td ng-bind="data.tradeName"></td>
+                        <td ng-bind="data.npwp"></td>
+                        <td>
+                            <input type="checkbox" ng-if="data.isDealerFinancing == false" disabled="disabled">
+                            <input type="checkbox" ng-if="data.isDealerFinancing == true" checked="checked" disabled="disabled">
+                        </td>
+                        <td class="text-nowrap text-center">
+                            <button type="button" class="btn btn-info" ng-click="me.selectEdit(data)">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button type="button" class="btn btn-danger" ng-click="me.selectDelete(data,MyForm)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>   
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+
+        </div>
+
+    
+
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="MyForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <label class="col-sm-2">Company Code</label>
+                    <div ng-if="me.editBtn==true">
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.companyCode" ng-minlength="0" ng-maxlength="30" name="txtName" disabled />
+                        </div>
+                    </div>
+                    <div ng-if="me.editBtn==false">
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.companyCode" ng-minlength="0" ng-maxlength="30" name="txtName" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">No.Fax</label>
+                        <div class="col-sm-3">
+                            <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.fax" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2">Dealer Code</label>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.dealer" theme="bootstrap">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.dealerCode}}</ui-select-match>
+                            <ui-select-choices repeat="dealerCode in me.dealerCodeData | filter: $select.search">
+                                <span ng-bind-html="dealerCode.dealerCode | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>                       
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">Email</label>
+                        <div class="col-sm-3">
+                            <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.email" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">Company Name</label>
+                    <div class="col-sm-3">
+                        <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.name" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">Trade Name</label>
+                        <div class="col-sm-3">
+                            <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.tradeName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">Alamat NPWP</label>
+                    <div class="col-sm-3">
+                        <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.npwpAddress" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">NPWP</label>
+                        <div class="col-sm-3">
+                            <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.npwp" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">Kode Company SAP</label>
+                    <div class="col-sm-3">
+                        <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.sapCode" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">Dealer Financing</label>
+                        <div class="col-sm-3">
+                            <input type="checkbox" ng-model="me.isDealerFinancing" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">No Telp.</label>
+                    <div class="col-sm-5">
+                        <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.phone" />
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+         
+        </div>
+
+    <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+
+    <div class="container">
+
+        <div class="form-group">
+            <div class="pull-right">
+                <button type="submit" class="frmSubmit btn btn-primary" ng-click="me.confirmationDialog('Are you sure want to save this ?', 'Create', MyForm)" ng-if="me.Created==true">Simpan</button>
+                <button type="submit" class="frmSubmit btn btn-primary" ng-click="me.confirmationDialog('Are you sure want to update this ?', 'Update', MyForm)"  ng-if="me.Edited==true">Update</button>
+                <button type="reset" class="buttonSubmit btn btn-default" ng-click="me.refreshData()">Batal</button>
+            </div>
+        </div>
+    </div>
+
+
+</div>

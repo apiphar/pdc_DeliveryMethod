@@ -1,0 +1,70 @@
+﻿<h4 class="form-group h4-aqua">Customer & Salesman Information</h4>
+
+<div class="form-group"><hr class="header-line" /></div>
+<div class="row-striped">
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Estimasi PDC Out<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup="dd-MMM-yyyy"
+                       ng-model="me.deliveryRequestDirectDelivery.estimasiPdcOut" is-open="me.popup1.opened" datepicker-options="dateOptions"
+                       close-text="Close" ng-change="me.validationEstimasiPdcOut();me.broadcast()" readonly />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="me.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </div>
+            <span class="field-validation-error" ng-bind="me.errorMsgEstimasiPdcOut" ng-hide="me.validateEstimasiPdcOut === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Nama Customer<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" ng-model="me.deliveryRequestDirectDelivery.customerName" ng-change="me.validationCustomerName();me.broadcast()" ng-model-options="{debounce: 500}" />
+            <span class="field-validation-error" ng-bind="me.errorMsgCustomerName" ng-hide="me.validateCustomerName === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Alamat Customer<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" ng-model="me.deliveryRequestDirectDelivery.customerAddress" ng-change="me.validationCustomerAddress();me.broadcast()" ng-model-options="{debounce: 500}" />
+            <span class="field-validation-error" ng-bind="me.errorMsgCustomerAddress" ng-hide="me.validateCustomerAddress === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Kota Customer<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" ng-model="me.deliveryRequestDirectDelivery.customerCity" ng-change="me.validationCustomerCity();me.broadcast()" ng-model-options="{debounce: 500}" />
+            <span class="field-validation-error" ng-bind="me.errorMsgCustomerCity" ng-hide="me.validateCustomerCity === false"></span>
+        </div>
+
+    </div>
+</div>
+<div class="form-group"><hr class="header-line"/></div>
+<div class="row-striped">
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Nama Salesman<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" ng-model="me.deliveryRequestDirectDelivery.salesmanName" ng-change="me.validationSalesmanName();me.broadcast()" ng-model-options="{debounce: 500}" />
+            <span class="field-validation-error" ng-bind="me.errorMsgSalesmanName" ng-hide="me.validateSalesmanName === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">No. Contact Salesman<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" ng-model="me.deliveryRequestDirectDelivery.salesmanContactNo" ng-change="me.validationSalesmanContactNo();me.broadcast();" ng-model-options="{debounce: 500}" />
+            <span class="field-validation-error" ng-bind="me.errorMsgSalesmanContactNo" ng-hide="me.validateSalesmanContactNo === false"></span>
+        </div>
+    </div>
+</div>

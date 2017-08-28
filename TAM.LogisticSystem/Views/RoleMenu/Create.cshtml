@@ -1,0 +1,55 @@
+﻿@model RoleMenuController.MenuMappingCreateViewModel
+@inject RoleMenuService MenuMan
+
+@{
+    ViewBag.Title = "Create New Role-Menu Mapping";
+    ViewBag.Page = RoleMenuEnum.MenuAdministrator;
+
+    var roleDropdown = (await MenuMan.GetAllRoles()).Select(Q => new SelectListItem
+    {
+        Text = Q.AppRoleName
+    });
+    var menuDropdown = (await MenuMan.GetAllMenu()).Select(Q => new SelectListItem
+    {
+        Text = Q.AppMenuName
+    });
+}
+
+<h2>
+    Role-Menu Mapping
+    <small>Create</small>
+</h2>
+
+<p>
+    <a href="@Url.Action("Index")">
+        <span class="glyphicon glyphicon-backward"></span>
+        Return to index
+    </a>
+</p>
+
+@if (TempData["RoleMenuCreated"] != null)
+{
+    <p class="help-block">
+        @TempData["RoleMenuCreated"]
+    </p>
+}
+
+<form method="post">
+    <div class="form-group">
+        @Html.LabelFor(Q => Q.Role)
+        <select class="form-control" asp-for="Role" asp-items="roleDropdown"></select>
+        @Html.ValidationMessageFor(Q=>Q.Role)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(Q => Q.Menu)
+        <select class="form-control" asp-for="Menu" asp-items="menuDropdown"></select>
+        @Html.ValidationMessageFor(Q => Q.Menu)
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+            Submit
+        </button>
+        @Html.AntiForgeryToken()
+    </div>
+</form>

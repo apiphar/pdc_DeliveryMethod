@@ -1,0 +1,149 @@
+﻿<div ng-if="mastermodelseries.pageState == true">
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                Master Model Series
+            </h1>
+        </div>
+        <div class="col-md-6 text-right">
+            <h1>
+                <button type="button" class="buttonSubmit btn btn-primary" ng-click="mastermodelseries.Download(result)">Download</button>
+                <button type="button" class="buttonSubmit btn btn-default" ng-click="mastermodelseries.Upload()">Upload</button>
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="mastermodelseries.pageSize" ng-options="data for data in mastermodelseries.pageSizes"></select>
+                item per halaman
+            </p>
+        </div>
+
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th ng-click="mastermodelseries.order('carModelCode')">Kode Model</th>
+                        <th ng-click="mastermodelseries.order('carSeriesCode')">Kode Model Series</th>
+                        <th ng-click="mastermodelseries.order('carSeriesName')">Model Series</th>
+                        <th class="action"></th>
+                    </tr>
+                    <tr>
+                        <th><input class="form-control col-sm-2" name="SearchCarModel" ng-model="mastermodelseries.searchString.carModelCode" ng-keyup="mastermodelseries.search(this)" /></th>
+                        <th><input class="form-control col-sm-2" name="SearchCarSeries" ng-model="mastermodelseries.searchString.carSeriesCode"  ng-keyup="mastermodelseries.search(this)"/></th>
+                        <th><input class="form-control col-sm-2" name="SearchName" ng-model="mastermodelseries.searchString.carSeriesName" ng-keyup="mastermodelseries.search(this)" /></th>
+                        <th class="action"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr ng-repeat="series in (result = (mastermodelseries.data | filter:mastermodelseries.searchString:mastermodelseries.allowNullValue | orderBy:mastermodelseries.orderString : mastermodelseries.orderState))  track by series.carSeriesCode "
+                        ng-if="$index >= ((mastermodelseries.currentPage-1)*mastermodelseries.pageSize) && $index < (mastermodelseries.currentPage * mastermodelseries.pageSize)">
+                        <td ng-bind="series.carModelCode + ' - '+series.carModelName"></td>
+                        <td ng-bind="series.carSeriesCode"></td>
+                        <td ng-bind="series.carSeriesName"></td>
+                        <td class="action">
+                            <button type="button" class="btn btn-info" ng-click="mastermodelseries.selectEdit(series)"><i class="glyphicon glyphicon-edit"></i></button>
+                            <button type="button" class="btn btn-danger" ng-click="mastermodelseries.deleteData(series,myForm)"><i class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr ng-if="mastermodelseries.loader">
+                        <td colspan="4" class="text-center"><i>Loading...</i></td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="4" class="text-center">Data tidak ditemukan</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="mastermodelseries.currentPage" max-size="mastermodelseries.maxSize" ng-change="mastermodelseries.pageChanged()" class="pagination-sm" items-per-page="mastermodelseries.pageSize" num-pages="mastermodelseries.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+        </div>
+
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <form name="myForm" role="form" class="form-horizontal row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Kode Model</label>
+                            <span class="mandatory">*</span>
+                        </div>
+                        <div class="col-sm-5"  ng-if="mastermodelseries.editMe == true">
+                           
+                            <ui-select ng-model="mastermodelseries.masterModel" theme="bootstrap" ng-required="true" ng-disabled="true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="model in mastermodelseries.dataModel | filter: $select.search">
+                                    <span ng-bind-html="model.carModelCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="model.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-sm-5"  ng-if="mastermodelseries.editMe == false">
+
+                            <ui-select ng-model="mastermodelseries.masterModel" theme="bootstrap" ng-required="true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.carModelCode}} - {{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="model in mastermodelseries.dataModel | filter: $select.search">
+                                    <span ng-bind-html="model.carModelCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="model.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Kode Model Series</label>
+                            <span class="mandatory">*</span>
+                        </div>
+                        <div class="col-sm-5" ng-if="mastermodelseries.editMe == true">
+                            <input type="text" class="form-control" name="Kode_ModelSeries" id="SeriesCode" ng-model="mastermodelseries.masterModelSeriesCode"  readonly="readonly" />
+                            <validation-message input="myForm.Kode_ModelSeries" title="Kode Model Series"></validation-message>
+
+                        </div>
+                        <div class="col-sm-5" ng-if="mastermodelseries.editMe == false">
+                            <input type="text" class="form-control" name="Kode_ModelSeries" id="SeriesCode" ng-model="mastermodelseries.masterModelSeriesCode"  ng-maxlength="8" ng-minlength="1"  ng-change="mastermodelseries.cekPola()" ng-pattern="/^[\d\w]+$/" required />
+                            <validation-message input="myForm.Kode_ModelSeries" title="Kode Model Series"></validation-message>
+                            <!--<span ng-if="mastermodelseries.isCodeExists==true" class="mandatory"><i>Kode Model Series telah terdaftar</i></span>-->               
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Model Series</label>
+                            <span class="mandatory">*</span>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" name="Model_Series"  ng-maxlength="255" ng-model="mastermodelseries.masterModelName" ng-pattern="/^[\w\-\ \.\/\'\,\&]+$/" required />
+                            <validation-message input="myForm.Model_Series" title="Model Series"></validation-message>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note">
+                                <span class="mandatory">*</span>
+                                :Field mandatory harus diisi
+                            </p>
+                        </div>
+                    </div>
+
+
+                </form>
+
+                </div>
+            </div>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary" ng-click="mastermodelseries.addData(myForm)" ng-if="mastermodelseries.editMe == false" ng-disabled="!mastermodelseries.isFormValid(myForm)">Simpan</button>
+                    <button type="submit" class="frmSubmit btn btn-primary" ng-click="mastermodelseries.updatedData(myForm)" ng-if="mastermodelseries.editMe == true" ng-disabled="!mastermodelseries.isFormValid(myForm)">Update</button>
+                    <button type="reset" class="btn btn-danger" ng-click="mastermodelseries.reset(myForm)">Batal</button>
+                </div>          
+
+        </div>
+ </div>

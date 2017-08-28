@@ -1,0 +1,56 @@
+﻿<h4 class="form-group h4-aqua">Driver Information</h4>
+<div class="form-group"><hr class="header-line" /></div>
+<div class="row-striped">
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Tanggal Pick Up<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-7">
+            <div class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup="dd-MMM-yyyy"
+                       ng-model="me.deliveryRequestSelfPick.pickUpDate" is-open="me.popup1.opened" datepicker-options="dateOptions"
+                       close-text="Close" ng-change="me.validationPickUpDate();me.broadcast()" readonly/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="me.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </div>
+            <span class="field-validation-error" ng-bind="me.errorMessagePickUpDate" ng-hide="me.validatePickUpDate === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Identitas Driver<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-3">
+            <ui-select ng-model="me.deliveryRequestSelfPick.driverType" theme="bootstrap" ng-change="me.validationIdentitasDriver();me.broadcast()">
+                <ui-select-match placeholder="Pilih salah satu">{{$select.selected}}</ui-select-match>
+                <ui-select-choices repeat="driverType in me.driverType| filter: $select.search">
+                    <div ng-bind-html="driverType | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
+            
+        </div>
+        <div class="col-md-4">
+            <input name="DriverId" type="text" class="form-control" ng-model="me.deliveryRequestSelfPick.driverId" ng-change="me.validationIdentitasDriver();me.broadcast()"/>
+        </div>
+        <span class="field-validation-error col-md-offset-3 col-md-9" ng-bind="me.errorMessageDriverId" ng-hide="me.validateDriverId === false"></span>
+
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Nama Driver<span class="mandatory"> *</span></label>
+        </div>
+        <div class="col-md-7">
+            <input name="NamaDriver" type="text" class="form-control" ng-model="me.deliveryRequestSelfPick.driverName" ng-change="me.validationDriverName();me.broadcast()"  ng-model-options="{debounce: 500}"/>
+            <span class="field-validation-error" ng-bind="me.errorMessageDriverName" ng-hide="me.validateDriverName === false"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <label class="control-label">Kode Konfirmasi</label>
+        </div>
+        <div class="col-md-7">
+            <input type="text" class="form-control" disabled ng-model="me.deliveryRequestSelfPick.confirmationCode" />
+        </div>
+    </div>
+</div>

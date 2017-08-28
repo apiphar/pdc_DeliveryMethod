@@ -1,0 +1,214 @@
+﻿<style>
+    body {
+        background-color: #edf3f9;
+    }
+
+    fieldset {
+        padding: 1em;
+        border: 1px solid rgba(0, 0, 0, .5);
+        color: grey;
+        border-radius: 10px;
+        background: white;
+    }
+</style>
+
+<div class="container">
+
+    <div class="container">
+        <div class="form-group">
+
+            <h2>
+                Item Check Maintenance
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate" ng-click="me.checkInput()" ng-show="me.ShowEdit">Simpan</button>
+                    <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit" ng-click="me.checkUpdate()" ng-hide="me.ShowEdit">Update</button>
+                    <button type="reset" class="btn btn-default" ng-click="me.refreshData()">Batal</button>
+                </div>
+            </h2>
+
+            <hr style="border-top-color: #999999;" />
+        </div>
+    </div>
+
+    <fieldset>
+        <div class="container">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-primary">Inspection Part Name</th>
+                        <th class="text-primary">Inspection Item Name</th>
+                        <th class="text-primary col-sm-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.partName" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.itemName" /></th>
+                        <th></th>
+                    </tr>
+                    <!--<tr ng-repeat="data in (result = (me.Data | filter:me.Search)) | orderBy:'+partName' track by data.partName">-->
+                    <tr ng-repeat="data in (result = (me.Data | filter:me.Search)) | orderBy:'+partName' | limitTo: me.pageSize : (me.currentPage-1) * me.pageSize">
+                        <td ng-bind="data.partName"></td>
+                        <td ng-bind="data.itemName"></td>
+                        <td>
+                            <button type="button" class="btn btn-info" ng-click="me.selectData(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalDelete" ng-click="me.selectData(data)"><i class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="4" class="text-warning">Data Not Found!!!</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </fieldset>
+
+    <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+
+    <fieldset>
+        <div class="container">
+            <div class="form-horizontal">
+                <form id="frmData"name="frmData">
+                    <div class="form-group">
+                        <label class="col-sm-3">Inspection Part Name</label>
+                        <div class="col-sm-5">
+                            <input type="text" asp-for="ItemName" class="form-control" ng-model="me.partName" ng-minlength="0" id="PartName" name="PartName" required />
+                            <validation-message input="frmData.PartName"></validation-message>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-3">Inspection Side</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="me.InspectionItem" ng-change="me.SelectItemOnChange()" ng-options="option.name for option in me.DataItem track by option.inspectionItemId" id="SideName" name="SideName">
+                                <option>Please select</option>
+                            </select>
+                            <validation-message input="frmData.SideName"></validation-message>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </fieldset>
+
+    <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+
+    <div class="container">
+
+        <div class="form-group">
+            <div class="pull-right">
+                <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate" ng-click="me.checkInput()" ng-show="me.ShowEdit">Simpan</button>
+                <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit" ng-click="me.checkUpdate()" ng-hide="me.ShowEdit">Update</button>
+                <button type="submit" class="buttonSubmit btn btn-default" ng-click="me.refreshData()">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalShowCreate" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure want to save this details ?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Inspection Part Name</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.partName"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Inspection Side</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.itemName"></label>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.createData()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+   
+    <!-- Modal -->
+    <div class="modal fade" id="ModalShowEdit" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure want to edit this details ?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Inspection Part Name</label>
+                            <div class="col-sm-4">
+                                <label typeof="" class="control-label" ng-bind="me.partName"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Inspection Side</label>
+                            <div class="col-sm-4">
+                                <input type="hidden" ng-bind="me.inspectionPartId" />
+                                <label typeof="" class="control-label" ng-bind="me.itemName"></label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.updateData()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalDelete" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure ?</h4>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" ng-bind="me.inspectionPartId" />
+                    <strong style="color: red;">
+                        You are going to delete {{me.partName}}. All information...
+                    </strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="me.deleteData()">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<!--<p ng-bind="me.Data"></p>
+<p ng-bind="me.DataItem"></p>-->
+

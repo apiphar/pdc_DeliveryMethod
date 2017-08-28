@@ -1,0 +1,153 @@
+﻿
+    <div class="row">
+        <div class="col-md-12">
+            <h1>PDC Delivery Method</h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+            <div class="text-right">
+                <p>Tampilkan <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage, me.currentPage)"></select> item per halaman</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('locationData')">PDC</th>
+                            <th ng-click="me.order('branchData')">Branch</th>
+                            <th ng-click="me.order('deliveryMethodData')">Kode Moda</th>
+                            <th class="action"></th>
+                        </tr>
+                        <tr>
+                            <th><input type="text" ng-keyup="me.search(this)" ng-model="me.Search.locationData" class="form-control" /></th>
+                            <th><input type="text" ng-keyup="me.search(this)" ng-model="me.Search.branchData" class="form-control" /></th>
+                            <th><input type="text" ng-keyup="me.search(this)" ng-model="me.Search.deliveryMethodData" class="form-control" /></th>
+                            <th class="action"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in (result = (me.pdcDeliveryViewModel | filter: me.Search | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.locationData"></td>
+                            <td ng-bind="data.branchData"></td>
+                            <td ng-bind="data.deliveryMethodData"></td>
+                            <td class="action">
+                                <button type="button" ng-click="me.delete(data)" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="me.pdcDeliveryViewModel == null">
+                            <td colspan="12" class="text-center"><i>Loading...</i></td>
+                        </tr>
+                        <tr ng-if="result.length == 0">
+                            <td colspan="12" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        <div class="text-right">
+            <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+
+    <form name="myForm" class="form-horizontal">
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <div class="row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">PDC <span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-5">
+                            <ui-select name="PDC" ng-model="me.locations"
+                                        theme="bootstrap" ng-change="me.checkLocationAndBranch()" ng-required="true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="item in me.pdcLocationViewModel | filter: $select.search">
+                                    <span ng-bind-html="item.locationCode | highlight: $select.search"></span> -
+                                    <small ng-bind-html="item.name | highlight: $select.search"></small>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <div class="row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Kode Branch<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-5">
+                            <ui-select name="branch" ng-model="me.branches"
+                                        theme="bootstrap" ng-change="me.checkLocationAndBranch()" ng-required="true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.branchCode}} - {{$select.selected.branchName}}</ui-select-match>
+                                <ui-select-choices repeat="item in me.pdcBranchViewModel | filter: $select.search">
+                                    <span ng-bind-html="item.branchCode | highlight: $select.search"></span> -
+                                    <small ng-bind-html="item.branchName | highlight: $select.search"></small>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Kode Mode<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-5">
+                            <ui-select name="deliveryMethod" ng-model="me.deliveryMethods"
+                                        theme="bootstrap" ng-required="true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.deliveryMethodCode}} - {{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="item in me.pdcDeliveryMethodViewModel | filter: $select.search">
+                                    <span ng-bind-html="item.deliveryMethodCode | highlight: $select.search"></span> -
+                                    <small ng-bind-html="item.name | highlight: $select.search"></small>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="text-right">
+                            <button type="submit" ng-click="me.addDetail(myForm)" class="btn btn-primary" ng-disabled="myForm.$invalid || me.validateAllComboBox() === false">Tambah</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     
+
+        <div class="menu-panel">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>PDC</th>
+                            <th>Branch</th>
+                            <th>Kode Moda</th>
+                            <th class="action col-sm-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in result = (me.pdcDeliveryCreateViewModel | orderBy : 'ordering' ) track by $index">
+                            <td ng-bind="item.locationCode + ' - ' + item.locationName"></td>
+                            <td ng-bind="item.branchCode + ' - ' + item.branchName"></td>
+                            <td ng-bind="item.deliveryMethodCode + ' - ' + item.deliveryMethodName"></td>
+                            <td class="action">
+                                <button type="button" ng-click="me.deleteDetail(item)" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="text-right">
+            <button type="submit" ng-click="me.createData(myForm)" ng-disabled="result.length==0 || me.pdcDeliveryCreateViewModel==null" class="btn btn-primary">Simpan</button>
+            <button type="button" ng-click="me.clearDetail(myForm)" class="btn btn-danger">Batal</button>
+        </div>
+    </form>
+
+

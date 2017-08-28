@@ -1,0 +1,53 @@
+﻿@model TAM.LogisticSystem.Helpers.IPagination
+@inject WebEnvironmentService WebEnv
+
+@{
+    var range = 5;
+    var showFrom = Math.Max(Model.Page - range, 1);
+    var showTo = Math.Min(Model.Page + range, Model.TotalPages);
+}
+
+<ul class="pagination">
+    @if (Model.HasPreviousPage)
+    {
+        <li>
+            <a href="@WebEnv.ChangePageUrl(Model.Page-1)" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+    }
+    else
+    {
+        <li class="disabled">
+            <a aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+    }
+
+    @for (var i = showFrom; i <= showTo; i++)
+    {
+        <li active="i == Model.Page">
+            <a href="@WebEnv.ChangePageUrl(i)">@i</a>
+        </li>
+    }
+
+    @if (Model.HasNextPage)
+    {
+        <li>
+            <a href="@WebEnv.ChangePageUrl(Model.Page+1)" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    }
+    else
+    {
+        <li class="disabled">
+            <a aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    }
+
+</ul>
+

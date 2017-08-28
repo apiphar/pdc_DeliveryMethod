@@ -1,0 +1,227 @@
+﻿<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                Pola Rangkaian: Tahap Akhir
+            </h1>
+        </div>
+    </div>
+
+    <div class="header-line"></div>
+
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                item per halaman
+            </p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th ng-click="me.order('processTailTemplateCode')">Kode Pola</th>
+                        <th ng-click="me.order('description')">Keterangan</th>
+                        <th class="action"></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="form-control col-sm-2" ng-model="me.searchFilter.processTailTemplateCode" ng-keyup="me.search(resultFilter)" />
+                        </td>
+                        <td>
+                            <input class="form-control col-sm-2" ng-model="me.searchFilter.description" ng-keyup="me.search(resultFilter)" />
+                        </td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="resultFilter.length == 0 && !me.loading">
+                        <td colspan="3" class="text-center">Data tidak ditemukan</td>
+                    </tr>
+                    <tr ng-if="me.loading">
+                        <td colspan="3" class="text-center"><i>Loading ...</i></td>
+                    </tr>
+                    <tr ng-repeat="data in (resultFilter = (me.dataRangkaianTahapAkhir.routingDictionaryTail | filter: me.searchFilter | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="data.processTailTemplateCode"></td>
+                        <td ng-bind="data.description"></td>
+                        <td class="action">
+                            <button type="button" class="btn btn-info" ng-click="me.selectEditHeader(data);me.detailState = false">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button type="button" class="btn btn-danger" ng-click="me.selectDeleteHeader(data, PolaRangkaianTahapAkhirForm, PolaRangkaianTahapAkhirDetailForm);me.detailState = false">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-right">
+            <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="PolaRangkaianTahapAkhirForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Kode Pola <span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control text-uppercase" name="KodePola" ng-model="me.routingDictionaryTailCode" ng-change="me.detailState = false;me.checkHeader()" ng-disabled="me.lock" required="required" ng-maxlength="8" ng-pattern="me.regexCode" />
+                        <validation-message input="PolaRangkaianTahapAkhirForm.KodePola" title="Kode Pola" mismatch="harus berformat alphanumeric"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Keterangan <span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control text-uppercase" name="Keterangan" ng-model="me.description" required="required" ng-maxlength="255" ng-pattern="me.regexName" />
+                        <validation-message input="PolaRangkaianTahapAkhirForm.Keterangan" mismatch="harus berformat alphanumeric"></validation-message>
+                    </div>
+                    <div class="col-sm-2 col-md-offset-4">
+                        <button class="btn btn-primary" ng-click="me.changeDetailState()" ng-disabled="PolaRangkaianTahapAkhirForm.$invalid">Lihat Detail</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="menu-panel" ng-if="me.detailState">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Lokasi</th>
+                        <th>No. Urut</th>
+                        <th>Kode Rute</th>
+                        <th>Nama Rute</th>
+                        <th>Moda</th>
+                        <th class="action"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="6" class="text-center">Data tidak ditemukan</td>
+                    </tr>
+                    <tr ng-repeat="data in result = ( me.detailData | filter:{ 'routingDictionaryTailCode' : me.routingDictionaryTailCode.toUpperCase() } : true | orderBy : 'ordering')">
+                        <td ng-bind="data.locationName"></td>
+                        <td ng-bind="data.ordering"></td>
+                        <td ng-bind="data.processMasterCode"></td>
+                        <td ng-bind="data.routingMasterName"></td>
+                        <td ng-bind="data.deliveryMethodName"></td>
+                        <td class="action">
+                            <button type="button" class="btn btn-info" ng-click="me.selectEditDetail(data)">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button type="button" class="btn btn-danger" ng-click="me.selectDeleteDetail(data)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="menu-panel" ng-if="me.detailState">
+        <div class="panel-inside-padding">
+            <form name="PolaRangkaianTahapAkhirDetailForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Pola <span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control text-uppercase" ng-model="me.routingDictionaryTailCode" disabled="disabled"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Lokasi <span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.location" theme="bootstrap" required>
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="data in me.dataRangkaianTahapAkhir.location | filter: $select.search">
+                                <span ng-bind-html="data.locationCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="data.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <label class="control-label">No. Urut <span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" ng-model="me.ordering" name="NoUrut" required="required" ng-pattern="me.regexNumeric"/>
+                        <validation-message input="PolaRangkaianTahapAkhirDetailForm.NoUrut" title="No. Urut" mismatch="harus berformat numeric"></validation-message>
+                    </div>
+
+                    <div class="col-sm-1">
+                        <label class="control-label">Moda</label>
+                    </div>
+                    <div class="col-sm-2">
+                        <ui-select ng-model="me.deliveryMethod" theme="bootstrap">
+                            <ui-select-match allow-clear="true" placeholder="Pilih salah satu">{{$select.selected.deliveryMethodCode}} - {{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="data in me.dataRangkaianTahapAkhir.deliveryMethod | filter: $select.search">
+                                <span ng-bind-html="data.deliveryMethodCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="data.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Rute <span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.routingMaster" theme="bootstrap" required>
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.processMasterCode}} - {{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="data in me.dataRangkaianTahapAkhir.routingMaster | filter: $select.search">
+                                <span ng-bind-html="data.processMasterCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="data.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-sm-2 col-sm-offset-5">
+                        <button class="btn btn-primary" ng-if="me.addState" ng-click="me.addDetail(PolaRangkaianTahapAkhirDetailForm)" ng-disabled="PolaRangkaianTahapAkhirDetailForm.$invalid">Tambah Detail</button>
+                        <button class="btn btn-primary" ng-if="!me.addState" ng-click="me.updateDetail()" ng-disabled="PolaRangkaianTahapAkhirDetailForm.$invalid">Update Detail</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-danger" ng-click="me.resetDetail(PolaRangkaianTahapAkhirDetailForm)">Batal Detail</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <span>
+            <button class="btn btn-primary" ng-if="me.addHeaderState" ng-disabled="PolaRangkaianTahapAkhirForm.$invalid" ng-click="me.addData(PolaRangkaianTahapAkhirForm,PolaRangkaianTahapAkhirDetailForm)">Simpan</button>
+            <button class="btn btn-primary" ng-if="!me.addHeaderState" ng-disabled="PolaRangkaianTahapAkhirForm.$invalid" ng-click="me.addData(PolaRangkaianTahapAkhirForm,PolaRangkaianTahapAkhirDetailForm)">Update</button>
+        </span>
+        <span>
+            <button class="btn btn-danger" ng-click="me.reset(PolaRangkaianTahapAkhirForm,PolaRangkaianTahapAkhirDetailForm)">Batal</button>
+        </span>
+        <span>
+            <button class="btn btn-default" ng-click="me.applyTo()">Apply to</button>
+        </span>
+    </div>
+</div>

@@ -1,0 +1,120 @@
+﻿<div>
+    <h1>
+        Configuration Point Pre Book Vessel
+    </h1>
+
+
+    <button class="btn btn-info pull-right" ng-click="me.uploadExcel()">Upload</button>
+    <button class="btn btn-basic pull-right" ng-click="me.downloadExcel()">Download</button>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-info col-lg-2 col-md-2 col-xs-2 col-sm-2">Kode Lokasi</th>
+                        <th class="text-info col-lg-2 col-md-2 col-xs-2 col-sm-2">Point Pre Book Vessel</th>
+                        <th class="col-lg-1 col-md-1 col-xs-1 col-sm-1"></th>
+                        <th class="col-lg-1 col-md-1 col-xs-1 col-sm-1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input class="form-control col-sm-2" ng-model="search.locationCode" ng-keyup="me.search(this)" /></td>
+                        <td><input class="form-control col-sm-2" ng-model="search.pointPreBookVesselName" ng-keyup="me.search(this)" /></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr ng-repeat="bookVessel in (result = (me.allDatas.pointPreBookVesselsList | filter : search  | orderBy : me.orderString :me.orderState)) track by $index"
+                        ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <!--<td ng-bind="$index + 1"></td>-->
+                        <td ng-bind="bookVessel.locationCode"></td>
+                        <td ng-bind="bookVessel.pointPreBookVesselName"></td>
+
+                        <td class="col-lg-1 col-md-1 col-xs-1 col-sm-1"><button class="glyphicon glyphicon-edit btn btn-info" ng-click="me.selectEditBookVessel(bookVessel)"></button></td>
+                        <td class="col-lg-1 col-md-1 col-xs-1 col-sm-1"><button class="glyphicon glyphicon-trash btn btn-danger" ng-click="me.deleteBookVessel(bookVessel,vesselBookForm)"></button></td>
+
+                    </tr>
+                    <tr ng-if="result.length < 1">
+                        <td colspan="4" class="text-warning">Data Not Found !</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+        
+        
+    </div>
+    <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages"></ul>
+    <div class="container-fluid paging-sales">
+        <div class="navbar-right">
+            Tampilkan
+            <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+            item per halaman
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+            <form name="vesselBookForm" >
+                <div>
+                    <table class="table-striped table">
+                        <tr>
+                            <td class="col-lg-2 col-md-2 col-xs-2 col-sm-2"><label class="control-label">Kode Lokasi</label></td>
+                            <td ng-if="!me.editCheck" class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+                                <select class="form-control pull-center" ng-model="me.pointPreBookVesselList.locationCode"
+                                        ng-options="x for x in me.allDatas.locationCodes" required>
+                                    <option value="" disabled>(Please Choose One)</option>
+                                </select>
+                            </td>
+
+                            <td ng-if="me.editCheck" class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+                                <input type="text" class="form-control" name="LocationCodeSelect" ng-model="me.pointPreBookVesselList.locationCode" disabled />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-lg-2 col-md-2 col-xs-2 col-sm-2"><label class="control-label">Point Pre Book Vessel</label></td>
+                            <td ng-if="!me.editCheck" class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+                                <select name="PointPreBookVesselSelect" class="form-control" ng-model="me.pointPreBookVesselList.pointPreBookVesselId"
+                                        ng-options="x.pointPreBookVesselId as x.pointPreBookVesselName   for x in me.allDatas.masterRoutingDataNeeded" required>
+
+                                    <option value="" disabled>(Please Choose One)</option>
+
+                                </select>
+
+                            </td>
+                            <td ng-if="me.editCheck" class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+                                <select name="PointPreBookVesselSelect" class="form-control" ng-model="me.pointPreBookVesselList.pointPreBookVesselId"
+                                        ng-options="x.pointPreBookVesselId as x.pointPreBookVesselName   for x in me.allDatas.masterRoutingDataNeeded" required>
+
+                                    <option value="" disabled>(Please Choose One)</option>
+
+                                </select>
+
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+                
+                
+            </form>
+        </div>
+        
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div class="pull-right">
+                <button class="btn btn-basic pull-right" type="button" ng-click="me.resetBookVessel(vesselBookForm)">Batal</button>
+                <button ng-if="!me.editCheck" class="btn btn-info pull-right" type="submit" ng-click="me.addBookVessel(me.pointPreBookVesselList,vesselBookForm)">Simpan</button>
+
+                <button ng-if="me.editCheck" class="btn btn-info" ng-click="me.updateBookVessel(me.pointPreBookVesselList,vesselBookForm)" type="button">Ubah</button>
+            </div>
+        </div>
+    </div>
+
+
+   
+</div>

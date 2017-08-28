@@ -1,0 +1,125 @@
+﻿<div class="col-xs-12" ng-if="me.pageState==true">
+    <h1>Request AFI List (Returned From HO)</h1>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="afiSearchingForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <label class="control-label col-xs-3">Frame No:</label>
+                    <div class="col-xs-7">
+                        <input type="text" class="form-control text-uppercase" name="frameNo" ng-model="me.SearchData.frameNumber" ng-maxlength="30" ng-pattern="/^[A-Za-z0-9]*$/">
+                        <validation-message input="afiSearchingForm.frameNo" mismatch="harus Alpha Numeric" title="Frame Number"></validation-message>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-xs-3">Tanggal Pengajuan</label>
+                    <div class="col-xs-3">
+                        <p class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" ng-model="me.SearchData.tanggalPengajuan" is-open="openedPengajuan" close-text="Close" datepicker-options="me.dateOptions" alt-input-formats="me.altInputFormats" ng-change="me.tanggalChanged()" readonly />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openedPengajuan=!openedPengajuan"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                    <label class="control-label col-xs-1">Sampai</label>
+                    <div class="col-xs-3">
+                        <p class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" ng-model="me.SearchData.sampai" is-open="openedSampai" close-text="Close" datepicker-options="me.dateOptionsSampai" alt-input-formats="me.altInputFormats" ng-change="me.tanggalChangedSampai()" readonly />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openedSampai=!openedSampai"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-xs-1">
+                        <button type="submit" class="btn btn-primary" id="btnCari" ng-click="me.Cari()" ng-disabled="afiSearchingForm.$invalid">Cari</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-options="data for data in me.pageSizes"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered tableAfi">
+                <thead>
+                    <tr>
+                        <th>
+                            
+                        </th>
+                        <th class="th100">Frame No</th>
+                        <th class="th130">No Application</th>
+                        <th class="th100">Tanggal DO</th>
+                        <th class="th100">Model Name</th>
+                        <th class="th100">Color</th>
+                        <th class="th100">Jenis</th>
+                        <th class="th100">Model</th>
+                        <th class="th100">Chassis</th>
+                        <th class="th160">Branch</th>
+                        <th class="th130">No Reference</th>
+                        <th class="th130">Nama Customer</th>
+                        <th class="th100">No ID</th>
+                        <th class="thAddress">Alamat</th>
+                        <th class="th100">Provinsi</th>
+                        <th class="th100">Kota</th>
+                        <th class="th100">Kode Pos</th>
+                        <th class="th100">Tanggal Efektif</th>
+                        <th class="th160">TanggalAju</th>
+                        <th class="th160">Region</th>
+                        <th class="th100">Tipe Pengajuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-hide="me.loader==true">
+                        <td colspan="21" class="text-center">
+                            <i>Loading...</i>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="data in (result = me.Data)"
+                        ng-if="$index >= ((me.currentPage-1)*me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td>
+                            <input type="radio" ng-model="me.radio" name="rbSelect" value="{{data.afiApplicationId}}">
+                        </td>
+                        <td ng-bind="data.frameNumber"></td>
+                        <td ng-bind="data.applicationNumber"></td>
+                        <td ng-bind="data.doDate |date:'dd MMM yyyy'"></td>
+                        <td ng-bind="data.modelName"></td>
+                        <td ng-bind="data.color"></td>
+                        <td ng-bind="data.jenis"></td>
+                        <td ng-bind="data.model"></td>
+                        <td ng-bind="data.chassis"></td>
+                        <td ng-bind="data.branch"></td>
+                        <td ng-bind="data.referenceNumber"></td>
+                        <td ng-bind="data.customerName"></td>
+                        <td ng-bind="data.ktp"></td>
+                        <td ng-bind="(data.address1+'/'+data.address2+'/'+data.address3)"></td>
+                        <td ng-bind="data.province"></td>
+                        <td ng-bind="data.city"></td>
+                        <td ng-bind="data.postalCode"></td>
+                        <td ng-bind="data.tanggalEfektif |date:'dd MMM yyyy'"></td>
+                        <td ng-bind="data.tanggalAjuAFI |date:'dd MMM yyyy HH:mm'"></td>
+                        <td ng-bind="data.region"></td>
+                        <td ng-bind="data.tipePengajuanName"></td>
+                    </tr>
+                    <tr ng-if="me.Data.length==0 || me.Data==null ">
+                        <td colspan="21"><center>Data tidak ditemukan</center></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-right">
+            <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize"
+                class="pagination-sm" boundary-links="true" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+
+    <div class="pull-right">
+        <button type="submit" class="frmSubmit btn btn-primary" ng-click="me.Process()" ng-disabled="me.radio==null">Proccess</button>
+    </div>
+</div>

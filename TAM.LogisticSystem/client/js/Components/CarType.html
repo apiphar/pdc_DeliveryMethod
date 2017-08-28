@@ -1,0 +1,263 @@
+﻿
+<div ng-if="me.pageState==true" class="Page">
+    <div class="row">
+        <div class="col-md-4">
+            <h1>
+                Master Tipe
+            </h1>
+        </div>
+        <div class="col-md-8 text-right">
+            <h1>
+                <button type="button" class="buttonSubmit btn btn-primary" ng-click="me.Download(result)">Download</button>
+                
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center" ng-click="me.order('katashiki')">Katashiki</th>
+                        <th class="text-center" ng-click="me.order('suffix')">Suffix</th>
+                        <th class="text-center" ng-click="me.order('name')">Tipe</th>
+                        <th class="text-center" ng-click="me.order('engineDescription')">Engine Desc.</th>
+                        <th class="text-center" ng-click="me.order('engineVolume')">CC</th>
+                        <th class="text-center" ng-click="me.order('steerPosition')">Steer Position</th>
+                        <th class="text-center" ng-click="me.order('wheelDiameter')">Wheel Diametre</th>
+                        <th class="text-center" ng-click="me.order('wheelSize')">Wheel Size</th>
+                        <th class="text-center" ng-click="me.order('assembly')">Assembly</th>
+                        <th class="text-center" ng-click="me.order('carSeriesName')">Kode Model Series</th>
+                        <th class="text-center" ng-click="me.order('carCategoryName')">Kode Jenis</th>
+                        <th class="text-center" ng-click="me.order('isFTZ')">FTZ</th>
+                        <th></th>     
+                    </tr>
+                    <tr>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.katashiki" />
+                        </th>
+                        <th> 
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.suffix" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.name" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.engineDescription" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.engineVolume" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.steerPosition" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.wheelDiameter" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.wheelSize" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.assembly" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.carSeriesName" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.carCategoryName" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.isFTZText" /> 
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in (result = (me.dataCarType | filter: me.Search:me.allowNullValue  | orderBy: me.orderString : me.orderState)) track by data.suffix + data.katashiki" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="data.katashiki"></td>
+                        <td ng-bind="data.suffix"></td>
+                        <td ng-bind="data.name"></td>
+                        <td ng-bind="data.engineDescription"></td>   
+                        <td ng-bind="data.engineVolume"></td>
+                        <td ng-bind="data.steerPosition"></td>
+                        <td ng-bind="data.wheelDiameter"></td>
+                        <td ng-bind="data.wheelSize"></td>
+                        <td ng-bind="data.assembly"></td>    
+                        <td ng-bind="data.carSeriesName"></td>
+                        <td ng-bind="data.afiCarTypeCode"></td>
+                        <td ng-bind="data.isFreeTaxZone==1 ? 'Ya' : 'Tidak'"></td>
+                        <td class="action-1">
+                            <button type="button" class="btn btn-info" ng-click="me.selectEdit(data)">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </button>
+                            <!--<button type="button" class="btn btn-danger" ng-click="me.deleteCartype(data,myForm)">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>-->
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0"> 
+                        <td colspan="14" align="center">Data tidak ditemukan</td>
+                    </tr>
+                    <tr ng-if="me.loader">
+                        <td colspan="14" class="text-center"><i>Loading ...</i></td>
+                    </tr>     
+                </tbody>
+            </table>
+        </div>
+        <div class="text-right">
+            <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+    <div ng-if="me.showHideButton == true">
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <form name="myForm" class="form-horizontal row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Katashiki<span class="mandatory"> *</span></label>
+                        </div>
+                        <!--<div class="col-sm-3" ng-if="me.showHideButton == false">
+                            <input type="text" class="form-control" ng-model="me.cartypeModel.katashiki" name="Katashiki" ng-maxlength="20" required="required" pattern="^[a-zA-Z0-9\-]*$">
+                            <validation-message input="myForm.Katashiki" title="Katashiki">></validation-message>
+                        </div>-->
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.cartypeModel.katashiki" readonly="readonly" />
+                        </div>
+                        <label class="col-sm-1"></label>
+                        <div class="col-sm-2">
+                            <label class="control-label">Wheel Diametre<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.cartypeModel.wheelDiameter" name="WheelDiametre" ng-maxlength="8" required="required" pattern="^[0-9]*$" />
+                            <validation-message input="myForm.WheelDiametre" title="Wheel Diametre" mismatch="harus numeric"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Suffix<span class="mandatory"> *</span></label>
+                        </div>
+                        <!--<div class="col-sm-3" ng-if="me.showHideButton == false">
+                            <input type="text" class="form-control" ng-model="me.cartypeModel.suffix" name="Suffix" ng-maxlength="2" required="required" pattern="^[a-zA-Z0-9]*$"/>
+                            <validation-message input="myForm.Suffix" title="Suffix"></validation-message>
+                        </div>-->
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.cartypeModel.suffix" readonly="readonly" />
+                        </div>
+                        <label class="col-sm-1"></label>
+                        <div class="col-sm-2">
+                            <label class="control-label">Wheel Size<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.cartypeModel.wheelSize" name="WheelSize" ng-maxlength="32" required="required">
+                            <validation-message input="myForm.WheelSize" title="Wheel Size"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Tipe<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.cartypeModel.name" name="Name" ng-maxlength="255" required="required">
+                            <validation-message input="myForm.Name" title="Tipe"></validation-message>
+                        </div>
+                        <label class="col-sm-1"></label>
+                        <div class="col-sm-2">
+                            <label class="control-label">Assembly</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.cartypeModel.assembly" name="Assembly" ng-maxlength="8">
+                            <validation-message input="myForm.Assembly" title="Assembly"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Engine Desc.<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.cartypeModel.engineDescription" name="EngineDescription" ng-maxlength="255" required="required">
+                            <validation-message input="myForm.EngineDescription" mismatch="tidak boleh lebih dari 255 karakter" title="Engine Description"></validation-message>
+                        </div>
+                        <label class="col-sm-1"></label>
+                        <div class="col-sm-2">
+                            <label class="control-label">Kode Model Series<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <ui-select ng-model="me.carSeries" theme="bootstrap" required="required">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.carSeriesName}}</ui-select-match>
+                                <ui-select-choices repeat="data in me.dataSeries | filter: $select.search">
+                                    <span ng-bind-html="data.carSeriesCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="data.carSeriesName | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">CC<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="me.cartypeModel.engineVolume" name="CC" ng-maxlength="8" required="required" pattern="^[0-9]*$" />
+                            <validation-message input="myForm.CC" title="CC" mismatch="harus numeric"></validation-message>
+                        </div>
+                        <label class="col-sm-1"></label>
+                        <div class="col-sm-2">
+                            <label class="control-label">Kode Jenis<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <ui-select ng-model="me.carCategory" theme="bootstrap" required="required">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.aficartypeName}}</ui-select-match>
+                                <ui-select-choices repeat="category in me.dataCategory | filter: $select.search">
+                                    <span ng-bind-html="category.afiCarTypeCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="category.aficartypeName | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Steer Position<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <ui-select ng-model="me.listSteerPosition" theme="bootstrap" required="required">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.steerPosition}}</ui-select-match>
+                                <ui-select-choices repeat="steerPosition in me.dataSteerPosition | filter: $select.search">
+                                    <span ng-bind-html="steerPosition.steerPosition | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <label class="col-sm-1"></label>
+                        <div class="col-sm-2">
+                            <label class="control-label">FTZ<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="me.cartypeModel.isFTZ" ng-value="true" required="required"> Ya
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="me.cartypeModel.isFTZ" ng-value="false" required="required"> Tidak
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note"><span class="mandatory">*</span> : Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="text-right">
+            <!--<button type="submit" class="btn btn-primary" ng-if="me.showHideButton == false" ng-click="me.postCartype(myForm)" ng-disabled="!myForm.$valid">Simpan</button>-->
+            <button type="submit" class="btn btn-primary" ng-click="me.updateCartype(myForm)" ng-disabled="!myForm.$valid">Update</button>
+            <button type="reset" class="btn btn-danger" ng-click="me.reset(myForm)">Batal</button>
+        </div>
+    </div>
+</div>

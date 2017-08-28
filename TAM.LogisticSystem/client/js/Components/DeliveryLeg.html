@@ -1,0 +1,211 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>
+                    Master Delivery Leg
+                </h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <h1>
+                    <button type="button" class="btn btn-primary" ng-click="me.download(result)">Download</button>
+                    <button type="button" class="btn btn-default" ng-click="me.upload()">Upload</button>
+                </h1>
+            </div>
+        </div>
+        <p></p>
+        <div class="header-line"></div>
+
+        <div class="menu-panel">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('deliveryLegCode')">Kode Delivery Leg</th>
+                            <th ng-click="me.order('name')">Delivery Leg</th>
+                            <th ng-click="me.order('locationFrom')">Lokasi Asal</th>
+                            <th ng-click="me.order('locationTo')">Lokasi Tujuan</th>
+                            <th ng-click="me.order('cityLegCode')">Kode City Leg</th>
+                            <th ng-click="me.order('bufferMinutes')">Buffer Time</th>
+                            <th ng-click="me.order('needSJKB')">Menggunakan SJKB</th>
+                            <th class="action"></th>
+                        </tr>
+                        <tr>
+                            <th><input ng-keypress="me.setPage(1)" ng-model="me.search.deliveryLegCode" class="form-control" /></th>
+                            <th><input ng-keypress="me.setPage(1)" ng-model="me.search.name" class="form-control" /></th>
+                            <th><input ng-keypress="me.setPage(1)" ng-model="me.search.locationFromString" class="form-control" /></th>
+                            <th><input ng-keypress="me.setPage(1)" ng-model="me.search.locationToString" class="form-control" /></th>
+                            <th><input ng-keypress="me.setPage(1)" ng-model="me.search.cityLegCodeString" class="form-control" /></th>
+                            <th></th>
+                            <th><input ng-keypress="me.setPage(1)" ng-model="me.search.needSJKB" class="form-control" /></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in (result = (me.deliveryLegViewModels |
+                                        filter : me.search |
+                                        orderBy : me.orderString :me.orderState)) track by item.deliveryLegCode"
+                            ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="item.deliveryLegCode"></td>
+                            <td ng-bind="item.name"></td>
+                            <td ng-bind="item.locationFromString"></td>
+                            <td ng-bind="item.locationToString"></td>
+                            <td ng-bind="item.cityLegCodeString"></td>
+                            <td ng-bind="me.convertToDay(item.bufferMinutes)"></td>
+                            <td ng-bind="item.needSJKB"></td>
+                            <td class="action">
+                                <button type="button" ng-click="me.fillForm(item)" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span></button>
+                                <button type="button" ng-click="me.deleteData(deliveryLegForm, item)" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+                                <a href="../DeliveryLegLeadTime/Index/{{item.deliveryLegCode}}" class="btn btn-primary glyphicon glyphicon-cog"></a>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length < 1" class="text-center">
+                            <td colspan="8">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="result.length == undefined" class="text-center">
+                            <td colspan="8"><i>Loading...</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+        <form name="deliveryLegForm" class="form-horizontal">
+            <div class="menu-panel">
+                <div class="panel-inside-padding">
+                    <div class="row-striped">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Kode Delivery Leg <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input name="KodeDeliveryLeg" ng-model="me.deliveryLegPostPutViewModel.deliveryLegCode" class="form-control" ng-pattern="me.codePattern" ng-maxlength="16" required ng-disabled="me.disabledCodeInput" />
+                                <validation-message input="deliveryLegForm.KodeDeliveryLeg"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Delivery Leg <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input name="DeliveryLeg" ng-model="me.deliveryLegPostPutViewModel.name" ng-pattern="me.namePattern" ng-maxlength="255" class="form-control" ng-required="true" />
+                                <validation-message input="deliveryLegForm.DeliveryLeg"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Lokasi Asal <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-6">
+                                <ui-select name="locationFrom" ng-model="me.deliveryLegPostPutViewModel.locationFrom"
+                                           theme="bootstrap">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="item.locationCode as item in me.deliveryLegLocationViewModels | filter: $select.search">
+                                        <span ng-bind-html="item.locationCode | highlight: $select.search"></span> -
+                                        <small ng-bind-html="item.name | highlight: $select.search"></small>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <span class="field-validation-error" ng-if="me.deliveryLegPostPutViewModel.locationFrom == null && deliveryLegForm.locationFrom.$touched">Lokasi harus dipilih</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Lokasi Tujuan <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-6">
+                                <ui-select name="locationTo" ng-model="me.deliveryLegPostPutViewModel.locationTo"
+                                           theme="bootstrap">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="item.locationCode as item in me.deliveryLegLocationViewModels | filter: $select.search">
+                                        <span ng-bind-html="item.locationCode | highlight: $select.search"></span> -
+                                        <small ng-bind-html="item.name | highlight: $select.search"></small>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <span class="field-validation-error" ng-if="me.deliveryLegPostPutViewModel.locationTo == null && deliveryLegForm.locationTo.$touched">Lokasi harus dipilih</span>
+                                <span ng-if="me.checkSameLocation()" class="field-validation-error">Lokasi Asal dan Lokasi Tujuan tidak boleh sama</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Kode City Leg <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-6">
+                                <ui-select name="cityLegCode" ng-model="me.deliveryLegPostPutViewModel.cityLegCode"
+                                           theme="bootstrap">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.cityLegCode}} - {{$select.selected.cityLegName}}</ui-select-match>
+                                    <ui-select-choices repeat="item.cityLegCode as item in me.cityLegList | filter: $select.search">
+                                        <span ng-bind-html="item.cityLegCode | highlight: $select.search"></span> -
+                                        <small ng-bind-html="item.cityLegName | highlight: $select.search"></small>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <span class="field-validation-error" ng-if="me.deliveryLegPostPutViewModel.cityLegCode == null && deliveryLegForm.cityLegCode.$touched">Lokasi harus dipilih</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Buffer Time <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-1">
+                                <input name="Hari" ng-model="me.bufferHari" min="0" pattern="\d*$" type="number" class="form-control" required />
+                            </div>
+                            <div class="col-sm-1">
+                                <label class="control-label">Hari</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <input name="Jam" ng-model="me.bufferJam" min="0" max="23" pattern="\d*$" type="number" class="form-control" required />
+                            </div>
+                            <div class="col-sm-1">
+                                <label class="control-label">Jam</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <input name="Menit" ng-model="me.bufferMenit" min="0" max="59" pattern="\d*$" type="number" class="form-control" required />
+                            </div>
+                            <div class="col-sm-1">
+                                <label class="control-label">Menit</label>
+                            </div>
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <validation-message input="deliveryLegForm.Hari"></validation-message>
+                            </div>
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <validation-message input="deliveryLegForm.Jam"></validation-message>
+                            </div>
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <validation-message input="deliveryLegForm.Menit"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Menggunakan SJKB <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-1">
+                                <input ng-model="me.deliveryLegPostPutViewModel.needSJKB" ng-click="me.checkBoxClicked()" type="radio" name="useSjkb" ng-value="true" required /> Ya
+                            </div>
+                            <div class="col-sm-1">
+                                <input ng-model="me.deliveryLegPostPutViewModel.needSJKB" ng-click="me.checkBoxClicked()" type="radio" name="useSjkb" ng-value="false" required /> Tidak
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="submit" ng-if="!me.editCheck" ng-click="me.submitData(deliveryLegForm)" ng-disabled="me.disableButton()" class="btn btn-primary">Simpan</button>
+                <button type="submit" ng-if="me.editCheck" ng-click="me.updateData(deliveryLegForm)" ng-disabled="me.disableButton()" class="btn btn-primary">Update</button>
+                <button type="button" ng-click="me.setPristine(deliveryLegForm)" class="btn btn-danger">Batal</button>
+            </div>
+        </form>
+    </div>
+</div>

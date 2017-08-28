@@ -1,0 +1,145 @@
+﻿<div class="col-md-12">
+    <h1>Vessel Arrival</h1>
+    <div class="header-line"></div>
+    <form name="vesselArrivalForm" class="form-horizontal" ng-submit="me.sendData(me.arrivalDate, me.arrivalTime, vesselArrivalForm)">
+        <!--Voyage Detail-->
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <div class="row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Voyage No. <span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input name="VoyageNo" ng-model="me.voyageDestinationViewModel.voyageNumber" ng-pattern="me.voyagePattern" type="text" class="form-control" ng-change="me.searchVoyage(me.voyageDestinationViewModel.voyageNumber)" ng-model-options="{debounce: 1000}" required />
+                            <validation-message input="vesselArrivalForm.VoyageNo"></validation-message>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Vendor</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input ng-model="me.vesselArrivalViewModel.vendor" class="form-control" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Vessel</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input ng-model="me.vesselArrivalViewModel.vessel" class="form-control" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Destination City <span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <ui-select name="DestinationCity" ng-model="me.voyageDestinationViewModel.destinationCity" theme="bootstrap" ng-required="true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.cityName}}</ui-select-match>
+                                <ui-select-choices repeat="city.cityId as city in me.vesselArrivalPageViewModel.cityLists | filter: $select.search">
+                                    <span ng-bind-html="city.cityName | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group form-datepicker">
+                        <div class="col-sm-2">
+                            <label class="control-label">Date / Time Arrival <span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="input-group">
+                                <input name="DateArrival" type="text" class="form-control" uib-datepicker-popup="dd-MMM-yyyy" ng-model="me.arrivalDate" is-open="me.datePopup" datepicker-options="me.dateOptions" required close-text="Close" alt-input-formats="me.altInputFormats" ng-required="true" readonly />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="me.openDatePicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </div>
+                            <validation-message input="vesselArrivalForm.DateArrival"></validation-message>
+                        </div>
+                        <div class="col-sm-2">
+                            <div name="TimeArrival" uib-timepicker ng-model="me.arrivalTime" ng-changed="me.test()" hour-step="1" minute-step="1" show-meridian="false" ng-required="true"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <span class="mandatory">*: Field mandatory harus diisi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Unit List + Pagination-->
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="h2-aqua">Daftar Frame No.</h2>
+                    </div>
+                    <p class="text-right col-sm-6 tab-content">
+                        Tampilkan
+                        <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                        item per halaman
+                    </p>
+                </div>
+                <div class="header-line">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th ng-click="me.order('frameNo')">Frame No</th>
+                                <th ng-click="me.order('katashiki')">Katashiki</th>
+                                <th ng-click="me.order('suffix')">Suffix</th>
+                                <th ng-click="me.order('model')">Model</th>
+                                <th ng-click="me.order('tipe')">Tipe</th>
+                                <th ng-click="me.order('warna')">Warna</th>
+                                <th ng-click="me.order('branch')">Branch</th>
+                                <th ng-click="me.order('pdcIn')" width="110px">ETD PDC R</th>
+                                <th ng-click="me.order('customerAssign')">Customer Assigned</th>
+                                <th ng-click="me.order('requestedPdd')" width="110px">Requested PDD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input ng-model="me.search.frameNo" class="form-control" /></td>
+                                <td><input ng-model="me.search.katashiki" class="form-control" /></td>
+                                <td><input ng-model="me.search.suffix" class="form-control" /></td>
+                                <td><input ng-model="me.search.model" class="form-control" /></td>
+                                <td><input ng-model="me.search.tipe" class="form-control" /></td>
+                                <td><input ng-model="me.search.warna" class="form-control" /></td>
+                                <td><input ng-model="me.search.branch" class="form-control" /></td>
+                                <td><input ng-model="me.search.pdcInString" class="form-control" /></td>
+                                <td class="text-center"><input ng-model="me.search.customerAssign" type="checkbox" /></td>
+                                <td><input ng-model="me.search.requestedPddString" class="form-control" /></td>
+                            </tr>
+                            <tr ng-repeat="item in result = (me.vesselArrivalPageViewModel.unitLists | filter : me.voyageDestinationViewModel.voyageNumber | filter : me.search  | orderBy : me.orderString :me.orderState) track by $index"
+                                ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize) && me.voyageFound">
+                                <td ng-bind="item.frameNo"></td>
+                                <td ng-bind="item.katashiki"></td>
+                                <td ng-bind="item.suffix"></td>
+                                <td ng-bind="item.model"></td>
+                                <td ng-bind="item.tipe"></td>
+                                <td ng-bind="item.warna"></td>
+                                <td ng-bind="item.branch"></td>
+                                <td ng-bind="item.pdcInString"></td>
+                                <td class="text-center"><input type="checkbox" ng-checked="item.customerAssign" disabled /></td>
+                                <td ng-bind="item.requestedPddString"></td>
+                            </tr>
+                            <tr ng-if="!result.length && me.voyageFound">
+                                <td colspan="10" class="text-center">Data tidak ditemukan</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-right">
+                        <ul uib-pagination total-items="me.getTotalItems(result.length)" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary" ng-disabled="me.disableButton()">Simpan</button>
+            <button type="button" ng-click="me.setPristine(vesselArrivalForm)" class="btn btn-danger">Batal</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,146 @@
+﻿﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>
+                    Master Tipe Lokasi
+                </h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <h1>
+                    <button class="btn btn-primary" ng-click="me.download(result)">Download</button>
+                    <button class="btn btn-default" ng-click="me.upload()">Upload</button>
+                </h1>
+            </div>
+        </div>
+        <div class="header-line"></div>
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <div class="clearfix">
+                    <div class="text-right">
+                        <p>
+                            Tampilkan
+                            <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="item for item in me.pageSizes"></select>
+                            items per halaman
+                        </p>
+
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-primary" ng-click="me.order('locationTypeCode')">Kode Tipe Lokasi</th>
+                                <th class="text-primary" ng-click="me.order('name')">Tipe Lokasi</th>
+                                <th class="text-primary" ng-click="me.order('hasResponsibility')">Memiliki Tanggung Jawab</th>
+                                <th class="text-primary" ng-click="me.order('needSjkbTarikan')">SJKB Tarikan</th>
+                                <th class="action"></th>
+                            </tr>
+                            <tr>
+                                <th><input class="form-control col-sm-2" ng-model="me.searchFilter.locationTypeCode" ng-keyup="me.search(this)" /></th>
+                                <th><input class="form-control col-sm-2" ng-model="me.searchFilter.name" ng-keyup="me.search(this)" /></th>
+                                <th><input class="form-control col-sm-2" ng-model="me.searchFilter.tanggungJawab" ng-keyup="me.search(this)" /></th>
+                                <th><input class="form-control col-sm-2" ng-model="me.searchFilter.sjkb" ng-keyup="me.search(this)" /></th>
+                                <th class="action"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in (result = (me.locationTypeViewModelList | filter : me.searchFilter  | orderBy : me.orderString :me.orderState)) track by data.locationTypeCode"
+                                ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                                <td ng-bind="data.locationTypeCode"></td>
+                                <td ng-bind="data.name"></td>
+                                <td ng-bind="data.tanggungJawab"></td>
+                                <td ng-bind="data.sjkb"></td>
+                                <td class="action">
+                                    <button type="button" class="btn btn-info btn-action" ng-click="me.updateSelected(data)"><i class="glyphicon glyphicon-edit icon-sales"></i></button>
+                                    <button type="button" class="btn btn-danger btn-action" ng-click="me.deleteLocationType(data,LocationTypeForm)" data-toggle="modal" data-target="#ModalDelete"><i class="glyphicon glyphicon-trash icon-sales"></i></button>
+                                </td>
+                            </tr>
+                            <tr ng-if="result.length === undefined">
+                                <td colspan="5" class="text-center"><i>Loading...</i></td>
+                            </tr>
+                            <tr ng-if="result.length < 1">
+                                <td colspan="5" class="text-center">Data tidak ditemukan</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Panel Insert / Update -->
+        <form name="LocationTypeForm" class="form-horizontal" ng-submit="me.createLocationType(LocationTypeForm)">
+            <div class="menu-panel">
+                <div class="panel-inside-padding">
+                    <div class="row-striped">
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="control-label">Kode Tipe Lokasi <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <input name="KodeTipeLokasi" ng-model="me.locationTypeViewModel.locationTypeCode" class="form-control" ng-disabled="me.isEdit" required ng-maxlength="8" ng-pattern="me.regexStringCode" />
+                                <validation-message input="LocationTypeForm.KodeTipeLokasi" title="Kode Tipe Lokasi"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="control-label">Tipe Lokasi <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <input name="TipeLokasi" ng-model="me.locationTypeViewModel.name" class="form-control" required ng-maxlength="255" ng-pattern="me.regexStringName" />
+                                <validation-message input="LocationTypeForm.TipeLokasi" title="Tipe Lokasi"></validation-message>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="control-label">Memiliki Tanggung Jawab <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-md-1 check">
+                                <label><input name="tanggungJawab" value=true type="radio" ng-model="me.locationTypeViewModel.hasResponsibility" ng-checked="me.locationTypeViewModel.hasResponsibility === true" required />Ya</label>
+                            </div>
+                            <div class="col-md-1 check">
+                                <label><input name="tanggungJawab" value=false type="radio" ng-model="me.locationTypeViewModel.hasResponsibility" ng-checked="me.locationTypeViewModel.hasResponsibility === false" required />Tidak</label>
+                            </div>
+                            <validation-message input="LocationTypeForm.tanggungJawab"></validation-message>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="control-label">SJKB Tarikan <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-md-1 check">
+                                <label><input name="sjkb" value=true type="radio" ng-model="me.locationTypeViewModel.needSjkbTarikan" ng-checked="me.locationTypeViewModel.needSjkbTarikan === true" required />Ya</label>
+                            </div>
+                            <div class="col-md-1 check">
+                                <label><input name="sjkb" value=false type="radio" ng-model="me.locationTypeViewModel.needSjkbTarikan" ng-checked="me.locationTypeViewModel.needSjkbTarikan === false" required />Tidak</label>
+                            </div>
+                            <validation-message input="LocationTypeForm.sjkb"></validation-message>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <p class="control-label form-note"><span class="mandatory">*</span> : Field mandatory harus diisi</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary" ng-if="!me.isEdit" ng-disabled="LocationTypeForm.$invalid">Simpan</button>
+                <button type="button" class="btn btn-primary" ng-if="me.isEdit" ng-click="me.updateLocationType(LocationTypeForm)" ng-disabled="LocationTypeForm.$invalid">Update</button>
+                <button class="btn btn-danger" type="button" ng-click="me.reset(LocationTypeForm)">Batal</button>
+            </div>
+        </form>
+    </div>
+</div>

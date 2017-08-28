@@ -1,0 +1,162 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>
+                    Maintenance Waktu Break
+                </h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <h1>
+                    <button ng-click="me.download(result)" class="btn btn-primary">
+                        Download
+                    </button>
+                    <button ng-click="me.upload()" class="btn btn-default">
+                        Upload
+                    </button>
+                </h1>
+            </div>
+        </div>
+        <hr class="header-line" />
+        <div class="menu-panel">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('name')" class="text-center">Lokasi</th>
+                            <th ng-click="me.order('description')" class="text-center">Shift</th>
+                            <th ng-click="me.order('dateFrom')" class="text-center">Mulai Break</th>
+                            <th ng-click="me.order('dateFrom')" class="text-left">(Tanggal & Jam)</th>
+                            <th ng-click="me.order('dateTo')" class="text-center">Selesai Break</th>
+                            <th ng-click="me.order('dateTo')" class="text-left">(Tanggal & Jam)</th>
+                            <th class="action"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th><input class="form-control col-sm-2" ng-keyup="me.search(this)" ng-model="Search.name" /></th>
+                            <th><input class="form-control col-sm-2" ng-keyup="me.search(this)" ng-model="Search.description" /></th>
+                            <th><input class="form-control col-sm-2" ng-keyup="me.search(this)" ng-model="Search.convertDateFrom" /></th>
+                            <th></th>
+                            <th><input class="form-control col-sm-2" ng-keyup="me.search(this)" ng-model="Search.convertDateTo" /></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr ng-if="result.length == 0">
+                            <td colspan="10" class="text-warning">Data Tidak Ditemukan</td>
+                        </tr>
+                        <tr ng-if="me.loader">
+                            <td colspan="10" class="text-center">Loading</td>
+                        </tr>
+                        <tr ng-repeat="data in (result = (me.data | filter: Search | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.name"></td>
+                            <td ng-bind="data.description"></td>
+                            <td ng-bind="data.convertDateFrom"></td>
+                            <td ng-bind="data.dateFrom | date: 'HH:mm'"></td>
+                            <td ng-bind="data.convertDateTo"></td>
+                            <td ng-bind="data.dateTo | date: 'HH:mm'"></td>
+                            <td class="text-nowrap text-center">
+                                <button id="btnEdit" type="button" class="btn btn-info" ng-click="me.selectEdit(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                                <button type="button" class="btn btn-danger" ng-click="me.deleteData(data)"><i class="glyphicon glyphicon-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" ng-change="me.pageChanged()" max-size="me.maxSize" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <form id="MyForm" name="MyForm" class="form-horizontal row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Lokasi<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <ui-select ng-model="me.locations" theme="bootstrap">
+                                <ui-select-match placeholder="(Pilih Salah Satu)">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="dataLocation in me.dataLocation | filter: $select.search">
+                                    <span ng-bind-html="dataLocation.locationCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="dataLocation .name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label" for="">Kode Shift<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-2">
+                            <ui-select ng-model="me.shifts" theme="bootstrap">
+                                <ui-select-match placeholder="(Pilih Salah Satu)">{{$select.selected.description}}</ui-select-match>
+                                <ui-select-choices repeat="dataShift in me.dataShift | filter: $select.search">
+                                    <span ng-bind-html="dataShift.shiftCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="dataShift .description | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-datepicker">
+                        <div class="col-sm-3">
+                            <label class="control-label" for="">Mulai Break (Tanggal & jam)<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <input type="datetime" class="form-control" uib-datepicker-popup="dd MMM yyyy" ng-model="me.dateFrom" is-open="dateFromDatepickerIsOpen"
+                                       ng-required="true" close-text="Close" datepicker-options="me.dateOption" readonly="readonly"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="dateFromDatepickerIsOpen = !dateFromDatepickerIsOpen">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div uib-timepicker ng-model="me.dateFrom" hour-step="me.hourStep" minute-step="me.minuteStep" show-meridian="false" ng-change="me.dateChange(MyForm)"></div>                
+                        </div>
+                    </div>
+
+                    <div class="form-group form-datepicker">
+                        <div class="col-sm-3">
+                            <label class="control-label" for="">Selesai Break (Tanggal & jam)<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" ng-model="me.dateTo" is-open="dateToDatepickerIsOpen"
+                                       ng-required="true" close-text="Close" datepicker-options="me.dateOption" readonly="readonly" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="dateToDatepickerIsOpen = !dateToDatepickerIsOpen">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>
+                          
+                        </div>
+                        <div class="col-sm-2">
+                            <div uib-timepicker ng-model="me.dateTo" hour-step="me.hourStep" minute-step="me.minuteStep" show-meridian="false" ng-change="me.dateChange()"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="text-right">
+            <button type="submit" ng-click="me.addData(MyForm)" ng-if="me.created==true" ng-disabled="MyForm.$invalid" class="btn btn-info"> Simpan</button>
+            <button type="submit" class="btn btn-info" ng-click="me.updateData(MyForm)" ng-if="me.edited==true" ng-disabled="MyForm.$invalid">Update</button>
+            <button type="reset" ng-click="me.clearForm(MyForm)" class="btn btn-danger"> Batal</button>
+        </div>
+    </div>
+</div>

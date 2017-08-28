@@ -1,0 +1,156 @@
+﻿<div ng-show="me.isDetail === false">
+    <div class="col-md-12">
+        <h1>
+            Restriksi Area / Swapping
+        </h1>
+        <div class="header-line"></div>
+        <div class="menu-panel">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4 class="h4-aqua">
+                        Restriksi Area / Swapping List
+                    </h4>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <p>
+                        Tampilkan
+                        <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                        item per halaman
+                    </p>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('regionCode')">Provinsi</th>
+                            <th ng-click="me.order('isLocked')">Status</th>
+                            <th ng-click="me.order('validFrom')">Valid From</th>
+                            <th ng-click="me.order('validTo')">Valid To</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.regionString" />
+                            </td>
+                            <td>
+                                <input type="checkbox" ng-change="me.search(this)" ng-model="me.searchTable.isLocked" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.validFromString" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchTable.validToString" />
+                            </td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="me.afiRegionsRestriction === undefined">
+                            <td colspan="5" class="text-center"><i>Loading...</i></td>
+                        </tr>
+                        <tr ng-if="result.length === 0">
+                            <td colspan="5" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-repeat="data in (result = (me.afiRegionsRestriction | filter: me.searchTable | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage - 1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.regionString"></td>
+                            <td><input type="checkbox" ng-checked="data.isLocked" disabled /></td>
+                            <td ng-bind="data.validFromString"></td>
+                            <td ng-bind="data.validToString"></td>
+                            <td class="action">
+                                <button type="button" class="btn btn-info" ng-click="me.setUpdate(data)">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </button>
+                                <button type="button" class="btn btn-danger" ng-click="me.delete(data, AFIRestriksiAreaForm)">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                                <button type="button" class="btn btn-primary" ng-click="me.getDetail(data)">
+                                    <span class="glyphicon glyphicon-cog"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <form name="AFIRestriksiAreaForm" class="form-horizontal row-striped">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Provinsi<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <ui-select ng-model="me.afiRegionRestriction.regionCode" name="ProvinceComboBox" ng-disabled="me.isUpdate === true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.regionCode}} - {{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="province.regionCode as province in me.provinces | filter: $select.search">
+                                    <span ng-bind-html="province.regionCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="province.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Is Locked</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="checkbox" ng-model="me.afiRegionRestriction.isLocked" ng-checked="me.afiRegionRestriction.isLocked" class="checkbox-inline" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Valid From<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class=" input-group">
+                                <input type="text" class="form-control input-datepicker" ng-model="me.afiRegionRestriction.validFrom" uib-datepicker-popup="dd-MMM-yyyy" is-open="validFromDatepickerIsOpen" ng-required="true" close-text="Close" datepicker-options="me.dateOptionsValidFrom" ng-change="me.validFromChange()" readonly />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="validFromDatepickerIsOpen = !validFromDatepickerIsOpen">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label">Valid To<span class="mandatory"> *</span></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class=" input-group">
+                                <input type="text" class="form-control input-datepicker" ng-model="me.afiRegionRestriction.validTo" uib-datepicker-popup="dd-MMM-yyyy" is-open="validToDatepickerIsOpen" ng-required="true" close-text="Close" datepicker-options="me.dateOptionsValidTo" readonly />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="validToDatepickerIsOpen = !validToDatepickerIsOpen">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-right">
+            <button type="button" ng-click="me.create(AFIRestriksiAreaForm)" class="btn btn-primary" ng-show="me.isUpdate === false" ng-disabled="AFIRestriksiAreaForm.$invalid || me.afiRegionRestriction.regionCode == null">Simpan</button>
+            <button type="button" ng-click="me.update(AFIRestriksiAreaForm)" class="btn btn-primary" ng-show="me.isUpdate === true" ng-disabled="AFIRestriksiAreaForm.$invalid">Update</button>
+            <button type="button" ng-click="me.resetForm(AFIRestriksiAreaForm)" class="btn btn-danger">Batal</button>
+        </div>
+    </div>
+</div>
+<div ng-show="me.isDetail === true">
+    <afi-restriksi-area-detail>
+        <div class="loading"></div>
+    </afi-restriksi-area-detail>
+</div>

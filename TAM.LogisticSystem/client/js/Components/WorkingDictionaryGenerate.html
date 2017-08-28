@@ -1,0 +1,235 @@
+﻿<div class="col-sm-12 fbb" ng-if="workingDictionary.GenerateForm == true"><br /></div>
+<div class="col-sm-12" ng-if="workingDictionary.GenerateForm == true">
+    <div ng-if="workingDictionary.GenerateForm == true">
+        <h3>
+            Kalender Kerja : Generate Shift Kerja(Rentang Waktu Mulai & Selesai Kerja)
+
+        </h3>
+        <hr class="header-line" />
+    </div>
+</div>
+<div class="col-sm-12 fbb" ng-if="workingDictionary.GenerateForm == true"><br /></div>
+<div class="col-sm-12" ng-if="workingDictionary.GenerateForm == true">
+    <fieldset ng-if="workingDictionary.GenerateForm == true">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-primary">Kode Pola</th>
+                    <th class="text-primary">Keterangan</th>
+                    <th class="text-primary col-sm-2">Pilihan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th><input class="form-control col-sm-2" ng-model="workingDictionary.Search.workingDictionaryCode" /></th>
+                    <th><input class="form-control col-sm-2" ng-model="workingDictionary.Search.description" /></th>
+                    <th></th>
+                </tr>
+
+                <tr ng-repeat="dataGenerate in (result = (workingDictionary.WorkingGenerateData | filter:workingDictionary.Search)) | orderBy:'+workingTimeId' | limitTo: workingDictionary.pageSize : (workingDictionary.currentPage-1) * workingDictionary.pageSize">
+
+                    <td ng-bind="dataGenerate.workingDictionaryCode"></td>
+                    <td ng-bind="dataGenerate.description"></td>
+                    <td>
+                        <input type="radio" name="pilih" ng-click="workingDictionary.selectDataGenerate(dataGenerate)">
+                    </td>
+                </tr>
+                <tr ng-if="result.length == 0">
+                    <td colspan="4" class="text-danger">Data Not Found!!!</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center">
+            <ul uib-pagination total-items="result.length" ng-model="workingDictionary.currentPage" ng-change="workingDictionary.pageChanged()" class="pagination-sm" items-per-page="workingDictionary.pageSize" num-pages="workingDictionary.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+
+    </fieldset>
+</div>
+<br />
+
+<div class="col-sm-12 fbb"><br /></div>
+<div class="col-sm-12">
+    <fieldset ng-if="workingDictionary.GenerateForm == true">
+        <div class="form-horizontal">
+            <form id="frmData" name="frmData">
+                <div class="fieldset-padding">
+                    <div class="form-group fbb">
+                        <label class="col-sm-2">Kode Pola</label>
+                        <div class="col-sm-2" ng-if="workingDictionary.ShowEditGenerate == true">
+                            <select class="form-control" ng-model="workingDictionary.SelectedPola" ng-change="workingDictionary.SelectItemPolaOnChange()" ng-options="option.workingDictionaryCode for option in workingDictionary.DataPola track by option.workingDictionaryCode">
+                                <option>Please select</option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm-2" ng-if="workingDictionary.ShowEditGenerate == false">
+                            <select class="form-control" ng-model="workingDictionary.SelectedPola" ng-change="workingDictionary.SelectItemPolaOnChange()" ng-options="option.workingDictionaryCode for option in workingDictionary.DataPola track by option.workingDictionaryCode" disabled="disabled"></select>
+
+                        </div>
+                        <label class="col-sm-2">Keterangan</label>
+                        <div class="col-sm-6">
+                            <input type="hidden" ng-model="workingDictionary.WorkingDIctionaryDescription" />
+                            {{workingDictionary.WorkingDIctionaryDescription}}
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset-padding">
+                    <div class="form-group">
+                        <label class="col-sm-2">Lokasi</label>
+                        <div class="col-sm-2" ng-if="workingDictionary.ShowEditGenerate == true">
+                            <select class="form-control" ng-model="workingDictionary.SelectedLocation" ng-change="workingDictionary.SelectItemOnChange()" ng-options="option.name for option in workingDictionary.DataLocation track by option.locationCode">
+                                <option>Please select</option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm-2" ng-if="workingDictionary.ShowEditGenerate == false">
+                            <select class="form-control" ng-model="workingDictionary.SelectedLocation" ng-change="workingDictionary.SelectItemOnChange()" ng-options="option.name for option in workingDictionary.DataLocation track by option.locationCode" disabled="disabled">
+                                <option>Please select</option>
+                            </select>
+
+                        </div>
+                        <label class="col-sm-2">Batas Tanggal</label>
+                        <div class="col-sm-2" ng-if="workingDictionary.ShowEditGenerate == true">
+                            <input type="date" class="form-control" ng-model="workingDictionary.DateStart" required />
+                        </div>
+                        <div class="col-sm-2" ng-if="workingDictionary.ShowEditGenerate == true">
+                            <input type="date" class="form-control" ng-model="workingDictionary.DateFinish" required />
+                        </div>
+
+
+                        <div class="col-sm-2" ng-if="workingDictionary.ShowEditGenerate == false">
+                            <input type="date" class="form-control" ng-model="workingDictionary.dateStart" required />
+                        </div>
+                        <div class="col-sm-2" ng-if="workingDictionary.ShowEditGenerate == false">
+                            <input type="date" class="form-control" ng-model="workingDictionary.dateFinish" required />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </fieldset>
+</div>
+<div class="col-sm-12 fbb"><br /></div>
+<div class="col-sm-12">
+    <div ng-if="workingDictionary.GenerateForm == true">
+
+        <div class="form-group">
+            <div class="pull-right">
+                <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowCreateGenerate" ng-click="workingDictionary.checkInput()" ng-show="workingDictionary.ShowEditGenerate">Tambah</button>
+                <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEditGenerate" ng-click="workingDictionary.checkUpdate()" ng-hide="workingDictionary.ShowEditGenerate">Update</button>
+                <button type="submit" class="buttonSubmit btn btn-default" ng-click="workingDictionary.refreshData()">Batal</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="ModalShowCreateGenerate" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure want to save this details ?</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Kode Pola</label>
+                        <div class="col-sm-4">
+                            <label typeof="" ng-bind="workingDictionary.WorkingDictionaryCode" hidden="hidden"></label>
+                            <label typeof="" c ng-bind="workingDictionary.WorkingDictionaryCode"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Keterangan</label>
+                        <div class="col-sm-4">
+
+                            <label typeof="" ng-bind="workingDictionary.WorkingDIctionaryDescription"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Lokasi</label>
+                        <div class="col-sm-4">
+                            <label typeof="" ng-bind="workingDictionary.LocationCode" hidden="hidden"></label>
+                            <label typeof="" ng-bind="workingDictionary.LocationName"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Batas Tanggal</label>
+                        <div class="col-sm-4">
+
+                            <label typeof="" ng-bind="workingDictionary.DateStart |date:'dd-MM-yyyy'"></label>
+                            <label typeof="" ng-bind="workingDictionary.DateFinish |date:'dd-MM-yyyy'"></label>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default" ng-click="workingDictionary.createDataGenerate()" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalShowEditGenerate" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure want to edit this details ?</h4>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Kode Pola</label>
+                            <div class="col-sm-4">
+                                <label typeof="" ng-bind="workingDictionary.WorkingDictionaryCode" hidden="hidden"></label>
+                                <label typeof="" ng-bind="workingDictionary.WorkingDictionaryCode"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Keterangan</label>
+                            <div class="col-sm-4">
+
+                                <label typeof="" ng-bind="workingDictionary.WorkingDIctionaryDescription"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Lokasi</label>
+                            <div class="col-sm-4">
+                                <label typeof="" ng-bind="workingDictionary.Selecte"></label>
+                                <label typeof="" ng-bind="workingDictionary.LocationName"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Batas Tanggal</label>
+                            <div class="col-sm-4">
+
+                                <label typeof="" ng-bind="workingDictionary.dateStart |date:'dd-MM-yyyy'"></label>
+                                <label typeof="" ng-bind="workingDictionary.dateFinish |date:'dd-MM-yyyy'"></label>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="workingDictionary.updateDataGenerate()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+﻿<div class="col-sm-12">
+    <h1>Download DCCP - Readiness Volume</h1>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <div class="form-horizontal row-striped">
+                <div class="form-group">
+                    <label class="col-md-1 control-label">Tanggal</label>
+                    <div class="col-md-3">
+                        <!-- angular ui datepicker | default today -->
+                        <div class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup="{{me.format}}" ng-model="me.dateSelected.date" is-open="me.popupDate.opened" ng-required="true" close-text="Close" readonly />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="me.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix">
+        <div class="pull-right">
+            <button type="button" class="btn btn-default" ng-click="me.downloadDccp()">Download</button>
+        </div>
+    </div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <div class="form-horizontal row-striped">
+                <div class="form-group">
+                    <label class="col-md-12">Keterangan:</label>
+                    <div class="col-md-12" ng-show="me.isDownload===true">
+                        <p>{{me.countData}} rekor sudah diunduh</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

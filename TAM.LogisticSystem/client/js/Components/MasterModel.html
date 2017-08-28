@@ -1,0 +1,175 @@
+﻿<div ng-if="mastermodel.pageState == true">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>
+                    Master Model
+                </h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <h1>
+                    <button type="button" class="buttonSubmit btn btn-primary" ng-click="mastermodel.Download(result)">Download</button>
+                </h1>
+            </div>
+        </div>
+        <div class="header-line"></div>
+        <div class="menu-panel">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select name="pageSize" ng-model="mastermodel.pageSize" ng-change="mastermodel.setPage(mastermodel.currentPage)" ng-options="data for data in mastermodel.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th ng-click="mastermodel.order('brandCode')">Kode Brand</th>
+                            <th ng-click="mastermodel.order('carModelCode')">Kode Model</th>
+                            <th ng-click="mastermodel.order('name')">Model</th>
+                            <th ng-click="mastermodel.order('plantCode')">Kode Manufacturing</th>
+                            <th class="äction-1"></th>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                 <input class="form-control col-sm-2 text-uppercase" name="SearchBrand" ng-model="mastermodel.searchString.brandCode"  ng-keyup="mastermodel.search(this)" />
+                                
+                            </th>
+                            <th>                               
+                                 <input class="form-control col-sm-2 text-uppercase" name="SearchCarModel" ng-model="mastermodel.searchString.carModelCode"  ng-keyup="mastermodel.search(this)" />
+                            </th>
+                            <th>
+                                <input class="form-control col-sm-2 text-uppercase" name="SearchName" ng-model="mastermodel.searchString.name"  ng-keyup="mastermodel.search(this)" />                                
+                            </th>
+                            <th>                              
+                                 <input class="form-control col-sm-2 text-uppercase" name="SearchManufacturing" ng-model="mastermodel.searchString.plantCode"  ng-keyup="mastermodel.search(this)" />
+                            </th>
+                            <th class="action-1"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="result.length == 0">
+                            <td colspan="5" class="text-center">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="mastermodel.loader">
+                            <td colspan="5" class="text-center"><i>Loading...</i></td>
+                        </tr>
+                        <tr ng-repeat="data in (result = (mastermodel.data | filter:mastermodel.searchString:mastermodel.allowNullValue | orderBy: mastermodel.orderString : mastermodel.orderState)) track by data.carModelCode"
+                            ng-if="$index >= ((mastermodel.currentPage-1)*mastermodel.pageSize) && $index < (mastermodel.currentPage * mastermodel.pageSize)">
+                            <td ng-bind="data.brandCode"></td>
+                            <td ng-bind="data.carModelCode"></td>
+                            <td ng-bind="data.name"></td>
+                            <td ng-bind="data.plantCode"></td>
+                            <td class="action-1">
+                                <button type="button" class="btn btn-info" ng-click="mastermodel.selectEdit(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="mastermodel.currentPage" ng-change="mastermodel.pageChanged()" num-pages="mastermodel.pageNumber" max-size="mastermodel.maxSize" class="pagination-sm" items-per-page="mastermodel.pageSize" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+
+
+
+        <div class="menu-panel" ng-show="mastermodel.editMe == true">
+            <div class="panel-inside-padding">
+                <form name="myForm" role="form" class="form-horizontal row-striped">
+
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Kode Brand</label>
+                            <span class="mandatory">*</span>
+                        </div>
+                        <div class="col-sm-5" ng-if="mastermodel.editMe == false">
+                            <ui-select ng-model="mastermodel.brandModel" theme="bootstrap" ng-required="true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="brand in mastermodel.dataBrand | filter: $select.search">
+                                    <span ng-bind-html="brand.brandCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="brand.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-sm-5" ng-if="mastermodel.editMe == true">
+                            <ui-select ng-model="mastermodel.brandModel" theme="bootstrap" ng-required="true" ng-disabled="true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="brand in mastermodel.dataBrand | filter: $select.search">
+                                    <span ng-bind-html="brand.brandCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="brand.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Kode Model</label>
+                            <span class="mandatory">*</span>
+                        </div>
+                        <div class="col-sm-5" ng-if="mastermodel.editMe == false">
+                            <input type="text" class="form-control text-uppercase" name="KodeModel" id="masterModelId" ng-model="mastermodel.masterModelId" ng-maxlength="8" ng-minlength="1"   ng-pattern="/^[\d\w]+$/" required />
+                            <validation-message input="myForm.KodeModel" title="Kode Model"></validation-message>
+                           
+                        </div>
+                        <div class="col-sm-5" ng-if="mastermodel.editMe == true">
+                            <input type="text" class="form-control" id="masterModelId" ng-model="mastermodel.masterModelId" ng-maxlength="8" ng-minlength="1" readonly="readonly" required />
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Model</label>
+                            <span class="mandatory">*</span>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control text-uppercase" name="Model" id="masterName" ng-maxlength="255" ng-model="mastermodel.masterName" ng-pattern="/^[\d\w\-\ \.\/\'\,\&]+$/" required />
+                            <validation-message input="myForm.Model" title="Model"></validation-message>                            
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">Kode Manufacturing</label>
+                            <span class="mandatory">*</span>
+                        </div>
+                        <div class="col-sm-5">
+                            <ui-select ng-model="mastermodel.manufacturingCode" theme="bootstrap" ng-required="true">
+                                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="manufacturing in mastermodel.dataManufacturing | filter: $select.search">
+                                    <span ng-bind-html="manufacturing.plantCode | highlight: $select.search"></span> -
+                                    <span ng-bind-html="manufacturing.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                       
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <p class="form-note">
+                                <span class="mandatory">*</span>
+                                :Field mandatory harus diisi
+                            </p>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <div class="text-right" ng-show="mastermodel.editMe == true">
+            <button type="submit" name="btnSave" class="btn btn-primary" ng-click="mastermodel.addData(myForm)" ng-if="mastermodel.editMe == false" ng-disabled="!mastermodel.isFormValid(myForm)">Simpan</button>
+            <button type="submit" name="btnUpdate" class="frmSubmit btn btn-primary" ng-click="mastermodel.updatedData(myForm)" ng-if="mastermodel.editMe == true" ng-disabled="!mastermodel.isFormValid(myForm)">Update</button>
+            <button type="reset" name="btnReset" class="btn btn-danger" ng-click="mastermodel.reset(myForm)">Batal</button>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,83 @@
+﻿<div class="col-md-12" ng-hide="!me.flag">
+    <h1>Unit Loading Detail</h1>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('frameNo')">Frame No.</th>
+                            <th ng-click="me.order('katashiki')">Katashiki</th>
+                            <th ng-click="me.order('suffix')">Suffix</th>
+                            <th ng-click="me.order('model')">Model</th>
+                            <th ng-click="me.order('tipe')">Tipe</th>
+                            <th ng-click="me.order('warna')">Warna</th>
+                            <th ng-click="me.order('branch')">Branch</th>
+                            <th ng-click="me.order('estimatedPDCIn')">ETD PDC R</th>
+                            <th ng-click="me.order('customerAssign')">Customer Assign</th>
+                            <th ng-click="me.order('requestedDeliveryTime')">Requested PDD</th>
+                            <th ng-click="me.order('status')">Status</th>
+                        </tr>
+                        <tr>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.frameNo" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.katashiki" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.suffix" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.model" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.tipe" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.warna" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.branch" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.dateTempEPDC" ng-keyup="me.search(this)" /></th>
+                            <th class="text-center">
+                                <input type="checkbox"
+                                       ng-model="me.searchInput.customerAssign"
+                                       name="customerAssign"
+                                       ng-true-value="true"
+                                       ng-false-value="false"
+                                       ng-change="me.search(this)">
+
+                            </th>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.dateTemp" ng-keyup="me.search(this)" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.searchInput.status" ng-keyup="me.search(this)" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="me.loader">
+                            <td colspan="11" class="text-center"><i>Loading...</i></td>
+                        </tr>
+                        <tr ng-repeat="data in (result = (me.unitLoadingDetailModel | filter : me.searchInput  | orderBy : me.orderString :me.orderState)) track by $index"
+                            ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.frameNo"></td>
+                            <td ng-bind="data.katashiki"></td>
+                            <td ng-bind="data.suffix"></td>
+                            <td ng-bind="data.model"></td>
+                            <td ng-bind="data.tipe"></td>
+                            <td ng-bind="data.warna"></td>
+                            <td ng-bind="data.branch"></td>
+                            <td ng-bind="data.dateTempEPDC"></td>
+                            <td class="text-center"><input type="checkbox" ng-checked="data.customerAssign" disabled /></td>
+                            <td ng-bind="data.dateTemp"></td>
+                            <td ng-bind="data.status"></td>
+                        </tr>
+                        <tr ng-if="result.length < 1 && !me.loader" class="text-center">
+                            <td colspan="11">Data tidak ditemukan</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="text-right">
+        <a ng-click="me.back()" class="btn btn-default">Kembali</a>
+    </div>
+</div>

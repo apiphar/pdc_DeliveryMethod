@@ -1,0 +1,95 @@
+﻿
+
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                Master Kode Shift
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">     
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th ng-click="me.order('shiftCode')" class="text-center">Kode Shift</th>
+                        <th ng-click="me.order('description')" class="text-center">Keterangan</th>
+                        <th class="text-primary action" width="120"></th>
+                    </tr>
+                    <tr>
+                        <th><input class="form-control col-sm-2" ng-model="me.searchTable.shiftCode" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="me.searchTable.description" /></th>
+                        <th class="action"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in (result = (me.Data | filter:me.searchTable | orderBy: me.orderString : me.orderState))|limitTo: me.pageSize : (me.currentPage-1) * me.pageSize">
+                        <td ng-bind="data.shiftCode"></td>
+                        <td ng-bind="data.description"></td>
+
+                        <td class="action">
+                            <button (click)="clicked()" type="button" class="btn btn-info" ng-click="me.selectData(data,frmdata)"><i class="glyphicon glyphicon-edit"></i></button>
+                            <button type="button" class="btn btn-danger" ng-click="me.deleteData(data,frmdata)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="4" class="text-center">Data tidak ditemukan</td>
+                    </tr>
+                    <tr ng-if="me.loading">
+                        <td colspan="4" class="text-center"><i>Loading...</i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" ng-change="me.pageChanged()" max-size="me.maxSize" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+
+        </div>
+       
+    <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <form name="frmdata" class="form-horizontal row-striped"> 
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">Kode Shift <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input name="KodeShift" class="form-control text-uppercase" type="text" ng-model="me.shiftCode" ng-pattern="/^[A-Za-z0-9]+$/" ng-change="me.checkShiftCode()" ng-maxlength="16" required ng-disabled="me.editBtn==true" />
+                                <validation-message input="frmdata.KodeShift" title="Kode Shift" mismatch="harus berformat alphanumeric"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2">Keterangan <span class="mandatory">*</span></label>
+                            <div class="col-sm-5">
+                                <input name="Description" class="form-control text-uppercase" type="text" ng-pattern="/^[a-zA-Z0-9\s\-.&,\'/]+$/" ng-maxlength="255" ng-model="me.description" required />
+                                <validation-message input="frmdata.Description" title="Keterangan" mismatch="harus berformat alphanumeric"></validation-message>
+                            </div>
+                        </div>
+                    <div class="form-group">
+                        <i class="mandatory">* : Field mandatory harus diisi</i>
+                    </div>
+                </form>
+            </div>
+   
+    </div>
+        <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+            <div class="form-group">
+                <div class="text-right"> 
+                    <button type="submit" class="frmSubmit btn btn-primary" ng-click="me.addData(frmdata)" ng-disabled="frmdata.$invalid" ng-if="me.Created==true">Simpan</button>
+                    <button type="submit" class="frmSubmit btn btn-primary"  ng-click="me.updateData(frmdata)" ng-disabled="frmdata.$invalid" ng-if="me.Edited==true">Update</button>
+                    <button type="reset" class="buttonSubmit btn btn-danger" ng-click="me.clearForm(frmdata)">Batal</button>
+                </div>
+            </div>
+    </div>

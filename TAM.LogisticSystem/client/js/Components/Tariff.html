@@ -1,0 +1,181 @@
+﻿
+
+
+<div class="panel">
+    <div class="form-group">
+
+        <h2>
+            Tariff
+        </h2>
+        <div class="pull-right">
+            <button type="submit" class="btn btn-primary" ng-if="me.isUpdate == 0" ng-click="me.createData()">Simpan</button>
+            <button type="submit" class="frmSubmit btn btn-primary" ng-if="me.isUpdate != 0" ng-click="me.updateData()">Update</button>
+            <button type="reset" class="btn btn-default" ng-click="me.reset()">Batal</button>
+        </div>
+
+
+        <hr style="border-top-color: #999999;" />
+    </div>
+</div>
+
+<div class="panel">
+    <fieldset>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-primary">HSCode</th>
+                        <th class="text-primary">Scheme</th>
+                        <th class="text-primary">BM</th>
+                        <th class="text-primary">PPH</th>
+                        <th class="text-primary">PPn</th>
+                        <th class="text-primary">LT</th>
+                        <th class="text-primary">Effective From</th>
+                        <th class="text-primary">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td><input class="form-control col-sm-2" ng-model="Search.hsCode" ng-keyup="me.search(this)" /></td>
+                        <td><input class="form-control col-sm-2" ng-model="Search.scheme" ng-keyup="me.search(this)" /></td>
+                        <td><input class="form-control col-sm-2" ng-model="Search.bm" ng-keyup="me.search(this)" /></td>
+                        <td><input class="form-control col-sm-2" ng-model="Search.pph" ng-keyup="me.search(this)" /></td>
+                        <td><input class="form-control col-sm-2" ng-model="Search.pPn" ng-keyup="me.search(this)" /></td>
+                        <td><input class="form-control col-sm-2" ng-model="Search.pPnBM" ng-keyup="me.search(this)" /></td>
+                        <td><input class="form-control col-sm-2" ng-model="Search.effectiveDateFrom" ng-keyup="me.search(this)" /></td>
+                        <td></td>
+                    </tr>
+                    <tr ng-repeat="data in (result = (me.AllTariffData | filter : Search  | orderBy : me.orderString :me.orderState)) track by data.tariffId"
+                        ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="data.hsCode"></td>
+                        <td ng-bind="data.scheme"></td>
+                        <td ng-bind="data.bm"></td>
+                        <td ng-bind="data.pph"></td>
+                        <td ng-bind="data.pPn"></td>
+                        <td ng-bind="data.pPnBM"></td>
+                        <td ng-bind="data.effectiveDateFrom"></td>
+                        <td>
+                            <button type="button" class="btn btn-info" ng-click="me.SelectEdit(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                            <button type="button" class="btn btn-danger" ng-click="me.Remove(data)"><i class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length < 1">
+                        <td colspan="8" class="text-warning">Data Not Found!!!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages"></ul>
+
+
+
+        <div class="container-fluid paging-sales">
+            <div class="navbar-right">
+                Tampilkan
+                <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                item per halaman
+            </div>
+        </div>
+
+    </fieldset>
+</div>
+
+<div class="panel">
+
+    <fieldset>
+        <table class="table">
+            <tr>
+                <td>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3">HSCode</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" name="Name" ng-model="me.HSCode" />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">PPH</label>
+                            <div class="col-sm-5">
+                                <input type="number" class="form-control" name="PPH" ng-model="me.PPH" />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">PPn</label>
+                            <div class="col-sm-5">
+                                <input type="number" class="form-control" name="PPn" ng-model="me.PPn" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">PPnBM</label>
+                            <div class="col-sm-5">
+                                <input type="number" class="form-control" name="PPnBM" ng-model="me.PPnBM" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">Effective Date From</label>
+                            <div class="col-sm-5">
+                                <input type="Date" class="form-control" name="EffectiveFrom" ng-model="me.EffectiveFrom" />
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+                <td>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-primary">Scheme</th>
+                                        <th class="text-primary">BM%</th>
+                                        <th class="text-primary">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in me.SchemeData | orderBy:'scheme' track by $index">
+                                        <td ng-bind="item.scheme"></td>
+                                        <td ng-bind="item.bm"></td>
+                                        <td><button ng-click="me.DeleteData(item)">Hapus</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">Scheme</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" name="Scheme" ng-model="me.Scheme" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">BM</label>
+                            <div class="col-sm-5">
+                                <input type="number" class="form-control" name="BM" ng-model="me.BM" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" ng-if="me.isUpdate == 0"  ng-click="me.AddData()">Add Data</button>
+                        </div>
+                    </div>
+
+
+                </td>
+            </tr>
+        </table>
+
+    </fieldset>
+</div>
+
+<div class="panel">
+
+    <div class="form-group">
+
+        <div class="pull-right">
+            <button type="submit" class="btn btn-primary" ng-if="me.isUpdate == 0" ng-click="me.createData()">Simpan</button>
+            <button type="submit" class="frmSubmit btn btn-primary" ng-if="me.isUpdate != 0" ng-click="me.updateData()">Update</button>
+            <button type="reset" class="btn btn-default" ng-click="me.reset()">Batal</button>
+        </div>
+    </div>
+</div>

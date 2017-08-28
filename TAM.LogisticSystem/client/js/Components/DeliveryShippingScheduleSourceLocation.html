@@ -1,0 +1,84 @@
+﻿<div ng-show="me.showSourceLocation" class="col-sm-12">
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th ng-click="me.order('locationName')">Source Location</th>
+                        <th ng-click="me.order('capacity')">Capacity</th>
+                        <th class="action"></th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="form-control" ng-model="Search.locationName" ng-keyup="me.search(this)" /></td>
+                        <td><input type="text" class="form-control" ng-model="Search.capacity" ng-keyup="me.search(this)" /></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="me.tempSourceLocationsView.length == 0 || me.tempSourceLocationsView === undefined || result.length < 1">
+                        <td class="text-center" colspan="4">Data tidak ditemukan</td>
+                    </tr>
+
+                    <tr ng-repeat="sourceLocation in (result = (me.tempSourceLocationsView | filter : Search | orderBy : me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="sourceLocation.locationName"></td>
+                        <td ng-bind="sourceLocation.capacity"></td>
+                        <td>
+                            <button ng-click="me.editSourceLocation(sourceLocation)" type="button" class="btn btn-info">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button ng-click="me.deleteSourceLocation(sourceLocation)" type="button" class="btn btn-danger">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <form name="deliveryShippingScheduleSourceLocationForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Source Location<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.sourceLocationForm.sourceLocation" ng-change="me.checkSourceLocation()" theme="bootstrap">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.locationName}}</ui-select-match>
+                            <ui-select-choices repeat="sourceLocation in me.sourceLocations | filter: $select.search">
+                                <span ng-bind-html="sourceLocation.locationCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="sourceLocation.locationName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-bind="me.sourceLocationForm.errorMessageSourceLocation" ng-if="me.sourceLocationForm.errorMessageSourceLocation"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Kapasitas<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="number" ng-model="me.sourceLocationForm.capacity" name="Kapasitas" id="Kapasitas" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <button type="submit" ng-if="!me.sourceLocationEdit" ng-click="me.addSourceLocation(deliveryShippingScheduleSourceLocationForm)" ng-disabled="deliveryShippingScheduleSourceLocationForm.$invalid || me.sourceLocationForm.validateForm" class="btn btn-primary">Simpan</button>
+                    <button type="submit" ng-if="me.sourceLocationEdit" ng-click="me.updateSourceLocation(deliveryShippingScheduleSourceLocationForm)" ng-disabled="deliveryShippingScheduleSourceLocationForm.$invalid || me.sourceLocationForm.validateForm" class="btn btn-primary">Update</button>
+                    <button ng-click="me.resetForm(deliveryShippingScheduleSourceLocationForm)" class="btn btn-danger">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <button ng-click="me.save(deliveryShippingScheduleSourceLocationForm)" class="btn btn-primary">Simpan</button>
+        <button ng-click="me.reset()" class="btn btn-danger">Batal</button>
+    </div>
+</div>

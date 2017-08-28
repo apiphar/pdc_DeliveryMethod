@@ -1,0 +1,101 @@
+﻿<div class="col-sm-12">
+    <h1>Shipping Schedule</h1>
+    <div class="header-line"></div>
+
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="deliveryShippingScheduleVoyageForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label" for="VoyageNumber">Voyage No.<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" ng-model="me.voyageForm.voyageNumber" ng-change="me.searchVoyage(deliveryShippingScheduleVoyageForm)" ng-model-options="{ debounce: 1000 }" ng-pattern="/^[a-zA-Z0-9]+$/" ng-maxlength="16" name="VoyageNumber" class="form-control" id="VoyageNumber" required="required" />
+                        <validation-message input="deliveryShippingScheduleVoyageForm.VoyageNumber"></validation-message>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Vendor<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.voyageForm.vendor" ng-change="me.broadcastForm()" theme="bootstrap">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.deliveryVendorCode}} - {{$select.selected.deliveryVendorName}}</ui-select-match>
+                            <ui-select-choices repeat="vendor in me.deliveryShippingScheduleViewModel.vendors | filter: $select.search">
+                                <span ng-bind-html="vendor.deliveryVendorCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="vendor.deliveryVendorName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Vessel<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.voyageForm.vessel" ng-change="me.broadcastForm()" theme="bootstrap">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.deliveryVendorVehicleId}} - {{$select.selected.policeNumberOrVesselName}}</ui-select-match>
+                            <ui-select-choices repeat="vessel in me.deliveryShippingScheduleViewModel.vessels | filter: $select.search">
+                                <span ng-bind-html="vessel.deliveryVendorVehicleId | highlight: $select.search"></span> -
+                                <span ng-bind-html="vessel.policeNumberOrVesselName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Original Port<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <ui-select ng-model="me.voyageForm.port" ng-change="me.broadcastForm()" theme="bootstrap">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.locationName}}</ui-select-match>
+                            <ui-select-choices repeat="port in me.deliveryShippingScheduleViewModel.ports | filter: $select.search">
+                                <span ng-bind-html="port.locationCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="port.locationName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group form-datepicker">
+                    <div class="col-sm-3">
+                        <label class="control-label">Estimation Time Departure<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup="d-MMM-yyyy" ng-model="me.voyageForm.departureDate" ng-change="me.broadcastForm();me.checkEstimatedDeparture();" is-open="deliveryDatepickerIsOpen"
+                                   ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="deliveryDatepickerIsOpen = !deliveryDatepickerIsOpen">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <span class="field-validation-error" ng-bind="me.voyageForm.errorMessage" ng-if="me.voyageForm.validateDepartureDate"></span>
+                    </div>
+                    <div class="col-sm-1 text-center">
+                        <label class="control-label">/</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <div uib-timepicker ng-model="me.voyageForm.departureDate" ng-change="me.broadcastForm();me.checkEstimatedDeparture();" hour-step="me.hourStep" minute-step="me.minuteStep" show-meridian="false"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <button ng-disabled="deliveryShippingScheduleVoyageForm.$invalid || me.voyageForm.validateDepartureDate" ng-if="me.voyageForm.showAddButton" ng-click="me.showDestinationCityPanel()" type="submit" class="btn btn-primary">Add Destination</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

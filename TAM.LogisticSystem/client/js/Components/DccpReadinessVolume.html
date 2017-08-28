@@ -1,0 +1,87 @@
+﻿<div class="col-xs-12 col-md-12 col-sm-12">
+    <h1>DCCP Readiness Volume</h1>
+    <div class="header-line"></div>
+
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr></tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="2">--Unit Ready--</th>
+                        <th></th>
+                        <th colspan="2"><center></center></th>
+                    </tr>
+                    <tr>
+                        <th ng-click="me.order('tanggal')">Tanggal</th>
+                        <th ng-click="me.order('asal')"> Lok. Asal</th>
+                        <th ng-click="me.order('tujuan')"> Lok. Tujuan</th>
+                        <th ng-click="me.order('trip')"> Trip</th>
+                        <th ng-click="me.order('load')"> Load</th>
+                        <th ng-click="me.order('shift')"> Shift</th>
+                        <th ng-click="me.order('qty')"> Qty</th>
+                        <th ng-click="me.order('adjust')"> Adjust</th>
+                        <th ng-click="me.order('estimasi')"> Unit Estimasi</th>
+                        <th class="action"></th>
+                    </tr>
+                    <tr>
+                        <th><input class="form-control col-sm-2" ng-model="Search.tanggal" ng-keyup="me.search(this)" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="Search.asal" ng-keyup="me.search(this)" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="Search.tujuan" ng-keyup="me.search(this)" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="Search.trip" ng-keyup="me.search(this)" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="Search.load" ng-keyup="me.search(this)" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="Search.shift" ng-keyup="me.search(this)" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="Search.qty" ng-keyup="me.search(this)" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="Search.adjust" ng-keyup="me.search(this)" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="Search.estimasi" ng-keyup="me.search(this)" /></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                   
+                    <tr ng-if="me.dccpListModel.length == 0 || me.totalItems==0 ||me.isLoading ==true">
+                        <td class="text-center" colspan="11">Data tidak ditemukan</td>
+                    </tr>
+                    <tr ng-repeat="item in (result = (me.dccpListModel | filter : Search  | orderBy : me.orderString :me.orderState)) track by item.id"
+                        ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="item.tanggal"></td>
+                        <td ng-bind="item.asal"></td>
+                        <td ng-bind="item.tujuan"></td>
+                        <td ng-bind="item.trip"></td>
+                        <td ng-bind="item.load"></td>
+                        <td ng-bind="item.shift"></td>
+                        <td ng-bind="item.qty"></td>
+                        <td ng-bind="item.adjust"></td>
+                        <td ng-bind="item.estimasi"></td>
+                        <td>
+                            <button type="button" class="btn btn-info" ng-click="me.getSingleModel(item)">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button type="button" class="btn btn-danger" ng-click="me.deleteData(item)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-right">
+            <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+</div>

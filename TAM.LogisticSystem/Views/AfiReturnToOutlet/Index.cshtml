@@ -1,0 +1,17 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = "Request AFI (Returned From HO)";
+    ViewBag.BreadCrumb = new List<string> {
+        "AFI",
+        "Request AFI (Returned From HO)"
+    };
+}
+
+<div ng-app="aspnet" class="row">
+    <afi-return-to-outlet><div class="loading"></div></afi-return-to-outlet>
+    <afi-return-to-outlet-form></afi-return-to-outlet-form>
+    <afi-return-to-outlet-revisi-form></afi-return-to-outlet-revisi-form>
+    <afi-return-to-outlet-ex-cancel-form></afi-return-to-outlet-ex-cancel-form>
+</div>

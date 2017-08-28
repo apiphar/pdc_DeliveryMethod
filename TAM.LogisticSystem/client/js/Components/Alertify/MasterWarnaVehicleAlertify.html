@@ -1,0 +1,21 @@
+﻿{{#action}}
+<label class="control-label">{{action}}</label>
+{{/action}}
+
+<table class="table">
+    {{#grid}}
+    <tr>
+        <td>
+            {{#key}}
+            <strong>{{key}}</strong>
+            {{/key}}
+        </td>
+
+        <td>
+            {{#value}}
+            {{value}}
+            {{/value}}
+        </td>
+    </tr>
+    {{/grid}}
+</table>

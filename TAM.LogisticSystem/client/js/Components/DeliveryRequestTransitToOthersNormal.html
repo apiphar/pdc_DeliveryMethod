@@ -1,0 +1,34 @@
+﻿
+<div class="row-striped">
+    <div class="form-group">
+        <div class="col-md-4">
+            <input type="radio" name="deliveryTransitDetailMethod" value="ReturnToPDC" ng-model="me.deliveryRequestTransitToOthersNormalModel.deliveryTransitType" class="radio radio-inline" ng-change="me.validation();me.resetValidationDetail();me.broadcast()" /> Return to PDC
+            <input type="radio" name="deliveryTransitDetailMethod" value="ReturnToOthersPDC" ng-model="me.deliveryRequestTransitToOthersNormalModel.deliveryTransitType" class="radio radio-inline" ng-change="me.validation();me.resetValidationDetail();me.broadcast()" /> Return To Others PDC
+        </div>
+
+        <div class="col-md-3">
+            <ui-select ng-disabled="me.deliveryRequestTransitToOthersNormalModel.deliveryTransitType !== 'ReturnToOthersPDC'" ng-model="me.deliveryRequestTransitToOthersNormalModel.deliveryOtherPdcLocation" ng-change="me.validation();me.broadcast()">
+                <ui-select-match placeholder="Pilih salah satu">{{$select.selected.otherPdcLocationCode}} - {{$select.selected.otherPdcLocation}}</ui-select-match>
+                <ui-select-choices repeat="deliveryOtherPdcLocation in me.deliveryOtherPdcLocation | filter: $select.search">
+                    <span ng-bind-html="deliveryOtherPdcLocation.otherPdcLocationCode | highlight: $select.search"></span> -
+                    <span ng-bind-html="deliveryOtherPdcLocation.otherPdcLocation | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+
+        <div class="col-md-3">
+            <input type="radio" name="deliveryTransitDetailMethod" value="SelfPickFromOthers" ng-model="me.deliveryRequestTransitToOthersNormalModel.deliveryTransitType" class="radio radio-inline" ng-change="me.broadcast()" /> Self Pick From Others
+        </div>
+        <div class="col-md-offset-4 col-md-8">
+            <span class="field-validation-error" ng-bind="me.errorMsg" ng-hide="me.validate === false"></span>
+        </div>
+
+    </div>
+
+    <p ng-show="me.deliveryRequestTransitToOthersNormalModel.deliveryTransitType === 'ReturnToPDC'"><i>* Unit kendaraan akan dikembalikan ke PDC pengiriman</i></p>
+    <p ng-show="me.deliveryRequestTransitToOthersNormalModel.deliveryTransitType === 'ReturnToOthersPDC'"><i>* Unit kendaraan akan dikembalikan ke PDC pilihan</i></p>
+    <p ng-show="me.deliveryRequestTransitToOthersNormalModel.deliveryTransitType === 'SelfPickFromOthers'"><i>* Pengambilan unit kendaraan menjadi tanggung jawab cabang</i></p>
+
+    <delivery-request-transit-to-others-self-pick-from-others ng-show="me.deliveryRequestTransitToOthersNormalModel.deliveryTransitType === 'SelfPickFromOthers'"></delivery-request-transit-to-others-self-pick-from-others>
+
+</div>

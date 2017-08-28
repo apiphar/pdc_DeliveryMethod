@@ -1,0 +1,146 @@
+﻿<html>
+    <head>
+
+    </head>
+    <body>
+        <div ng-if="me.pageState==true" class="Page">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>
+                        Master Logistic Vehicle
+                    </h1>
+                </div>
+                <div class="col-md-6 text-right">
+                    <h1>
+                        <button type="button" class="buttonSubmit btn btn-default" ng-click="me.Download(result)">Download</button>
+                        <button type="button" class="buttonSubmit btn btn-primary" ng-click="me.Upload()">Upload</button>
+                    </h1>
+                </div>
+            </div>
+            <div class="header-line"></div>
+            <div class="menu-panel">
+                <div class="text-right">
+                    <p>
+                        Tampilkan
+                        <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                        item per halaman
+                    </p>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped"> 
+                        <thead>
+                            <tr>
+                                <th ng-click="me.order('deliveryMethodCode')">Kode Moda</th>
+                                <th ng-click="me.order('name')">Deskripsi Moda</th>
+                                <th ng-click="me.order('deliveryMethodTypeName')">Tipe Moda</th>
+                                <th ng-click="me.order('needSJKBValidation')">Menggunakan Validasi SJKB</th>
+                                <th class="action"></th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.deliveryMethodCode" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.name" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.deliveryMethodTypeName" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.needSJKBValidationText" />
+                                </td> 
+                                <td></td>  
+                            </tr> 
+                        </thead> 
+                        <tbody>                            
+                            <tr ng-repeat="data in (result = (me.dataDeliveryMethod | filter: me.Search:me.allowNullValue  | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                                <td ng-bind="data.deliveryMethodCode"></td>
+                                <td ng-bind="data.name"></td>
+                                <td ng-bind="data.deliveryMethodTypeName"></td>
+                                <td ng-bind="data.needSJKBValidation ? 'Ya' : 'Tidak'"></td>
+                                <td>
+                                    <button type="button" class="btn btn-info" ng-click="me.selectEdit(data)">
+                                        <i class="glyphicon glyphicon-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger" ng-click="me.deleteVehicle(data,myForm)">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-if="result.length == 0">
+                                <td colspan="5" align="center">Data tidak ditemukan</td>
+                            </tr>
+                            <tr ng-if="me.loader">
+                                <td colspan="5" class="text-center"><i>Loading ...</i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-right">
+                        <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-panel">
+                <div class="panel-inside-padding">
+                    <form name="myForm" class="form-horizontal row-striped">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Kode Moda<span class="mandatory"> *</span></label>
+                            </div>
+                            <div class="col-sm-4" ng-if="me.showHideButton == false">
+                                <input type="text" class="form-control" ng-model="me.logisticVehicleModel.deliveryMethodCode" name="deliveryMethodCode" required="required" ng-maxlength="16" pattern="^[a-zA-Z0-9]*$" />
+                                <validation-message input="myForm.deliveryMethodCode" title="Kode Moda"></validation-message>
+                            </div>
+                            <div class="col-sm-4" ng-if="me.showHideButton == true">
+                                <input type="text" class="form-control" ng-model="me.logisticVehicleModel.deliveryMethodCode" readonly="readonly" />
+                            </div> 
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Deskripsi Moda<span class="mandatory"> *</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" ng-model="me.logisticVehicleModel.name" name="name" required="required" ng-maxlength="255" pattern="^[a-zA-Z0-9\ ]*$" />
+                                <validation-message input="myForm.name" title="Deskripsi Moda"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Tipe Moda<span class="mandatory"> *</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="radio-inline" ng-repeat="methodType in me.dataDeliveryMethodType track by methodType.deliveryMethodTypeId" required="required">
+                                    <input type="radio" name="Tipe" required="required" ng-model="me.logisticVehicleModel.deliveryMethodTypeId" ng-value="{{ methodType.deliveryMethodTypeId }}"> {{ methodType.deliveryMethodTypeName }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Menggunakan Validasi SJKB<span class="mandatory"> *</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="radio-inline">
+                                    <input type="radio" name="Validasi" required="required" ng-model="me.logisticVehicleModel.needSJKBValidation" ng-value="true"> Ya
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="Validasi" required="required" ng-model="me.logisticVehicleModel.needSJKBValidation" ng-value="false"> Tidak
+                                </label>
+                            </div>
+                        </div>  
+                        <div class="form-group">  
+                            <div class="col-sm-12">
+                                <p class="form-note"><span class="mandatory">*</span> : Field mandatory harus diisi</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-primary" ng-if="me.showHideButton == false" ng-click="me.postVehicle(myForm)" ng-disabled="!myForm.$valid">Simpan</button>
+                <button type="submit" class="btn btn-primary" ng-if="me.showHideButton == true" ng-click="me.updateVehicle(myForm)" ng-disabled="!myForm.$valid">Update</button>
+                <button type="reset" class="btn btn-danger" ng-click="me.reset(myForm)">Batal</button>
+            </div>
+        </div>
+    </body>
+</html>
+

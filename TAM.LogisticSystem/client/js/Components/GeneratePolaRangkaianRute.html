@@ -1,0 +1,108 @@
+﻿<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>
+                Generate Pola Rangkaian Rute
+            </h1>
+        </div>
+    </div>
+
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="text-right">
+            <label>Select All <input type="checkbox" ng-model="me.all" ng-change="me.selectAll()" /></label>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th ng-click="me.order('branchCode')">Kode Branch</th>
+                        <th ng-click="me.order('branchName')">Nama Branch</th>
+                        <th ng-click="me.order('katashiki')">Katashiki</th>
+                        <th ng-click="me.order('suffix')">Suffix</th>
+                        <th ng-click="me.order('routingDictionaryHeadCode')">Kode Tahap Awal</th>
+                        <th ng-click="me.order('routingDictionaryTailCode')">Kode Tahap Akhir</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="form-control" ng-model="me.searchFilter.branchCode" ng-keyup="me.search(resultFilter)" /></td>
+                        <td><input type="text" class="form-control" ng-model="me.searchFilter.branchName" ng-keyup="me.search(resultFilter)" /></td>
+                        <td><input type="text" class="form-control" ng-model="me.searchFilter.katashiki" ng-keyup="me.search(resultFilter)" /></td>
+                        <td><input type="text" class="form-control" ng-model="me.searchFilter.suffix" ng-keyup="me.search(resultFilter)" /></td>
+                        <td><input type="text" class="form-control" ng-model="me.searchFilter.kodeTahapAwal" ng-keyup="me.search(resultFilter)" /></td>
+                        <td><input type="text" class="form-control" ng-model="me.searchFilter.kodeTahapAkhir" ng-keyup="me.search(resultFilter)" /></td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="result.length == 0 && !me.loading">
+                        <td colspan="7" class="text-center">Data tidak ditemukan</td>
+                    </tr>
+                    <tr ng-if="me.loading">
+                        <td colspan="7" class="text-center"><i>Loading ...</i></td>
+                    </tr>
+                    <tr ng-repeat="data in (result = (me.dataGeneratePola | filter: me.searchFilter | orderBy: me.orderString : me.orderState)) track by $index" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="data.branchCode"></td>
+                        <td ng-bind="data.branchName"></td>
+                        <td ng-bind="data.katashiki"></td>
+                        <td ng-bind="data.suffix"></td>
+                        <td ng-bind="data.kodeTahapAwal"></td>
+                        <td ng-bind="data.kodeTahapAkhir"></td>
+                        <td>
+                            <input type="checkbox" ng-model="data.selected" ng-click="me.checkAll()"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-right">
+            <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+
+    <div class="menu-panel">
+        <div class="panel-inside-padding">
+            <form name="GeneratePolaRangkaianRuteForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <label class="control-label">Berlaku Mulai <span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="BerlakuMulai" uib-datepicker-popup="dd-MMM-yyyy" ng-model="me.validFrom" is-open="validFromPickerIsOpen"
+                                   ng-required="true" close-text="Close" datepicker-options="me.dateOptions" readonly />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="validFromPickerIsOpen = !validFromPickerIsOpen">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <validation-message input="GeneratePolaRangkaianRuteForm.BerlakuMulai" title="Berlaku Mulai" mismatch="harus berformat alphanumeric"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <span>
+            <button class="btn btn-primary" ng-click="me.generatePola()" ng-disabled="GeneratePolaRangkaianRuteForm.$invalid || !me.validation()">Generate</button>
+        </span>
+        <span>
+            <button class="btn btn-danger" ng-click="me.reset(GeneratePolaRangkaianRuteForm)">Batal</button>
+        </span>
+    </div>
+</div>

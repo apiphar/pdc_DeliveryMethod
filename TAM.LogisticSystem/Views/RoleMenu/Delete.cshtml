@@ -1,0 +1,28 @@
+﻿@model TAM.LogisticSystem.Entities.AppRoleMenuMapping
+@{
+    ViewBag.Title = "Delete Role-Menu Mapping";
+    ViewBag.Page = RoleMenuEnum.MenuAdministrator;
+}
+
+<h2>
+    Role-Menu Mapping
+    <small>Delete</small>
+</h2>
+
+<p>
+    <a href="@Url.Action("Index")">
+        <span class="glyphicon glyphicon-backward"></span>
+        Return to index
+    </a>
+</p>
+
+<form method="post">
+    <p>
+        Confirm unmapping of role <b>@Model.AppRoleName</b> to menu <b>@Model.AppMenuName</b>?
+    </p>
+    <button class="btn btn-danger">
+        <span class="glyphicon glyphicon-remove"></span>
+        Delete!
+    </button>
+    @Html.AntiForgeryToken()
+</form>

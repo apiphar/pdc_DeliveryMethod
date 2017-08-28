@@ -1,0 +1,104 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace TAM.LogisticSystem.Services
+{
+    public class RoleMenuEnum
+    {
+        public const string SuperAdministrator = "SUPER_ADMIN";
+
+        public const string MenuAdministrator = "MENU_ADMIN";
+        public const string MenuMasterBranch = "MENU_MASTER_BRANCH";
+        public const string MenuMasterManufacturing = "MENU_MASTER_MANUFACTURING";
+        public const string MenuMasterModel = "MENU_MASTER_MODEL";
+        public const string MenuMasterModelSeries = "MENU_MASTER_MODEL_SERIES";
+        public const string MenuMasterWarna = "MENU_MASTER_WARNA";
+        public const string MenuMasterWarnaVehicle = "MENU_MASTER_WARNA_VEHICLE";
+        public const string MenuMasterDealer = "MENU_MASTER_DEALER";
+        public const string MenuMasterCompany = "MENU_MASTER_COMPANY";
+        public const string MenuMasterLogisticVendor = "MENU_MASTER_LOGISTIC_VENDOR";
+        public const string MenuMasterLocationType = "MENU_MASTER_LOCATION_TYPE";
+        public const string MenuMasterDeliveryLeg = "MENU_MASTER_DELIVERY_LEG";
+        public const string MenuMasterDeliveryLegLeadTime = "MENU_MASTER_DELIVERY_LEG_LEAD_TIME";
+        public const string MenuMasterPlafond = "MENU_MASTER_PLAFOND";
+        public const string MenuMasterLeadTimeLocation = "MENU_MASTER_LEAD_TIME_LOCATION";
+        public const string MenuMasterJenis = "MENU_MASTER_JENIS";
+        public const string MenuBrand = "MENU_BRAND";
+        public const string MenuDefectMaintenance = "MENU_DEFECT_MAINTENANCE";
+        public const string MenuAFIRequest = "MENU_AFI_REQUEST";
+        public const string MenuAFIRequestUpload = "MENU_AFI_REQUEST_UPLOAD";
+        public const string MenuAFIHOApproval = "MENU_AFI_HO_APPROVAL";
+        public const string MenuAFIDownload = "MENU_AFI_Download";
+        public const string MenuAFIReceiveDocument = "MENU_AFI_RECEIVE_DOCUMENT";
+        public const string MenuAFIRequestRevisi = "MENU_AFI_REQUEST_REVISI";
+        public const string MenuAFIReturnFromHO = "MENU_AFI_RETURN_TO_OUTLET";
+        public const string MenuCluster = "MENU_CLUSTER";
+        public const string MenuRegion = "MENU_REGION";
+        public const string MenuTariff = "MENU_TARIFF";
+        public const string MenuRitasePrice = "MENU_RITASE_PRICE";
+        public const string MenuSalesArea = "MENU_SALES_AREA";
+        public const string MenuConfigurationPlanning = "MENU_CONFIGURATION_PLANNING";
+        public const string MenuDccpReadinessVolume = "MENU_DCCP_READINESS_VOLUME";
+        public const string MenuDwellingTime = "MENU_DWELLING_TIME";
+        public const string MenuExchangeRate = "MENU_EXCHANGE_RATE";
+        public const string MenuGeneratePolaRangkaianRute = "MENU_GENERATE_POLA_RANGKAIAN_RUTE";
+        public const string MenuIdleDictionary = "MENU_IDLE_DICTIONARY";
+        public const string MenuInspectionItem = "MENU_INSPECTION_ITEM";
+        public const string MenuKodeShift = "MENU_KODE_SHIFT";
+        public const string MenuGenerateJamBreak = "MENU_GENERATE_JAM_BREAK";
+        public const string MenuGenerateShiftKerja = "MENU_GENERATE_SHIFT_KERJA";
+        public const string MenuLocationType = "MENU_LOCATION_TYPE";
+        public const string MenuLogisticVehicle = "MENU_LOGISTIC_VEHICLE";
+        public const string MenuMaintenanceShiftKerja = "MENU_MAINTENANCE_SHIFT_KERJA";
+        public const string MenuMaintenanceWaktuBreak = "MENU_WAKTU_BREAK";
+        public const string MenuMasterConfigurationPointPreBookVessel = "MENU_MASTER_CONFIGURATION_POINT_PRE_BOOK_VESSEL";
+        public const string MenuMasterProses = "MENU_MASTER_PROSES";
+        public const string MenuMasterRangkaianRute = "MENU_MASTER_RANGKAIAN_RUTE";
+        public const string MenuMCCP = "MENU_MCCP";
+        public const string MenuPDI = "MENU_PDI";
+        public const string MenuPDCConfig = "MENU_PDC_CONFIG";
+        public const string MenuPolaRangkaianTahapAkhir = "MENU_POLA_RANGKAIAN_TAHAP_AKHIR";
+        public const string MenuPolaRangkaianTahapAkhirPenerapan = "MENU_POLA_RANGKAIAN_TAHAP_AKHIR_PENERAPAN";
+        public const string MenuPolaRangkaianTahapAwal = "MENU_POLA_RANGKAIAN_TAHAP_AWAL";
+        public const string MenuPolaRangkaianTahapAwalPenerapan = "MENU_POLA_RANGKAIAN_TAHAP_AWAL_PENERAPAN";
+        public const string MenuVesselArrival = "MENU_VESSEL_ARRIVAL";
+        public const string MenuVesselDepart = "MENU_VESSEL_DEPART";
+        public const string MenuDeliveryRequest = "MENU_DELIVERY_REQUEST";
+        public const string MenuBatalDeliveryRequest = "MENU_BATAL_DELIVERY_REQUEST";
+        public const string MenuDeliveryUnitAdvance = "MENU_DELIVERY_UNIT_ADVANCE";
+        public const string MenuRoleMenu = "MENU_ROLE_MENU";
+        public const string MenuRoutingDictionary = "MENU_ROUTING_DICTIONARY";
+        public const string MenuRoutingDictionaryDetail = "MENU_ROUTING_DICTIONARY_DETAIL";
+        public const string MenuWorkingDictionary = "MENU_WORKING_DICTIONARY";
+        public const string MenuMaintenanceKonfigurasiExportExcelFileDccp = "MENU_MAINTENANCE_KONFIGURASI_EXPORT_EXCEL_FILE_DCCP";
+        public const string MenuDownloadDccpReadinessVolume = "MENU_DOWNLOAD_DCCP_READINESS_VOLUME";
+        public const string MenuCBUFormAInput = "MENU_CBU_FORM_A_INPUT";
+        public const string MenuCBUFormARequest = "MENU_CBU_FORM_A_REQUEST";
+        public const string MenuCBUFinalizePIB = "MENU_CBU_FINALIZE_PIB";
+        public const string MenuPenyesuaianTanggalProduksi = "MENU_PENYESUAIAN_TANGGAL_PRODUKSI";
+        public const string MenuMasterCityLeg = "MENU_MASTER_CITY_LEG";
+        public const string MenuMasterCity = "MENU_MASTER_CITY";
+        public const string MenuAFIKonfigurasiGesekan = "MENU_AFI_KONFIGURASI_GESEKAN";
+        public const string MenuAFIGesekNomorAngka = "MENU_AFI_GESEK_NOMOR_ANGKA";
+        public const string MenuAFISerahTerimaGesekan = "MENU_AFI_SERAH_TERIMA_GESEKAN";
+        public const string MenuAFIReportGesekan = "MENU_AFI_REPORT_GESEKAN";
+        public const string MenuDeliveryUnitAssign = "MENU_DELIVERY_UNIT_ASSIGN";
+        public const string MenuMaintenanceRuteProduksiLeadTime = "MENU_MAINTENANCE_RUTE_PRODUKSI_LEAD_TIME";
+        public const string MenuPIODefaultLeadTimeConfiguration = "MENU_PIO_DEFAULT_LEAD_TIME_CONFIGURATION";
+        public const string MenuSPUDefaultLeadTimeConfiguration = "MENU_SPU_DEFAULT_LEAD_TIME_CONFIGURATION";
+        public const string MenuPDILeadTimeConfiguration = "MENU_PDI_LEAD_TIME_CONFIGURATION";
+        public const string MenuMasterTipe = "MENU_MASTER_TIPE";
+        public const string MenuDeliveryUnitLoading = "MENU_DELIVERY_UNIT_LOADING";
+        public const string MenuMasterGroupDealer = "MENU_MASTER_GROUP_DEALER";
+        public const string MenuPIOLineMaster = "MENU_PIO_MASTER_LINE";
+        public const string MenuSPULineMaster = "MENU_SPU_MASTER_LINE";
+        public const string MenuMasterLokasi = "MENU_MASTER_LOKASI";
+        public const string MenuMasterLegPrice = "MENU_MASTER_LEG_PRICE";
+        public const string MenuMasterKalenderLiburKerja = "MENU_MASTER_KALENDER_LIBUR_KERJA";
+        public const string MenuMasterRegionAFI = "MENU_MASTER_REGION_AFI";
+
+        public const string Login = "LOGIN";
+    }
+}

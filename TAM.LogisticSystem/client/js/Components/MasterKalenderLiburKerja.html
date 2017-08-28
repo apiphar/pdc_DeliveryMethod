@@ -1,0 +1,47 @@
+﻿<div class="row">
+    
+        <h1>Master Kalender Libur Kerja</h1>
+            
+            <div class="col-sm-6 col-md-6 col-lg-6 col-xs-6 ">
+                <form class="form-group" name="kalenderForm">
+                    <table class="table table-striped">
+                        <tr>
+                            <td class="col-sm-2 col-md-2 col-lg-2 col-xs-2">Lokasi</td>
+                            <td class="col-sm-2 col-md-2 col-lg-2 col-xs-2">
+                                <select class="form-control" required ng-model="me.selectedLocation"
+                                      ng-options="data for data in me.locations"  >
+                                    
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class="col-sm-2 col-md-2 col-lg-2 col-xs-2">Default Libur Kerja</td>
+                            <td class="col-sm-1 col-md-1 col-lg-1 col-xs-1"><input type="checkbox" ng-model="me.chkSaturday" ng-change="me.selectDeselectSaturday()"/><span class="text-success">Sabtu</span></td>
+                            <td class="col-sm-1 col-md-1 col-lg-1 col-xs-1"><input type="checkbox" ng-model="me.chkSunday" ng-change="me.selectDeselectSunday()"/><span class="text-danger">Minggu</span></td>
+                        </tr>
+                        
+                    </table>
+                </form>
+                
+                
+
+            </div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+       <multiple-date-picker  class="col-sm-6 col-md-6 col-lg-6 col-xs-6" ng-model="me.selectedDates" change-year-past="2" change-year-future="2"></multiple-date-picker>
+    </div>
+
+</div>
+
+
+<div class="row">
+    <br />
+    <div class="col-sm-6 col-md-6 col-lg-6 col-xs-6">
+        <div class="navbar-right"> <button type="button" ng-click="me.resetForm(kalenderForm)" class="btn btn-default">Batal</button></div>  
+        <div class="navbar-right"> <button type="button" ng-click="me.saveKalender()" class="btn btn-info">Simpan</button></div>
+        
+    </div>
+    
+</div>
+

@@ -1,0 +1,153 @@
+﻿﻿<div class="col-md-12">
+     
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                Batal Delivery Request
+            </h1>
+        </div>
+    </div>
+
+    <div class="header-line"></div>
+
+     <form name="CancelDeliveryRequestForm" class="form-horizontal">
+         <div class="menu-panel">
+             <div class="panel-inside-padding">
+                 <div class="row-striped">
+                     <div class="form-group">
+                         <div class="col-md-3">
+                             <label class="control-label">No. Delivery Request<span class="mandatory"> *</span></label>
+                         </div>
+                         <div class="col-md-4">
+                             <input name="NoDeliveryRequest" type="text" class="form-control" ng-model="me.deliveryRequestNumber" required ng-change="me.getCancelDeliveryRequestByDeliveryRequestNumber()" ng-model-options="{debounce: 500}" ng-maxlength="32" ng-pattern="/^[A-Za-z0-9/]+$/"/>
+                             <validation-message title="No. Delivery Request" input="CancelDeliveryRequestForm.NoDeliveryRequest"></validation-message>
+                             <span class="field-validation-error" ng-hide="me.validate === false" ng-bind="me.errorMessage"></span>
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <div class="col-md-3">
+                             <label class="control-label">Tanggal Delivery Request</label>
+                         </div>
+                         <div class="col-md-4">
+                             <input type="text" class="form-control" disabled value="{{me.cancelDeliveryRequestViewModel.createdAt | date: 'dd-MMM-yyyy HH:mm'}}" />
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <div class="col-md-3">
+                             <label class="control-label">Frame No.</label>
+                         </div>
+                         <div class="col-md-4">
+                             <input name="FrameNo" type="text" class="form-control" ng-model="me.frameNumber" ng-change="me.getCancelDeliveryRequestByFrameNumber()" ng-model-options="{debounce: 500}" required ng-pattern="/^[A-Za-z0-9]+$/" maxlength="17" ng-minlength="17" />
+                             <validation-message title="Frame No." input="CancelDeliveryRequestForm.FrameNo"></validation-message>
+                             <span class="field-validation-error" ng-hide="me.validateFrameNumber === false" ng-bind="me.errorMessageFrameNumber"></span>
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <div class="col-md-3">
+                             <label class="control-label">Katashiki-Suffix</label>
+                         </div>
+                         <div class="col-md-2">
+                             <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.katashiki" />
+                         </div>
+                         <div class="col-md-2">
+                             <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.suffix" />
+                         </div>
+                         <div class="col-md-2">
+                             <label class="control-label">Model</label>
+                         </div>
+                         <div class="col-md-3">
+                             <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.model" />
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <div class="col-md-3">
+                             <label class="control-label">Tipe</label>
+                         </div>
+                         <div class="col-md-4">
+                             <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.tipe" />
+                         </div>
+                         <div class="col-md-2">
+                             <label class="control-label">Warna</label>
+                         </div>
+                         <div class="col-md-3">
+                             <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.warna" />
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <div class="col-md-3">
+                             <label class="control-label">Branch</label>
+                         </div>
+                         <div class="col-md-4">
+                             <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.branch" />
+                         </div>
+                         <div class="col-md-2">
+                             <label class="control-label">ETD PDC R</label>
+                         </div>
+                         <div class="col-md-3">
+                             <input type="text" class="form-control" disabled value="{{me.cancelDeliveryRequestViewModel.estimatedPDCIn | date: 'dd-MMM-yyyy'}}" />
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <div class="col-md-3">
+                             <label class="control-label">Customer Assigned</label>
+                         </div>
+                         <div class="col-md-4">
+                             <input type="checkbox" class="checkbox checkbox-inline" disabled ng-model="me.cancelDeliveryRequestViewModel.customerAssign" />
+                         </div>
+                         <div class="col-md-2">
+                             <label class="control-label">Requested PDD</label>
+                         </div>
+                         <div class="col-md-3">
+                             <input type="text" class="form-control" disabled value="{{me.cancelDeliveryRequestViewModel.requestedPdd | date: 'dd-MMM-yyyy'}}" />
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <div class="col-md-3">
+                             <label class="control-label">Posisi Terakhir</label>
+                         </div>
+                         <div class="col-md-4">
+                             <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.posisiTerakhir" />
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <div class="col-md-3">
+                             <label class="control-label">Lokasi Terakhir</label>
+                         </div>
+                         <div class="col-md-4">
+                             <input type="text" class="form-control" disabled ng-model="me.cancelDeliveryRequestViewModel.lokasiTerakhir" />
+                         </div>
+                         <div class="col-md-5">
+                             <p class="control-label form-note">*: Field mandatory harus diisi</p>
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <div class="col-md-6">
+                             <input type="radio" name="deliveryMethod" value="1" ng-checked="me.cancelDeliveryRequestViewModel.deliveryRequestTypeId === 1" class="radio radio-inline" disabled /> Normal
+                             <input type="radio" name="deliveryMethod" value="2" ng-checked="me.cancelDeliveryRequestViewModel.deliveryRequestTypeId === 2" class="radio radio-inline" disabled /> Self-Pick
+                             <input type="radio" name="deliveryMethod" value="3" ng-checked="me.cancelDeliveryRequestViewModel.deliveryRequestTypeId === 3" class="radio radio-inline" disabled /> Direct Delivery
+                             <input type="radio" name="deliveryMethod" value="4" ng-checked="me.cancelDeliveryRequestViewModel.deliveryRequestTypeId === 4" class="radio radio-inline" disabled /> Transit To Others
+                         </div>
+                     </div>
+                     <div class="menu-panel" ng-hide="me.cancelDeliveryRequestViewModel.deliveryRequestTypeId === undefined">
+                         <div class="panel-inside-padding">
+                             <cancel-delivery-request-self-pick ng-show="me.cancelDeliveryRequestViewModel.deliveryRequestTypeId === 2"></cancel-delivery-request-self-pick>
+                             <cancel-delivery-request-normal ng-show="me.cancelDeliveryRequestViewModel.deliveryRequestTypeId === 1"></cancel-delivery-request-normal>
+                             <cancel-delivery-request-direct-delivery ng-show="me.cancelDeliveryRequestViewModel.deliveryRequestTypeId === 3"></cancel-delivery-request-direct-delivery>
+                             <cancel-delivery-request-transit-to-others ng-show="me.cancelDeliveryRequestViewModel.deliveryRequestTypeId === 4"></cancel-delivery-request-transit-to-others>
+                         </div>
+                     </div>
+
+                 </div>
+             </div>
+
+         </div>
+     </form>
+        <div class="text-right">
+            <button type="button" ng-click="me.cancelDeliveryRequest(CancelDeliveryRequestForm)" ng-disabled="me.validateButton == true" class="btn btn-primary">Simpan</button>
+            <button ng-click="me.resetForm(CancelDeliveryRequestForm)" class="btn btn-danger">Batal</button>
+        </div>
+
+</div>
+
+
+

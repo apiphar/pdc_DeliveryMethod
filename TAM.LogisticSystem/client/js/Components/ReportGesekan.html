@@ -1,0 +1,112 @@
+﻿
+<div class="Page">
+    <div class="displayFlex">
+        <div class="col-xs-12">
+            <h2>Report Gesekan</h2>
+        </div>
+        <div class="col-xs-6 mt20">
+            <div class="pull-right">
+                <button type="submit" class="frmSubmit btn btn-primary" ng-click="me.download()" ng-disabled="!me.reportList">Download</button>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="col-xs-12">
+        <fieldset>
+            <form name="afiReporGesekan" class="m20">
+                <div class="form-group col-xs-12">
+                    <div class="col-xs-2">
+                        <h5 class="control-label">Frame No:</h5>
+                    </div>
+                    <div class="col-xs-3">
+                        <input type="text" class="form-control" name="frameNo" ng-model="me.reportGesekan.frameNumber">
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <div class="col-xs-2">
+                        <h5 class="control-label">From:</h5>
+                    </div>
+
+                    <div class="col-xs-3">
+                        <p class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" ng-model="me.reportGesekan.tanggalFrom" is-open="openedFrom" close-text="Close" alt-input-formats="me.altInputFormats" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openedFrom=!openedFrom"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-xs-1">
+                        <h5 class="control-label">To:</h5>
+                    </div>
+
+                    <div class="col-xs-3">
+                        <p class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup="dd MMM yyyy" ng-model="me.reportGesekan.tanggalTo" is-open="openedto" close-text="Close" alt-input-formats="me.altInputFormats" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openedto=!openedto"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-xs-2 col-xs-offset-1">
+                        <button type="submit" id="btnCari" class="btn btn-primary" ng-click="me.getRepostGesekan()">Cari</button>
+                    </div>
+                </div>
+                
+
+            </form>
+        </fieldset>
+
+        <fieldset>
+            <div class="overflowTable">
+                <div>
+                    <div class="pull-right">
+                        tampilkan
+                        <select ng-model="me.pageSize" ng-options="data for data in me.pageSizes"></select>
+                        item per halaman
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-primary"><a href="" ng-click="me.order('frameNumber')">Frame No</a></th>
+                            <th class="text-primary"><a href="" ng-click="me.order('modelName')">Model Name</a></th>
+                            <th class="text-primary"><a href="" ng-click="me.order('tanggalGesek')">Tgl.Gesek</a></th>
+                            <th class="text-primary"><a href="" ng-click="me.order('lokasi')">Lokasi</a></th>
+                            <th class="text-primary"><a href="" ng-click="me.order('tanggalSerahTerima')">Tgl.Serah Terima</a></th>
+                            <th class="text-primary"><a href="" ng-click="me.order('jumlahGesek')">Jumlah Gesek</a></th>
+                            <th class="text-primary"><a href="" ng-click="me.order('noSurat')">No.Surat</a></th>
+                            <th class="text-primary"><a href="" ng-click="me.order('katashiki')">Katashiki</a></th>
+                            <th class="text-primary"><a href="" ng-click="me.order('suffix')">Suffix</a></th>
+                            <th class="text-primary"><a href="" ng-click="me.order('color')">Color</a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in (result =  (me.reportList | filter : searchString:me.allowNullValue | orderBy : me.orderString :me.orderState)) track by data.scratchId "
+                        ng-if="$index >= ((me.currentPage-1)*me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td ng-bind="data.frameNumber"></td>
+                            <td ng-bind="data.modelName"></td>
+                            <td ng-bind="data.tanggalGesek | date:'dd MMM yyyy'"></td>
+                            <td ng-bind="data.lokasi"></td>
+                            <td ng-bind="data.tanggalSerahTerima | date:'dd MMM yyyy'"></td>
+                            <td ng-bind="data.jumlahGesek"></td>
+                            <td ng-bind="data.noSurat"></td>
+                            <td ng-bind="data.katashiki"></td>
+                            <td ng-bind="data.suffix"></td>
+                            <td ng-bind="data.color"></td>
+                        </tr>
+                        <tr ng-hide="me.loader">
+                            <td colspan="10"><center>Loading....</center></td>
+                        </tr>
+                        <tr ng-if="me.reportList.length==0">
+                            <td colspan="10"><center>No Data Found</center></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pull-right">
+                    <ul uib-pagination boundary-links="true" max-size="me.maxSize" total-items="me.totalItems" ng-model="me.currentPage" items-per-page="me.pageSize" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</div>

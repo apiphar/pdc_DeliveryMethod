@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Shipping Schedule";
+    ViewBag.BreadCrumb = new List<string> {
+        "Delivery",
+        "Shipping Schedule"
+    };
+}
+
+<div ng-app="aspnet" class="row">
+    <delivery-shipping-schedule-destination-form><div class="loading"></div></delivery-shipping-schedule-destination-form>
+    <delivery-shipping-schedule-destination-list></delivery-shipping-schedule-destination-list>
+    <delivery-shipping-schedule-source-location></delivery-shipping-schedule-source-location>
+</div>

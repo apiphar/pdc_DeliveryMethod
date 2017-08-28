@@ -1,0 +1,87 @@
+﻿<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h1>
+        Unit Advance
+    </h1>
+    <div class="header-line"></div>
+    <form name="UnitAdvanceForm" class="form-horizontal">
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <div class="row-striped">
+                    <div class="form-group">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Frame No.</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input name="FrameNumber" ng-change="me.searchData()" ng-model="me.frameNumberSearch" class="form-control" type="text" ng-maxlength="17" ng-pattern="me.frameNumberRegex" ng-minlength="17" maxlength="17" required="required" />
+                            <validation-message input="UnitAdvanceForm.FrameNumber" title="Frame Number"></validation-message>
+                            <span ng-show="me.isFrameNumberExists" class="mandatory"><i>Frame Number tidak ditemukan</i></span>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Katashiki-Suffix</label>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <input name="Katashiki" ng-model="me.deliveryUnitAdvanceModel.katashiki" class="form-control" type="text" disabled />
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <input name="Suffix" ng-model="me.deliveryUnitAdvanceModel.suffix" class="form-control" type="text" disabled />
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Model</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input name="Model" ng-model="me.deliveryUnitAdvanceModel.model" class="form-control" type="text" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Tipe</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input name="Tipe" ng-model="me.deliveryUnitAdvanceModel.tipe" class="form-control" type="text" disabled />
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Warna</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input name="Warna" ng-model="me.deliveryUnitAdvanceModel.warna" class="form-control" type="text" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Branch</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input name="Branch" ng-model="me.deliveryUnitAdvanceModel.branch" class="form-control" type="text" disabled />
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Customer Assign</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input name="CustomerAssign" id="checkbox" ng-model="me.deliveryUnitAdvanceModel.customerAssign" type="checkbox" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <label class="control-label">Requested PDD</label>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <input name="RequestedPDD" value="{{me.deliveryUnitAdvanceModel.requestedPDD | date: 'dd-MMM-yyyy'}}" class="form-control" type="text" disabled />
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary" ng-disabled="UnitAdvanceForm.$invalid" ng-click="me.submitData(UnitAdvanceForm)">Simpan</button>
+            <button type="button" ng-click="me.resetField(UnitAdvanceForm)" class="btn btn-danger">Batal</button>
+        </div>
+    </form>
+</div>

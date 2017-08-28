@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - Toyota Logistic System</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-lg-2">
+                @Html.Partial("Navigation")
+            </div>
+            <div class="col-sm-9 col-lg-10">
+                @Html.Partial("Breadcrumb")
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/jquery-bootstrap.js"></script>
+    <script src="~/js/aspnet-validation.js"></script>
+    <script src="~/js/bundle.js"></script>
+</body>
+</html>

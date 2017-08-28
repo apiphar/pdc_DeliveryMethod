@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Delivery Leg Lead Time";
+    ViewBag.BreadCrumb = new List<string> {
+        "Master",
+        "Delivery Leg",
+        "Delivery Leg Lead Time"
+    };
+}
+@model string
+<div ng-app="aspnet" class="row">
+    <delivery-leg-lead-time><div class="loading"></div></delivery-leg-lead-time>
+    <div id="receivedDeliveryLegCode" hidden>@Model</div>
+    <upload-download><div class="loading"></div></upload-download>
+</div>

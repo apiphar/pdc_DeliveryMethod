@@ -1,0 +1,174 @@
+﻿<div ng-if="me.pageState === true" class="Page">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>
+                    Master - Warna Vehicle
+                </h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <h1>
+                    <button class="btn btn-default" ng-click="me.download(result)">Download</button>
+                    <button class="btn btn-primary btn-warna-vehicle" ng-click="me.upload()">Upload</button>
+                </h1>
+            </div>
+        </div>
+
+        <div class="header-line"></div>
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <div class="text-right">
+                    <p>
+                        Tampilkan
+                        <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="item for item in me.pageSizes"></select>
+                        items per halaman
+                    </p>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th><a href="" ng-click="me.order('kodeWarnaVehicle')">Kode Warna Vehicle</a></th>
+                                <th><a href="" ng-click="me.order('kodeBrand')">Kode Brand</a></th>
+                                <th><a href="" ng-click="me.order('kodeModel')">Kode Model</a></th>
+                                <th><a href="" ng-click="me.order('kodeWarna')">Kode Warna</a></th>
+                                <th><a href="" ng-click="me.order('deskripsiWarnaInd')">Deskripsi Warna (Ind)</a></th>
+                                <th><a href="" ng-click="me.order('deskripsiWarnaEng')">Deskripsi Warna (Eng)</a></th>
+                                <th width="12%"></th>
+                            </tr>
+                            <tr>
+                                <th><input class="form-control" ng-model="Search.kodeWarnaVehicle" ng-keyup="me.search(this)" /></th>
+                                <th><input class="form-control" ng-model="Search.brandDetail" ng-keyup="me.search(this)" /></th>
+                                <th><input class="form-control" ng-model="Search.modelDetail" ng-keyup="me.search(this)" /></th>
+                                <th><input class="form-control" ng-model="Search.kodeWarna" ng-keyup="me.search(this)" /></th>
+                                <th><input class="form-control" ng-model="Search.deskripsiWarnaInd" ng-keyup="me.search(this)" /></th>
+                                <th><input class="form-control" ng-model="Search.deskripsiWarnaEng" ng-keyup="me.search(this)" /></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr ng-repeat="data in (result = (me.vehicleColorViewModelList | filter : Search  | orderBy : me.orderString :me.orderState)) track by data.kodeWarnaVehicle"
+                                ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                                <td ng-bind="data.kodeWarnaVehicle"></td>
+                                <td ng-bind="data.brandDetail"></td>
+                                <td ng-bind="data.modelDetail"></td>
+                                <td ng-bind="data.kodeWarna"></td>
+                                <td ng-bind="data.deskripsiWarnaInd"></td>
+                                <td ng-bind="data.deskripsiWarnaEng"></td>
+                                <td>
+                                    <button type="button" class="btn btn-info" ng-click="me.updateSelected(data)"><span class="glyphicon glyphicon-edit"></span></button>
+                                    <button type="button" class="btn btn-danger" ng-click="me.deleteVehicleColor(data, VehicleColorForm)"><span class="glyphicon glyphicon-trash"></span></button>
+                                </td>
+                            </tr>
+                            <tr ng-if="result.length < 1">
+                                <td colspan="7" class="text-center text-warning">Data tidak ditemukan</td>
+                            </tr>
+                            <tr ng-if="result.length === undefined">
+                                <td colspan="7" class="text-center text-warning"><i>Loading...</i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-right">
+                        <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form name="VehicleColorForm" class="form-horizontal" ng-submit="me.createVehicleColor(VehicleColorForm)">
+            <div class="menu-panel">
+                <div class="panel-inside-padding">
+                    <div class="row-striped">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="control-label">Kode Warna Vehicle<span class="mandatory"> *</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <input name="KodeWarnaVehicle" ng-model="me.vehicleColorCreateModel.kodeWarnaVehicle" class="form-control" ng-disabled="me.isEdit" required pattern="[a-zA-Z0-9]*" ng-maxlength="4" ng-change="me.validationKodeWarnaVehicle()" ng-model-options="{debounce: 500}" />
+                                <validation-message title="Kode Warna Vehicle" input="VehicleColorForm.KodeWarnaVehicle"></validation-message>
+                                <span class="field-validation-error" ng-bind="me.errorMsgKodeWarnaVehicle" ng-hide="me.validateKodeWarnaVehicleDetail === false"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="control-label">Kode Brand<span class="mandatory"> *</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <ui-select ng-model="me.vehicleColorCreateModel.brand" theme="bootstrap" name="KodeBrand" ng-change="me.getKodeModel();me.validationKodeBrand()" ng-required="me.vehicleColorCreateModel.brand == null">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.kodeBrand}}</ui-select-match>
+                                    <ui-select-choices repeat="brand in me.kodeBrandList | filter: $select.search">
+                                        <span ng-bind-html="brand.kodeBrand | highlight: $select.search"></span> -
+                                        <span ng-bind-html="brand.brandName | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <!--<validation-message input="VehicleColorForm.KodeBrand"></validation-message>-->
+                                <span class="field-validation-error" ng-show="me.vehicleColorCreateModel.brand.kodeBrand === undefined && VehicleColorForm.KodeBrand.$touched && !me.isEdit">Kode Brand harus dipilih</span>
+                                <span class="field-validation-error" ng-show="me.vehicleColorCreateModel.brand.kodeBrand === undefined && me.isEdit">Kode Brand harus dipilih</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="control-label">Kode Model<span class="mandatory"> *</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <ui-select name="KodeModel" ng-model="me.vehicleColorCreateModel.model" theme="bootstrap" ng-change="me.validationKodeModel()" ng-required="me.vehicleColorCreateModel.model == null">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.kodeModel}}</ui-select-match>
+                                    <ui-select-choices repeat="model in me.kodeModel | filter: $select.search">
+                                        <span ng-bind-html="model.kodeModel | highlight: $select.search"></span> -
+                                        <span ng-bind-html="model.modelName | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <span class="field-validation-error" ng-show="me.vehicleColorCreateModel.model.kodeModel === undefined && VehicleColorForm.KodeModel.$touched">Kode Model harus dipilih</span>
+                                <!--<validation-message title="Kode Model" input="VehicleColorForm.KodeModel"></validation-message>-->
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="control-label">Kode Warna<span class="mandatory"> *</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <ui-select name="KodeWarna" ng-model="me.vehicleColorCreateModel.warna" theme="bootstrap" ng-change="me.validationKodeWarna()">
+                                    <ui-select-match placeholder="Pilih salah satu">{{$select.selected.kodeWarna}}</ui-select-match>
+                                    <ui-select-choices repeat="warna in me.kodeWarnaList | filter: $select.search">
+                                        <span ng-bind-html="warna.kodeWarna | highlight: $select.search"></span> -
+                                        <span ng-bind-html="warna.deskripsiWarnaInd | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <span class="field-validation-error" ng-show="me.vehicleColorCreateModel.warna.kodeWarna === undefined && VehicleColorForm.KodeWarna.$touched">Kode Warna harus dipilih</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="control-label">Deskripsi Warna (Ind)</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input ng-model="me.vehicleColorCreateModel.warna.deskripsiWarnaInd" class="form-control" required disabled />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="control-label">Deskripsi Warna (Eng)</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input ng-model="me.vehicleColorCreateModel.warna.deskripsiWarnaEng" class="form-control" required disabled />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label class="control-label form-note"><i>*: Field Mandatory harus diisi</i></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary" ng-if="!me.isEdit" ng-disabled="me.loading === true || me.validate === true">Simpan</button>
+                <button type="button" class="btn btn-primary" ng-if="me.isEdit" ng-click="me.updateVehicleColor(VehicleColorForm)" ng-disabled="me.loading === true || me.validate === true">Update</button>
+                <button class="btn btn-danger" type="button" ng-click="me.reset(VehicleColorForm)">Batal</button>
+            </div>
+        </form>
+    </div>
+    
+</div>﻿

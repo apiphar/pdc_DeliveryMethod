@@ -1,0 +1,302 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                Master Branch
+            </h1>
+        </div>
+        <div class="col-md-6 text-right">
+            <h1>
+                <button type="button" class="buttonSubmit btn btn-primary" ng-click="me.Download(result)">Download</button>
+                <!--<button type="button" class="buttonSubmit btn btn-default" ng-click="me.Upload()">Upload</button>-->
+            </h1>
+        </div>
+    </div>
+    <div class="header-line"></div>
+    <div class="menu-panel">
+        <div class="text-right">
+            <p>
+                Tampilkan
+                <select ng-model="me.pageSize" ng-options="pageSize for pageSize in me.pageSizes" ng-change="me.setPages(me.currentPage)"></select>
+                item per halaman
+            </p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center" ng-click="me.order('salesAreaCode')">Kode Sales Area</th>
+                        <th class="text-center" ng-click="me.order('companyName')">Kode Company</th>
+                        <th class="text-center" ng-click="me.order('locationName')">Kode Lokasi</th>
+                        <th class="text-center" ng-click="me.order('branchCode')">Kode Branch</th>
+                        <th class="text-center" ng-click="me.order('name')">Branch</th>
+                        <th class="text-center" ng-click="me.order('phone')">No. Telp</th>
+                        <th class="text-center" ng-click="me.order('fax')">No. Fax</th>
+                        <th class="text-center" ng-click="me.order('destinationName')">Destination Code</th>
+                        <th class="text-center" ng-click="me.order('regionName')">Region Code</th>
+                        <th class="text-center" ng-click="me.order('afiBranchCode')">Kode AFI Branch</th>
+                        <th class="text-center" ng-click="me.order('aS400BranchCode')">Branch AS 400</th>
+                        <th class="text-center" ng-click="me.order('clusterName')">Kode Cluster</th>
+                        <th class="text-center" ng-click="me.order('kabupatenCode')">Kode Kabupaten</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.salesAreaCode" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.companyName" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.locationName" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.branchCode" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.name" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.phone" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.fax" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.destinationName" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.regionName" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.afiBranchCode" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.aS400BranchCode" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.clusterName" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.Search.kabupatenCode" />
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in (result = (me.dataBranch | filter: me.Search:me.allowNullValue | orderBy: me.orderString : me.orderState)) track by data.branchCode" ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                        <td ng-bind="data.salesAreaCode"></td>
+                        <td ng-bind="data.companyName"></td>
+                        <td ng-bind="data.locationName"></td>
+                        <td ng-bind="data.branchCode"></td>
+                        <td ng-bind="data.name"></td>
+                        <td ng-bind="data.phone"></td>
+                        <td ng-bind="data.fax"></td>
+                        <td ng-bind="data.destinationName"></td>
+                        <td ng-bind="data.regionName"></td>
+                        <td ng-bind="data.afiBranchCode"></td>
+                        <td ng-bind="data.aS400BranchCode"></td>
+                        <td ng-bind="data.clusterName"></td>
+                        <td ng-bind="data.kabupatenCode"></td>
+                        <td class="action-1">
+                            <button type="button" class="btn btn-info" ng-click="me.selectEdit(data)">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </button>
+                            <!--<button type="button" class="btn btn-danger" ng-click="me.deleteBranch(data,myForm)">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>-->
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="14" align="center">Data tidak ditemukan</td>
+                    </tr>
+                    <tr ng-if="me.loader">
+                        <td colspan="14" class="text-center"><i>Loading ...</i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-right">
+            <ul uib-pagination total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+    <div class="menu-panel" ng-show="me.showHideForm == true">
+        <div class="panel-inside-padding">
+            <form name="myForm" class="form-horizontal row-striped">
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Sales Area<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <ui-select ng-model="me.salesArea" theme="bootstrap" required="required" name="salesAreaComboBox">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.salesAreaCode}} - {{$select.selected.salesAreaName}}</ui-select-match>
+                            <ui-select-choices repeat="sa in me.dataSalesArea | filter: $select.search">
+                                <span ng-bind-html="sa.salesAreaCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="sa.salesAreaName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-show="me.salesArea == null && myForm.salesAreaComboBox.$touched">Kode Sales Area harus dipilih</span>
+                    </div>
+                    <!--<label class="col-sm-1"></label>-->
+                    <div class="col-sm-2">
+                        <label class="control-label">Destination Code<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <ui-select ng-model="me.destination" theme="bootstrap" required="required" name="destinationComboBox">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.destinationCode}} - {{$select.selected.destinationName}}</ui-select-match>
+                            <ui-select-choices repeat="des in me.dataDestination | filter: $select.search">
+                                <span ng-bind-html="des.destinationCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="des.destinationName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-show="me.destination == null && myForm.destinationComboBox.$touched">Destination Code harus dipilih</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Company<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <ui-select ng-model="me.company" theme="bootstrap" required="required" name="companyComboBox">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.companyCode}} - {{$select.selected.companyName}}</ui-select-match>
+                            <ui-select-choices repeat="company in me.dataCompany | filter: $select.search">
+                                <span ng-bind-html="company.companyCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="company.companyName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-show="me.company == null && myForm.companyComboBox.$touched">Kode Company harus dipilih</span>
+                    </div>
+                    <!--<label class="col-sm-1"></label>-->
+                    <div class="col-sm-2">
+                        <label class="control-label">Region Code<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <ui-select ng-model="me.region" theme="bootstrap" required="required" name="regionComboBox">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.regionCode}} - {{$select.selected.regionName}}</ui-select-match>
+                            <ui-select-choices repeat="region in me.dataRegion | filter: $select.search">
+                                <span ng-bind-html="region.regionCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="region.regionName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-show="me.region == null && myForm.regionComboBox.$touched">Region Code harus dipilih</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Lokasi<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4" ng-if="me.showHideForm == false">
+                        <ui-select ng-model="me.location" on-select="me.selectLocation($select.selected)" theme="bootstrap" required="required" name="locationComboBox">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.locationName}}</ui-select-match>
+                            <ui-select-choices repeat="location in me.dataLocation | filter: $select.search">
+                                <span ng-bind-html="location.locationCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="location.locationName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-show="me.location == null && myForm.locationComboBox.$touched">Kode Lokasi harus dipilih</span>
+                    </div>
+                    <div class="col-sm-4" ng-if="me.showHideForm == true">
+                        <ui-select ng-model="me.location" theme="bootstrap" required="required">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.locationCode}} - {{$select.selected.locationName}}</ui-select-match>
+                            <ui-select-choices repeat="location in me.dataLocation | filter: $select.search">
+                                <span ng-bind-html="location.locationCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="location.locationName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-show="me.location == null && myForm.locationComboBox.$touched">Kode Lokasi harus dipilih</span>
+                    </div>
+                    <!--<label class="col-sm-1"></label>-->
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode AFI Branch<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4" ng-if="me.showHideForm == false">
+                        <input type="text" class="form-control" name="BranchCodeAFI" ng-model="me.branchModel.afiBranchCode" required="required" ng-maxlength="4" pattern="^[a-zA-Z0-9]*$" />
+                        <validation-message input="myForm.BranchCodeAFI" title="Kode AFI Branch"></validation-message>
+                    </div>
+                    <div class="col-sm-4" ng-if="me.showHideForm == true">
+                        <input type="text" class="form-control" ng-model="me.branchModel.afiBranchCode" disabled="disabled" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Branch<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4" ng-if="me.showHideForm == false">
+                        <input type="text" class="form-control" name="branchCode" ng-model="me.branchModel.branchCode" required="required" ng-maxlength="16" pattern="^[a-zA-Z0-9]*$" />
+                        <validation-message input="myForm.branchCode" title="Kode Branch"></validation-message>
+                    </div>
+                    <div class="col-sm-4" ng-if="me.showHideForm == true">
+                        <input type="text" class="form-control" ng-model="me.branchModel.branchCode" required="required" disabled="disabled" />
+                    </div>
+                    <!--<label class="col-sm-1"></label>-->
+                    <div class="col-sm-2">
+                        <label class="control-label">Branch AS 400<span class="mandatory"> *</span></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="branchAS400" ng-model="me.branchModel.aS400BranchCode" ng-maxlength="16" required="required" pattern="^[a-zA-Z0-9]*$" />
+                        <validation-message input="myForm.branchAS400" title="Branch AS 400"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">Branch<span class="mandatory"> *</span></label>
+                    </div>    
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="Name" ng-model="me.branchModel.name" required="required" ng-maxlength="255" ng-pattern="me.regexPattern" />
+                        <validation-message input="myForm.Name" title="Branch"></validation-message>
+                    </div>
+                    <!--<label class="col-sm-1"></label>-->
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Cluster<span class="mandatory"> *</span></label>
+                    </div>   
+                    <div class="col-sm-4">
+                        <ui-select ng-model="me.cluster" theme="bootstrap" required="required" name="clusterComboBox">
+                            <ui-select-match placeholder="Pilih salah satu">{{$select.selected.aS400ClusterCode}} - {{$select.selected.clusterName}}</ui-select-match>
+                            <ui-select-choices repeat="cluster in me.dataCluster | filter: $select.search">
+                                <span ng-bind-html="cluster.aS400ClusterCode | highlight: $select.search"></span> -
+                                <span ng-bind-html="cluster.clusterName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="field-validation-error" ng-show="me.cluster == null && myForm.clusterComboBox.$touched">Kode Cluster harus dipilih</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">No. Telp</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="Phone" ng-model="me.branchModel.phone" ng-maxlength="42" pattern="^[0-9]*$" />  <!--pattern="^[0-9]*$"-->
+                        <validation-message input="myForm.Phone" title="No.Telp" mismatch="harus berformat numeric"></validation-message>
+                    </div>   
+                    <!--<label class="col-sm-1"></label>-->
+                    <div class="col-sm-2">
+                        <label class="control-label">Kode Kabupaten<span class="mandatory"> *</span></label>
+                    </div>   
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="kabupaten" ng-model="me.branchModel.kabupatenCode" ng-maxlength="16" required="required" pattern="^[a-zA-Z0-9]*$" />  <!--pattern="^[0-9]*$"-->
+                        <validation-message input="myForm.kabupaten" title="Kode Kabupaten"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label">No. Fax</label>
+                    </div>
+                    <div class="col-sm-4">   
+                        <input type="text" class="form-control" name="Fax" ng-model="me.branchModel.fax" ng-maxlength="42" pattern="^[0-9]*$" />  <!--pattern="^[0-9]*$"-->
+                        <validation-message input="myForm.Fax" title="No.Fax" mismatch="harus berformat numeric"></validation-message>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <p class="form-note"><span class="mandatory">*</span> : Field mandatory harus diisi</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="pull-right" ng-show="me.showHideForm == true">
+        <!--<button type="submit" class="btn btn-primary" ng-if="me.showHideForm == false" ng-click="me.postBranch(myForm)" ng-disabled="!myForm.$valid">Simpan</button>-->
+        <button type="submit" class="btn btn-primary" ng-click="me.updateBranch(myForm)" ng-disabled="!myForm.$valid">Simpan</button>
+        <button type="reset" class="btn btn-danger" ng-click="me.reset(myForm)">Batal</button>
+    </div>
+</div>    

@@ -1,0 +1,125 @@
+﻿
+<div class="col-sm-12 fbb"><br /></div>
+<div class="col-sm-12">
+    <h2>
+        Kurs - Tax Rate
+    </h2>
+</div>
+    <hr class="header-line" />
+    <div class="col-sm-12 fbb"><br /></div>
+    <div class="col-sm-12">
+        <fieldset>
+            <div class="fieldset-padding">
+                <h5 id="title-grid">
+                    Kurs - Tax Rate
+                    <span class="pull-right">
+                        <button type="submit" data-toggle="modal" class="btn btn-default"> Download</button>
+                        <button type="button" class="btn btn-info"> Upload</button>
+                    </span>               
+                </h5>
+                <hr />
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-primary">Currency</th>
+                            <th class="text-primary">Rate</th>
+                            <th class="text-primary">Valid From</th>
+                            <th class="text-primary">Valid Until</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th><input class="form-control col-sm-2" ng-model="me.Search.currencySymbol" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.Search.toRupiah" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.Search.validFrom" /></th>
+                            <th><input class="form-control col-sm-2" ng-model="me.Search.validUntil" /></th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="data in (result = (me.data | filter:me.Search)) | orderBy:'+currencySymbol' | limitTo: me.pageSize : (me.currentPage-1) * me.pageSize">
+                            <td ng-bind="data.currencySymbol"></td>
+                            <td ng-bind="data.toRupiah"></td>
+                            <td ng-bind="data.validFrom | date: 'yyyy-MM-dd'"></td>
+                            <td ng-bind="data.validUntil | date: 'yyyy-MM-dd'"></td>
+                            <td>
+                                <button id="btnEdit" type="button" class="btn btn-info" ng-click="me.selectEdit(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalDelete" ng-click="me.selectDelete(data, MyForm)"><i class="glyphicon glyphicon-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length == 0">
+                            <td colspan="4" class="text-warning">Data Not Found!!!</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    <ul uib-pagination total-items="result.length" ng-model="me.currentPage" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="navbar-right">
+        Tampilkan
+        <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+        item per halaman
+    </div>
+
+    <div class="col-sm-12 fbb"><br /></div>
+    <div class="col-sm-12">
+        <fieldset>
+            <div class="fieldset-padding">
+                <form id="MyForm" name="MyForm">
+                    <div class="form-horizontal">
+                        <input type="number" class="form-control" style="display:none">
+                        <div class="form-group fbb">
+                            <div class="col-sm-3">
+                                <label class="control-label" for="">Currency</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <select class="form-control" ng-model="me.currencysName" ng-init="me.currencysName.value='0'" ng-options="option.text for option in me.dataCurrency track by option.value"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label" for="">Rate</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input name="ToRupiah" class="form-control" ng-model="me.toRupiah" type="number" required />
+                                <validation-message input="MyForm.ToRupiah"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group fbb">
+                            <div class="col-sm-3">
+                                <label class="control-label">Berlaku Mulai</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input name="ValidFrom" class="form-control" ng-model="me.validFrom" type="date" required />
+                                <validation-message input="MyForm.ValidFrom"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label" for="">Berlaku Sampai</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input name="ValidUntil" class="form-control" ng-model="me.validUntil" type="date" required />
+                                <validation-message input="MyForm.ValidUntil"></validation-message>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+    </div>
+    <br />
+    <div class="col-sm-12 fbb"><br /></div>
+    <div class="col-sm-12">
+        <div class="form-group">
+            <div class="pull-right">
+                <button type="submit" ng-click="me.confirmationDialog('Are you sure want to save this Exchange Rate ?', 'Simpan', MyForm)" ng-if="me.created==true" class="btn btn-info"> Simpan</button>
+                <button type="submit" class="btn btn-info" ng-click="me.confirmationDialog('Are you sure want to update this Exchange Rate ?', 'Update', MyForm)" ng-if="me.edited==true">Update</button>
+                <button type="button" ng-click="me.clearForm()" class="btn btn-default"> Batal</button>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,274 @@
+﻿<style>
+    body {
+        background-color: #edf3f9;
+    }
+
+    fieldset {
+        padding: 1em;
+        border: 1px solid rgba(0, 0, 0, .5);
+        color: grey;
+        border-radius: 10px;
+        background: white;
+    }
+</style>
+
+<div class="container">
+
+    <div class="container">
+        <div class="form-group">
+
+            <h2>
+               Engine 
+                <div class="pull-right">
+                    <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalNewForm">Tambah</button>-->
+                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate" ng-click="me.checkInput()">Simpan</button>
+                    <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit" ng-click="me.checkUpdate()">Update</button>
+                    <button type="reset" class="btn btn-default" ng-click="me.refreshData()">Batal</button>
+                </div>
+
+            </h2>
+
+            <hr style="border-top-color: #999999;" />
+        </div>
+    </div>
+
+    <fieldset>
+        <div class="container">
+
+            <!--<div class="row">
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default">Left</button>
+                    <button type="button" class="btn btn-default">Middle</button>
+                    <button type="button" class="btn btn-default">Right</button>
+                </div>
+            </div>-->
+            <div class="navbar-left">
+                Tampilkan
+                <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                item per halaman
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <!--<th class="text-primary"><a href="" ng-click="ord='data.itemName'">Inspection Part Name</a></th>-->
+                        <th class="text-primary">Katashiki</th>
+                        <th class="text-primary">Car Model</th>
+                        <th class="text-primary">Engine Prefix</th>
+                        <th class="text-primary">FrameCode</th>
+                        <th class="text-primary">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.katashiki" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.carModelName" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="me.Search.enginePrefix" /></th>
+                        <th><input class="form-control col-sm-2" ng-model="me.frameCode" /></th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="data in (result = (me.Data | filter:me.Search)) | orderBy:'+katashiki'|limitTo: me.pageSize : (me.currentPage-1) * me.pageSize">
+                        <td ng-bind="data.katashiki"></td>
+                        <td ng-bind="data.carModelName"></td>
+                        <td ng-bind="data.enginePrefix"></td>
+                        <td ng-bind="data.frameCode"></td>
+                        <td>
+                            <button type="button" class="btn btn-info" ng-click="me.selectEdit(data)"><i class="glyphicon glyphicon-edit"></i></button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalDelete" ng-click="me.selectData(data)"><i class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr ng-if="result.length == 0">
+                        <td colspan="4" class="text-warning">Data Not Found!!!</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <ul uib-pagination total-items="result.length" ng-model="me.currentPage" ng-change="me.pageChanged()" class="pagination-sm" items-per-page="me.pageSize" num-pages="me.pageNumber" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+
+        <div class="form-horizontal">
+            <form id="frmSubmit" method="get">
+
+                <div class="form-group">
+                    <label class="col-sm-3">Katashiki</label>
+                    <div class="col-sm-5">
+                        <select class="form-control" ng-model="me.Katashiki" ng-options="option as option.katashiki for option in me.KatashikiData track by option.katashiki" ng-change="me.cascadeForModel()"></select>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3">Car Model</label>
+                    <div class="col-sm-5">
+                        <input type="hidden" class="form-control" ng-model="me.CarModelId" />
+                        <input class="form-control" type="text" ng-model="me.CarModelValue" disabled />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3">Engine Prefix</label>
+                    <div class="col-sm-5">
+                        <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.EnginePrefix" />
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3">Frame Code</label>
+                    <div class="col-sm-5">
+                        <input type="text" asp-for="HarmonizeId" class="form-control" ng-model="me.FrameCode" />
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+
+    <label class="control-label col-sm-12"></label><label class="control-label col-sm-12"></label>
+
+    <div class="container">
+
+        <div class="form-group">
+            <div class="pull-right">
+                <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowCreate"  ng-click="me.checkInput()">Simpan</button>
+                <button type="submit" class="frmSubmit btn btn-primary" data-toggle="modal" data-target="#ModalShowEdit"  ng-click="me.checkUpdate()">Update</button>
+                <button type="reset" class="buttonSubmit btn btn-default" ng-click="me.reset()">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalShowCreate" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure want to save this name ?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Katashiki</label>
+                                <div class="col-sm-4">
+                                    <label typeof="" class="control-label" ng-bind="me.KatashikiValue"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Car Model</label>
+                                <div class="col-sm-4">
+                                    <label typeof="" class="control-label" ng-bind="me.CarModelValue"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Engine Prefix</label>
+                                <div class="col-sm-4">
+                                    <label typeof="" class="control-label" ng-bind="me.EnginePrefix"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Frame Code</label>
+                                <div class="col-sm-4">
+                                    <label typeof="" class="control-label" ng-bind="me.FrameCode"></label>
+                                </div>
+                            </div> 
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.createData()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalShowEdit" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure want to edit this Name ?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Katashiki</label>
+                                <div class="col-sm-4">
+                                    <label typeof="" class="control-label" ng-bind="me.KatashikiValidationId" hidden="hidden"></label>
+                                    <label typeof="" class="control-label" ng-bind="me.KatashikiValue"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Car Model</label>
+                                <div class="col-sm-4">
+                                    <label typeof="" class="control-label" ng-bind="me.CarModelValue"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Engine Prefix</label>
+                                <div class="col-sm-4">
+                                    <label typeof="" class="control-label" ng-bind="me.EnginePrefix"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Frame Code</label>
+                                <div class="col-sm-4">
+                                    <label typeof="" class="control-label" ng-bind="me.FrameCode"></label>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.updateData()" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="ModalDelete" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Are you sure  ?</h4>
+                    </div>
+                    <div class="modal-body">
+
+                     
+                        <strong style="color:red;">
+                            You are Going to delete {{me.KatashikiValidationId}}. All information...
+                        </strong>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" ng-click="me.deleteData()" data-dismiss="modal">Yes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>

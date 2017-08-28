@@ -1,0 +1,161 @@
+﻿<div ng-show="!masterProses.componentState.page"><div class="loading"></div></div>
+<div ng-show="masterProses.componentState.page" class="Page">
+    <div class="col-md-12">
+        <h1>Master Proses</h1>
+        <div class="header-line"></div>
+
+        <div class="menu-panel">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="masterProses.pageSize">
+                        <option ng-value="5">5</option>
+                        <option ng-value="10">10</option>
+                        <option ng-value="15">15</option>
+                        <option ng-value="20">20</option>
+                        <option ng-value="25">25</option>
+                    </select>
+                    item per halaman
+                </p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" ng-click="masterProses.setOrderBy('processMasterCode')">Kode Proses</th>
+                            <th rowspan="2" ng-click="masterProses.setOrderBy('name')">Proses</th>
+                            <th rowspan="2" ng-click="masterProses.setOrderBy('bufferMinutes')">Buffer Time (menit)</th>
+                            <th colspan="2" class="text-center">Proses Scan</th>
+                            <th colspan="{{ masterProses.processLeadTimeByEnumDataList.length }}" class="text-center">Lead Time mengikuti</th>
+                            <th rowspan="3" width="110">&nbsp;</th>
+                        </tr>
+                        <tr>
+                            <th ng-click="masterProses.setOrderBy('isScan', true)">Ya</th>
+                            <th ng-click="masterProses.setOrderBy('isScan', false)">Tidak</th>
+                            <th ng-repeat="leadtime in masterProses.processLeadTimeByEnumDataList track by leadtime.processLeadTimeByEnumId" ng-click="masterProses.setOrderBy('orderLeadTime' + leadtime.processLeadTimeByEnumId, true)">{{ leadtime.name }}</th>
+                        </tr>
+                        <tr>
+                            <th><input type="text" class="form-control" ng-model="masterProses.search.processMasterCode"></th>
+                            <th><input type="text" class="form-control" ng-model="masterProses.search.name"></th>
+                            <th><input type="number" class="form-control" ng-model="masterProses.search.bufferMinutes"></th>
+                            <th class="text-center"><input type="checkbox" ng-model="masterProses.search.isScan[1]" ng-value="true"></th>
+                            <th class="text-center"><input type="checkbox" ng-model="masterProses.search.isScan[0]" ng-value="true"></th>
+                            <th class="text-center" ng-repeat="leadtime in masterProses.processLeadTimeByEnumDataList track by leadtime.processLeadTimeByEnumId">
+                                <input type="checkbox" ng-model="masterProses.search.processLeadTimeByEnumId[leadtime.processLeadTimeByEnumId]" ng-value="true">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(key, data) in (result = (masterProses.masterProsesDataList | masterProsesFilter:masterProses | orderBy:masterProses.order.name:masterProses.order.direction)) | limitTo: masterProses.pageSize : (masterProses.currentPage-1) * masterProses.pageSize track by data.processMasterCode" ng-if="result.length>0">
+                            <td ng-bind="data.processMasterCode"></td>
+                            <td ng-bind="data.name"></td>
+                            <td ng-bind="data.bufferMinutes"></td>
+                            <td><input type="radio" disabled ng-checked="data.isScan" /></td>
+                            <td><input type="radio" disabled ng-checked="!data.isScan" /></td>
+                            <td ng-repeat="leadtime in masterProses.processLeadTimeByEnumDataList track by leadtime.processLeadTimeByEnumId">
+                                <input type="radio" disabled ng-checked="data.processLeadTimeByEnumId == leadtime.processLeadTimeByEnumId" />
+                            </td>
+                            <td class="text-nowrap text-center">
+                                <button class="btn btn-info" ng-click="masterProses.actionEdit(data, key)">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </button>
+                                <button class="btn btn-danger" ng-click="masterProses.actionDelete(data)" ng-disabled="masterProses._httpState && masterProses.masterProsesDataDelete.processMasterCode == data.processMasterCode">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length==0">
+                            <td colspan="{{ (masterProses.processLeadTimeByEnumDataList.length-1) + 7 }}">
+                                Data tidak ditemukan
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-right">
+                <ul uib-pagination total-items="result.length" ng-model="masterProses.currentPage" ng-change="masterProses.pageChanged()" items-per-page="masterProses.pageSize" max-size="masterProses.maxSize"
+                    class="pagination-sm" boundary-links="true" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <form class="form-horizontal row-striped" name="formMasterProses">
+                    <div class="form-group">
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="row">
+                                <label class="col-xs-4 col-sm-6 control-label">Kode Proses<span class="mandatory">*</span></label>
+                                <div class="col-xs-8 col-sm-6">
+                                    <input type="text" name="kodeProses" formal-name="Kode Proses" class="form-control text-uppercase" ng-model="masterProses.masterProsesDataActive.processMasterCode" ng-readonly="masterProses.componentState.edit" required ng-maxlength="8" ng-pattern="/^[\d\w]+$/" ng-keydown="masterProses.checkKodeProsesAvailability()" ng-class="{'ng-invalid ng-dirty':masterProses.isInputValid(formMasterProses.kodeProses) && !masterProses.kodeProsesAvailability}">
+                                    <validation-message input="formMasterProses.kodeProses" title="Kode Proses"></validation-message>
+                                    <div ng-show="masterProses.isInputValid(formMasterProses.kodeProses) && !masterProses.kodeProsesAvailability" class="field-validation-error ng-active">Kode Proses telah digunakan</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-7 col-sm-offset-1">
+                            <div class="row">
+                                <label class="col-xs-4 col-sm-3 control-label">Proses<span class="mandatory">*</span></label>
+                                <div class="col-xs-8 col-sm-9">
+                                    <input type="text" name="namaProses" class="form-control text-uppercase" ng-model="masterProses.masterProsesDataActive.name" required ng-maxlength="255" ng-pattern="/^[\d\w\ \-\_\.\&\/\,\']+$/">
+                                    <validation-message input="formMasterProses.namaProses" title="Nama Proses"></validation-message>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-4 col-sm-2 control-label">Buffer Time<span class="mandatory">*</span></label>
+                        <div class="col-xs-8 col-sm-2">
+                            <div class="input-group">
+                                <input type="number" name="bufferMinutes" class="form-control" ng-model="masterProses.masterProsesDataActive.bufferMinutes" required ng-pattern="/^[0-9]+$/" min="0">
+                                <span class="input-group-addon">menit</span>
+                            </div>
+                            <validation-message input="formMasterProses.bufferMinutes" title="Buffer Time"></validation-message>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-4 col-sm-2 control-label">Proses Scan<span class="mandatory">*</span></label>
+                        <div class="col-xs-8 col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="masterProses.masterProsesDataActive.isScan" ng-value="true" required> Ya
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="masterProses.masterProsesDataActive.isScan" ng-value="false" required> Tidak
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-4 col-sm-2 control-label">Lead Time Mengikuti<span class="mandatory">*</span></label>
+                        <div class="col-xs-8 col-sm-10">
+                            <label class="radio-inline" ng-repeat="leadtime in masterProses.processLeadTimeByEnumDataList track by leadtime.processLeadTimeByEnumId">
+                                <input type="radio" ng-model="masterProses.masterProsesDataActive.processLeadTimeByEnumId" ng-value="{{ leadtime.processLeadTimeByEnumId }}" required> {{ leadtime.name }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div align="left">
+                                <small class="mandatory"><em>*: Field mandatory harus diisi</em></small>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div align="right">
+                    <button class="btn btn-primary" ng-click="masterProses.actionSaveAddEdit(formMasterProses)" ng-disabled="!masterProses.isFormValid(formMasterProses) || masterProses._httpState">Simpan</button>
+                    <button class="btn btn-danger" ng-click="masterProses.actionCancelEdit(formMasterProses)">Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,106 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <h1>
+                    Master Group Dealer
+                </h1>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right">
+                <h1>
+                    <button type="button" ng-click="me.download(result)" class="btn btn-primary">Download</button>
+                    <button type="button" ng-click="me.upload()" class="btn btn-default">Upload</button>
+                </h1>
+            </div>
+        </div>
+        <div class="header-line"></div>
+        <div class="menu-panel">
+            <div class="panel-inside-padding">
+                <br />
+                <div class="text-right">
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="data for data in me.pageSizes"></select>
+                    item per halaman
+                </div>
+                <br />
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th><a ng-click="me.order('kodeGroupDealer')">Kode Group Dealer</a></th>
+                                <th><a ng-click="me.order('groupDealer')">Group Dealer</a></th>
+                                <th class="action"></th>
+                            </tr>
+                            <tr>
+                                <th><input type="text" ng-model="me.search.kodeGroupDealer" class="form-control" /></th>
+                                <th><input type="text" ng-model="me.search.groupDealer" class="form-control" /></th>
+                                <th class="action">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="result == 0">
+                                <td class="text-center" colspan="4">Data tidak ditemukan</td>
+                            </tr>
+                            <tr ng-if="me.loader">
+                                <td colspan="5" class="text-center"><i>Loading...</i></td>
+                            </tr>
+                            <tr ng-repeat="item in (result = (me.masterGroupDealerModels | filter : me.search | orderBy : me.orderString :me.orderState)) track by item.kodeGroupDealer"
+                                ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+
+                                <td ng-bind="item.kodeGroupDealer"></td>
+                                <td ng-bind="item.groupDealer"></td>
+                                <td class="action">
+                                    <button type="button" class="btn btn-info" ng-click="me.updateSelected(item)">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-danger" ng-click="me.deleteSelected(item.kodeGroupDealer, createGroupDealer)">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-right">
+                    <ul uib-pagination previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" total-items="result.length" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm" boundary-links="true" num-pages="me.numPages"></ul>
+                </div>
+            </div>
+        </div>
+
+        <form name="createGroupDealer" class="form-horizontal">
+            <div class="menu-panel">
+                <div class="panel-inside-padding">
+                    <div class="row-striped">
+                        <div class="form-group">
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <label class="control-label">Kode Group Dealer <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <input name="kodeGroupDealer" type="text" class="form-control" ng-model="me.masterGroupDealerModel.kodeGroupDealer" ng-maxlength="16" ng-pattern="me.groupDealerCodeRegex" ng-disabled="me.isEdit" required="required" />
+                                <validation-message input="createGroupDealer.kodeGroupDealer" title="Kode Group Dealer"></validation-message>
+                                <span ng-if="me.isCodeExists==true" class="mandatory"><i>Kode Group Dealer telah terdaftar</i></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <label class="control-label">Group Dealer <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <input name="groupDealer" type="text" class="form-control" ng-model="me.masterGroupDealerModel.groupDealer" ng-maxlength="255" ng-pattern="me.groupDealerRegex" required="required" />
+                                <validation-message input="createGroupDealer.groupDealer" title="Group Dealer"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-primary" ng-disabled="createGroupDealer.$invalid || me.isCodeExists" ng-if="!me.isEdit" ng-click="me.createData(createGroupDealer)">Simpan</button>
+                <button type="button" class="btn btn-primary" ng-disabled="createGroupDealer.$invalid || me.isCodeExists" ng-if="me.isEdit" ng-click="me.updateData(createGroupDealer)">Update</button>
+                <button type="button" ng-click="me.reset(createGroupDealer)" class="btn btn-danger">Batal</button>
+            </div>
+        </form>
+    </div>
+</div>

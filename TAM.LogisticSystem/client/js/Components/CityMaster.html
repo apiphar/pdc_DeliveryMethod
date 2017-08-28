@@ -1,0 +1,114 @@
+﻿<div ng-if="me.pageState==true" class="Page">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>
+                    Master City
+                </h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <h1>
+                    <button type="button" class="btn btn-primary" ng-click="me.download(result)">Download</button>
+                    <button type="button" class="btn btn-default" ng-click="me.upload()">Upload</button>
+                </h1>
+            </div>
+        </div>
+        <p></p>
+        <div class="header-line"></div>
+
+        <div class="menu-panel">
+            <div class="text-right">
+                <p>
+                    Tampilkan
+                    <select ng-model="me.pageSize" ng-change="me.setPage(me.currentPage)" ng-options="item for item in me.pageSizes"></select>
+                    item per halaman
+                </p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th ng-click="me.order('codeCity')">Kode City</th>
+                            <th ng-click="me.order('name')">City</th>
+                            <th class="col-sm-2"></th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchData.cityCode" />
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" ng-keyup="me.search(this)" ng-model="me.searchData.name" />
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr ng-repeat="data in (result = (me.cityMasterViewModel | filter : me.searchData  | orderBy : me.orderString :me.orderState)) track by data.cityCode"
+                            ng-if="$index >= ((me.currentPage-1) * me.pageSize) && $index < (me.currentPage * me.pageSize)">
+                            <td><span ng-bind="data.cityCode"></span></td>
+                            <td><span ng-bind="data.name"></span></td>
+                            <td class="action">
+                                <button type="button" class="btn btn-info" ng-click="me.selectEdit(data)">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </button>
+                                <button type="button" class="btn btn-danger" ng-click="me.deleteData(data, CityMasterForm)">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr ng-if="result.length < 1" class="text-center">
+                            <td colspan="3">Data tidak ditemukan</td>
+                        </tr>
+                        <tr ng-if="result.length == undefined" class="text-center">
+                            <td colspan="3"><i>Loading...</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <ul uib-pagination total-items="me.totalItems" ng-model="me.currentPage" max-size="me.maxSize" items-per-page="me.pageSize" class="pagination-sm"
+                    boundary-links="true" num-pages="me.numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+            </div>
+        </div>
+        <form name="CityMasterForm" ng-submit="me.addData(CityMasterForm)">
+            <div class="menu-panel">
+                <div class="panel-inside-padding">
+                    <div class="form-horizontal row-striped">
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">Kode City <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" name="CodeCity" ng-model="me.cityCode" ng-pattern="me.regexCode" ng-maxlength="16" required ng-disabled="me.editCheck"/>
+                                <validation-message title="Kode City" input="CityMasterForm.CodeCity"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">City <span class="mandatory">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" name="Name" ng-model="me.name" ng-pattern="me.regexName" ng-maxlength="255" required/>
+                                <validation-message title="City" input="CityMasterForm.Name"></validation-message>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <p class="form-note"><span class="mandatory">*</span>:Field mandatory harus diisi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary" ng-if="!me.editCheck" ng-disabled="Form.$invalid || me.cityCode == undefined || me.name == undefined">Simpan</button>
+                <button type="button" class="btn btn-primary" ng-if="me.editCheck" ng-click="me.updateData(CityMasterForm)" ng-disabled="Form.$invalid || me.cityCode == undefined || me.name == undefined">Update</button>
+                <button type="button" class="btn btn-danger" ng-click="me.reset(CityMasterForm)">Batal</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
